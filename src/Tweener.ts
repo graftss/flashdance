@@ -24,7 +24,7 @@ export default class Tweener {
     to: number,
     duration: number,
   ): Phaser.Tween => {
-    return this.game.add.tween(obj).to({ rotation: to }, duration);
+    return this.game.add.tween(obj).to({ rotation: obj.rotation + to }, duration);
   };
 
   scale = (

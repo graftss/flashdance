@@ -12,6 +12,10 @@ interface ITweenableRotation { rotation: number }
 
 // Game actions
 
+// `duration` denotes how long the action should visually appear to take.
+// `delay`, if present, denotes how long after the action before the
+//   next action starts.
+
 type TweenWrapper = {
   start: Function,
   onStart: Phaser.Signal
@@ -25,6 +29,7 @@ type GameAction = {
 
 type FlashOpts = {
   duration: number,
+  delay?: number,
   row: number,
   col: number,
 }

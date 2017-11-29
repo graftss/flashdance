@@ -47,14 +47,15 @@ export default class Cell extends Phaser.Group {
 
   flash(opts: FlashOpts): TweenWrapper {
     const { alpha, chain, merge, nothing, scale } = this.game.tweener;
-    const { duration } = opts;
+    const { delay, duration } = opts;
 
     const fadeInDuration = duration / 5;
-    const growDuration = 2 * duration / 25;
+    const growDuration = Math.max(30, duration * .04);
+    const waitDuration = (delay === undefined ? duration : delay) - growDuration;
 
     const scaleTween = chain([
       scale(this.flashLayer, .8, growDuration).easing(Phaser.Easing.Quadratic.Out),
-      nothing(duration - growDuration),
+      nothing(waitDuration),
     ]);
 
     const alphaTween = chain([
