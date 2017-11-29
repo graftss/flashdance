@@ -3,35 +3,20 @@ import 'pixi';
 import 'phaser';
 import * as Phaser from 'phaser-ce';
 
-import CellGroup from './CellGroup';
-import GameDirector from './GameDirector';
+import Play from './states/Play';
 import Tweener from './Tweener';
 
-const preload = () => { console.log('preloading') };
-const update = () => { };
-
-const create = () => {
-  game.tweener = new Tweener(game);
-  game.cellGroup = new CellGroup(game, 100, 100, 300, 300, 3, 3);
-  game.director = new GameDirector(game, game.cellGroup);
-
-  const actions: GameActionData[] = [
-    { type: 'flash', opts: { row: 1, col: 1, duration: 700 } },
-    { type: 'rotate', opts: { rotation: Math.PI, duration: 500 } },
-  ];
-
-  game.director.runActions(actions);
-};
-
-export default class Flashdance extends Phaser.Game {
+export default class Game extends Phaser.Game {
   public tweener: Tweener;
-  public cellGroup: CellGroup;
-  public director: GameDirector;
 
   constructor(...args) {
     super(...args);
-
+    this.tweener = new Tweener(this);
   }
 }
 
-const game = new Flashdance(800, 600, Phaser.AUTO, '', { preload, create, update });
+const game = new Game(800, 600, Phaser.AUTO);
+
+game.state.add('Play', Play);
+
+game.state.start('Play');

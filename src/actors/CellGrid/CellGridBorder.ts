@@ -1,12 +1,12 @@
 import * as Phaser from 'phaser-ce';
 
-import Flashdance from '.';
+import Game from '../..';
 
-export default class CellGroupBorder extends Phaser.Group {
+export default class CellGridBorder extends Phaser.Group {
   border: Phaser.Graphics;
 
   constructor(
-    public game: Flashdance,
+    public game: Game,
     public parent: Phaser.Group,
     public x: number,
     public y: number,

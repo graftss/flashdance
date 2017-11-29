@@ -1,7 +1,7 @@
 import * as Phaser from 'phaser-ce';
 
-import Flashdance from './index';
-import { shiftAnchor } from './utils';
+import Game from '../..';
+import { shiftAnchor } from '../../utils';
 
 const flashLayerColor = 0xffffff;
 const borderColor = 0xffffff;
@@ -11,7 +11,7 @@ export default class Cell extends Phaser.Group {
   private inputCaptureLayer: Phaser.Sprite;
 
   constructor(
-    public game: Flashdance,
+    public game: Game,
     public parent: Phaser.Group,
     public x: number,
     public y: number,

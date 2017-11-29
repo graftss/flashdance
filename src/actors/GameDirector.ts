@@ -1,11 +1,12 @@
-import CellGroup from './CellGroup';
+import * as Phaser from 'phaser-ce';
 
-import Flashdance from '.';
+import Game from '..';
+import CellGrid from './CellGrid';
 
 export default class GameDirector {
   constructor(
-    private game: Flashdance,
-    private cellGroup: CellGroup,
+    private game: Game,
+    private cellGroup: CellGrid,
   ) {}
 
   buildAction = (actionData: GameActionData): GameAction => {

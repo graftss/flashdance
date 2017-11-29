@@ -1,17 +1,16 @@
 import * as Phaser from 'phaser-ce';
 
-import Flashdance from '.';
-
 import Cell from './Cell';
-import CellGroupBorder from './CellGroupBorder';
-import { shiftAnchor } from './utils';
+import CellGridBorder from './CellGridBorder';
+import Game from '../..';
+import { shiftAnchor } from '../../utils';
 
-export default class CellGroup extends Phaser.Group {
+export default class CellGrid extends Phaser.Group {
   private cells: Cell[][] = [];
-  private border: CellGroupBorder;
+  private border: CellGridBorder;
 
   constructor(
-    public game: Flashdance,
+    public game: Game,
     public x: number,
     public y: number,
     private w: number,
@@ -46,7 +45,7 @@ export default class CellGroup extends Phaser.Group {
   }
 
   initBorder() {
-    this.border = new CellGroupBorder(this.game, this, 0, 0, this.w, this.h);
+    this.border = new CellGridBorder(this.game, this, 0, 0, this.w, this.h);
   }
 
   getCell(row: number, col: number) {
