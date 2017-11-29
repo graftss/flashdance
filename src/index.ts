@@ -11,7 +11,19 @@ const update = () => { };
 
 const create = () => {
   const cells = new CellGroup(game, 100, 100, 300, 300, 3, 3);
-  cells.flashCells().start();
+
+  const flashOpts = {
+    row: 2,
+    col: 0,
+    duration: 300,
+  };
+  // cells.flashCell(flashOpts).tween.start();
+
+  const rotateOpts: RotateOpts = {
+    rotation: Math.PI,
+    duration: 500,
+  }
+  cells.rotate(rotateOpts).tween.start();
 };
 
 export default class Flashdance extends Phaser.Game {

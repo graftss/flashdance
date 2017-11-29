@@ -13,8 +13,7 @@ export default class CellGroupBorder extends Phaser.Group {
     private w: number,
     private h: number,
   ) {
-    super(game);
-
+    super(game, parent);
     this.initBorder();
   }
 

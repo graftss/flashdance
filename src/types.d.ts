@@ -3,14 +3,26 @@
 
 interface ITweenableAlpha { alpha: number }
 
-type ScaleObject = { x: number, y: number };
-type ScaleTarget = number | ScaleObject;
+type ScaleObject = { x: number, y: number }
+type ScaleTarget = number | ScaleObject
 interface ITweenableScale { scale: ScaleObject }
 
+type Radians = number
 interface ITweenableRotation { rotation: number }
 
-// Cell transforms
+// Game actions
+
+type GameAction = {
+  tween: Phaser.Tween,
+}
 
 type FlashOpts = {
-  speed: number;
-};
+  row: number,
+  col: number,
+  duration: number,
+}
+
+type RotateOpts = {
+  rotation: Radians,
+  duration: number,
+}

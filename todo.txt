@@ -1,1 +1,7 @@
 - "fake" flash (not part of input, just a decoy or whatever)
+- "number" on flash to denote multiple taps
+
+- currency to buy upgrades like +0.01% delay or something, something
+  totally unnoticeable and worthless but it takes a ton of currency to
+  buy it and you don't know how little it's going to help until afte
+  ryou buy it. lmfao

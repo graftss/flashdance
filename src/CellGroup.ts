@@ -4,6 +4,7 @@ import Flashdance from '.';
 
 import Cell from './Cell';
 import CellGroupBorder from './CellGroupBorder';
+import { shiftAnchor } from './utils';
 
 export default class CellGroup extends Phaser.Group {
   private cells: Cell[][] = [];
@@ -20,6 +21,7 @@ export default class CellGroup extends Phaser.Group {
   ) {
     super(game);
 
+    shiftAnchor(this, w / 2, h / 2);
     this.initCells();
     this.initBorder();
   }
@@ -51,22 +53,18 @@ export default class CellGroup extends Phaser.Group {
     return this.cells[col][row];
   }
 
-  flashCell(row: number, col: number, opts: FlashOpts): Phaser.Tween {
-    return this.getCell(row, col).flash(opts);
+  flashCell(opts: FlashOpts): GameAction {
+    return {
+      tween: this.getCell(opts.row, opts.col).flash(opts),
+    };
   }
 
-  flashCells(): Phaser.Tween {
-    const coords = [
-      { x: 1, y: 2 },
-      { x: 2, y: 1 },
-      { x: 0, y: 2 },
-      { x: 2, y: 0 },
-    ];
+  rotate(opts: RotateOpts) {
+    const { rotation, duration } = opts;
+    const tween = this.game.tweener.rotation(this, rotation, duration);
 
-    const opts = { speed: 200 };
-
-    const tweens = coords.map(({ x, y }) => this.cells[x][y].flash(opts));
-
-    return this.game.tweener.chain(tweens);
+    return {
+      tween,
+    };
   }
 }

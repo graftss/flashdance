@@ -31,11 +31,7 @@ export default class Cell extends Phaser.Group {
     this.flashLayer.scale.x = 0;
     this.flashLayer.scale.y = 0;
 
-    // shiftAnchor(this.flashLayer, this.w / 2, this.h / 2);
-    this.flashLayer.pivot.x = this.w / 2;
-    this.flashLayer.pivot.y = this.h / 2;
-    this.flashLayer.x += this.w / 2;
-    this.flashLayer.y += this.h / 2;
+    shiftAnchor(this.flashLayer, this.w / 2, this.h / 2);
 
     this.flashLayer.beginFill(flashLayerColor);
     this.flashLayer.drawRect(0, 0, this.w, this.h);
@@ -48,16 +44,16 @@ export default class Cell extends Phaser.Group {
 
   flash(opts: FlashOpts): Phaser.Tween {
     const { alpha, chain, merge, scale } = this.game.tweener;
-    const { speed } = opts;
+    const { duration } = opts;
 
     const scaleTween = chain([
-      scale(this.flashLayer, 1, speed),
-      scale(this.flashLayer, 0, speed),
+      scale(this.flashLayer, 1, duration),
+      scale(this.flashLayer, 0, duration),
     ]);
 
     const alphaTween = chain([
-      alpha(this.flashLayer, 1, speed),
-      alpha(this.flashLayer, 0, speed),
+      alpha(this.flashLayer, 1, duration),
+      alpha(this.flashLayer, 0, duration),
     ]);
 
     return merge([
