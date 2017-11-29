@@ -61,12 +61,28 @@ export default class CellGrid extends Phaser.Group {
     };
   }
 
-  rotate(opts: RotateOpts) {
+  rotate(opts: RotateOpts): GameAction {
     const { rotation, duration } = opts;
 
     return {
       duration,
       tween: this.game.tweener.rotation(this, rotation, duration),
+    };
+  }
+
+  reflect(opts: ReflectOpts): GameAction {
+    const { duration, reflectX, reflectY } = opts;
+
+    const targetScale = {
+      x: this.scale.x * (reflectX ? -1 : 1),
+      y: this.scale.y * (reflectY ? -1 : 1),
+    };
+
+    console.log(targetScale)
+
+    return {
+      duration,
+      tween: this.game.tweener.scale(this, targetScale, duration),
     };
   }
 }

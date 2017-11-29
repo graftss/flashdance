@@ -1,9 +1,8 @@
 import * as Phaser from 'phaser-ce';
 
-import Game from '..';
-import CellGrid from '../actors/CellGrid';
-import GameDirector from '../actors/GameDirector';
-import Tweener from '../Tweener';
+import GameDirector from './GameDirector';
+import Game from '../..';
+import CellGrid from '../../actors/CellGrid';
 
 export default class Play extends Phaser.State {
   private cellGroup: CellGrid;
@@ -14,8 +13,11 @@ export default class Play extends Phaser.State {
     this.director = new GameDirector(game, this.cellGroup);
 
     const actions: GameActionData[] = [
+      { type: 'reflect', opts: { reflectX: true, reflectY: true, duration: 500 } },
       { type: 'flash', opts: { row: 1, col: 1, duration: 700 } },
       { type: 'rotate', opts: { rotation: Math.PI, duration: 500 } },
+      { type: 'reflect', opts: { reflectX: true, reflectY: false, duration: 500 } },
+      { type: 'reflect', opts: { reflectX: true, reflectY: true, duration: 500 } },
     ];
 
     this.director.runActions(actions);
