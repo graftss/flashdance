@@ -33,7 +33,6 @@ export default class GameDirector {
   runActions(actionDataList: GameActionData[]): void {
     const [first, ...rest] = actionDataList;
     const action = this.buildAction(first);
-    console.log(first)
 
     if (rest.length > 0) {
       this.onActionComplete(action, () => this.runActions(rest));

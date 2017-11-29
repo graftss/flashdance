@@ -1,5 +1,6 @@
 - "fake" flash (not part of input, just a decoy or whatever)
 - "number" on flash to denote multiple taps
+- "drag" flash that's like paths in the old game but using touch input
 
 - currency to buy upgrades like +0.01% delay or something, something
   totally unnoticeable and worthless but it takes a ton of currency to

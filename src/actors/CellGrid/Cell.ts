@@ -26,29 +26,45 @@ export default class Cell extends Phaser.Group {
   initFlashLayer(): void {
     this.flashLayer = this.game.add.graphics(0, 0, this);
 
-    // hide the layer initially
-    this.flashLayer.alpha = 0;
-    this.flashLayer.scale.x = 0;
-    this.flashLayer.scale.y = 0;
-
     shiftAnchor(this.flashLayer, this.w / 2, this.h / 2);
 
     this.flashLayer.beginFill(flashLayerColor);
-    this.flashLayer.drawRect(0, 0, this.w, this.h);
+    this.flashLayer.drawRoundedRect(0, 0, this.w, this.h, this.w / 10);
     this.flashLayer.endFill();
+
+    this.vanishFlashLayer();
+  }
+
+  vanishFlashLayer = (): void => {
+    this.flashLayer.alpha = 0;
+    // this.flashLayer.scale.x = 0;
+    // this.flashLayer.scale.y = 0;
   }
 
   initInputCaptureLayer(): void {
     this.inputCaptureLayer = this.game.add.sprite(0, 0, this);
   }
 
-  flash(opts: FlashOpts): Phaser.Tween {
-    const { alpha, merge, scale } = this.game.tweener;
+  flash(opts: FlashOpts): TweenWrapper {
+    const { alpha, chain, merge, nothing, scale } = this.game.tweener;
     const { duration } = opts;
 
-    const scaleTween = scale(this.flashLayer, 1, duration);
-    const alphaTween = alpha(this.flashLayer, 1, duration / 2).yoyo(true);
+    const fadeInDuration = duration / 5;
+    const growDuration = 2 * duration / 25;
 
-    return merge([scaleTween, alphaTween]);
+    const scaleTween = chain([
+      scale(this.flashLayer, .8, growDuration).easing(Phaser.Easing.Quadratic.Out),
+      nothing(duration - growDuration),
+    ]);
+
+    const alphaTween = chain([
+      alpha(this.flashLayer, 1, fadeInDuration),
+      alpha(this.flashLayer, 0, duration - fadeInDuration),
+    ]);
+
+    const result = merge([scaleTween, alphaTween]);
+    result.onComplete.add(this.vanishFlashLayer);
+
+    return result;
   }
 }

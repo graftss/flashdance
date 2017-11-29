@@ -12,9 +12,15 @@ interface ITweenableRotation { rotation: number }
 
 // Game actions
 
+type TweenWrapper = {
+  start: Function,
+  onStart: Phaser.Signal
+  onComplete: Phaser.Signal,
+};
+
 type GameAction = {
   duration: number,
-  tween: Phaser.Tween,
+  tween: TweenWrapper,
 }
 
 type FlashOpts = {
