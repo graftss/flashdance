@@ -14,7 +14,7 @@ export default class Play extends Phaser.State {
 
     const actions: GameActionData[] = [
       { type: 'reflect', opts: { reflectX: true, reflectY: true, duration: 500 } },
-      { type: 'flash', opts: { row: 1, col: 1, duration: 700 } },
+      { type: 'flash', opts: { row: 1, col: 1, duration: 600 } },
       { type: 'rotate', opts: { rotation: Math.PI, duration: 500 } },
       { type: 'reflect', opts: { reflectX: true, reflectY: false, duration: 500 } },
       { type: 'reflect', opts: { reflectX: true, reflectY: true, duration: 500 } },

@@ -78,8 +78,6 @@ export default class CellGrid extends Phaser.Group {
       y: this.scale.y * (reflectY ? -1 : 1),
     };
 
-    console.log(targetScale)
-
     return {
       duration,
       tween: this.game.tweener.scale(this, targetScale, duration),

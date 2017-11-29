@@ -43,22 +43,12 @@ export default class Cell extends Phaser.Group {
   }
 
   flash(opts: FlashOpts): Phaser.Tween {
-    const { alpha, chain, merge, scale } = this.game.tweener;
+    const { alpha, merge, scale } = this.game.tweener;
     const { duration } = opts;
 
-    const scaleTween = chain([
-      scale(this.flashLayer, 1, duration / 2),
-      scale(this.flashLayer, 0, duration / 2),
-    ]);
+    const scaleTween = scale(this.flashLayer, 1, duration);
+    const alphaTween = alpha(this.flashLayer, 1, duration / 2).yoyo(true);
 
-    const alphaTween = chain([
-      alpha(this.flashLayer, 1, duration / 2),
-      alpha(this.flashLayer, 0, duration / 2),
-    ]);
-
-    return merge([
-      scaleTween,
-      alphaTween,
-    ]);
+    return merge([scaleTween, alphaTween]);
   }
 }

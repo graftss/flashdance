@@ -17,29 +17,28 @@ export default class GameDirector {
     }
   };
 
-  sequenceActionData = (first: GameAction, second: GameActionData): GameAction => {
-    first.tween.onStart.add(() => {
-      setTimeout(() => this.startAction(this.buildAction(second)), first.duration);
-    });
-
-    return {
-      duration: first.duration + second.opts.duration,
-      tween: first.tween,
-    };
-  };
-
   startAction(action: GameAction): void {
     action.tween.start();
   }
 
+  onActionComplete(action: GameAction, callback: Function) {
+    action.tween.onComplete.add(callback);
+  }
+
+  runAction(action: GameAction, nextActionsData: GameActionData[]) {
+    this.onActionComplete(action, () => this.runActions(nextActionsData));
+    this.startAction(action);
+  }
+
   runActions(actionDataList: GameActionData[]): void {
     const [first, ...rest] = actionDataList;
+    const action = this.buildAction(first);
+    console.log(first)
 
-    const actionSequence = rest.reduce(
-      this.sequenceActionData,
-      this.buildAction(first)
-    );
+    if (rest.length > 0) {
+      this.onActionComplete(action, () => this.runActions(rest));
+    }
 
-    this.startAction(actionSequence);
+    this.startAction(action);
   }
 }
