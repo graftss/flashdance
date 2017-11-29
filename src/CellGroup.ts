@@ -54,17 +54,20 @@ export default class CellGroup extends Phaser.Group {
   }
 
   flashCell(opts: FlashOpts): GameAction {
+    const { row, col, duration } = opts;
+
     return {
-      tween: this.getCell(opts.row, opts.col).flash(opts),
+      duration: duration,
+      tween: this.getCell(row, col).flash(opts),
     };
   }
 
   rotate(opts: RotateOpts) {
     const { rotation, duration } = opts;
-    const tween = this.game.tweener.rotation(this, rotation, duration);
 
     return {
-      tween,
+      duration,
+      tween: this.game.tweener.rotation(this, rotation, duration),
     };
   }
 }

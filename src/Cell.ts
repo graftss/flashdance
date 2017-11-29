@@ -47,13 +47,13 @@ export default class Cell extends Phaser.Group {
     const { duration } = opts;
 
     const scaleTween = chain([
-      scale(this.flashLayer, 1, duration),
-      scale(this.flashLayer, 0, duration),
+      scale(this.flashLayer, 1, duration / 2),
+      scale(this.flashLayer, 0, duration / 2),
     ]);
 
     const alphaTween = chain([
-      alpha(this.flashLayer, 1, duration),
-      alpha(this.flashLayer, 0, duration),
+      alpha(this.flashLayer, 1, duration / 2),
+      alpha(this.flashLayer, 0, duration / 2),
     ]);
 
     return merge([

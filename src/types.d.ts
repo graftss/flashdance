@@ -12,7 +12,12 @@ interface ITweenableRotation { rotation: number }
 
 // Game actions
 
+type GameActionData =
+  { type: 'flash', opts: FlashOpts } |
+  { type: 'rotate', opts: RotateOpts }
+
 type GameAction = {
+  duration: number,
   tween: Phaser.Tween,
 }
 
