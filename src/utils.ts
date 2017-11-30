@@ -19,3 +19,5 @@ export const mapJust = <S, T>(f: (S) => Maybe<T>, list: S[]): T[] => {
 
   return result;
 }
+
+export const labelArgs = label => (...args) => console.log(label, ...args);

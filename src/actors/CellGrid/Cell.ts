@@ -2,7 +2,7 @@ import * as Phaser from 'phaser-ce';
 
 import CellGrid from './CellGrid';
 import Game from '../..';
-import { shiftAnchor } from '../../utils';
+import { labelArgs, shiftAnchor } from '../../utils';
 
 const flashLayerColor = 0xffffff;
 const fakeFlashLayerColor = 0xff0000;
@@ -11,7 +11,8 @@ const borderColor = 0xffffff;
 export default class Cell extends Phaser.Group {
   private flashLayer: Phaser.Graphics;
   private fakeFlashLayer: Phaser.Graphics;
-  private inputCaptureLayer: Phaser.Graphics;
+  private hitboxLayer: Phaser.Graphics;
+  private inputLayer: Phaser.Sprite;
 
   constructor(
     public game: Game,
@@ -27,18 +28,19 @@ export default class Cell extends Phaser.Group {
 
     this.initFlashLayer();
     this.initFakeFlashLayer();
-    this.initInputCaptureLayer();
+    this.initHitboxLayer();
+    this.initInputLayer();
   }
 
   private initFlashLayer(): void {
     this.flashLayer = this.game.add.graphics(0, 0, this);
-    this.positionFlashLayer(this.flashLayer);
     this.drawFlashLayer(this.flashLayer);
+    this.centerLayer(this.flashLayer);
+    this.resetFlashLayer(this.flashLayer);
   }
 
-  private positionFlashLayer(layer: Phaser.Graphics): void {
+  private centerLayer(layer: PIXI.DisplayObjectContainer): void {
     shiftAnchor(layer, this.w / 2, this.h / 2);
-    this.resetFlashLayer(layer);
   }
 
   private drawFlashLayer(layer: Phaser.Graphics): void {
@@ -49,8 +51,9 @@ export default class Cell extends Phaser.Group {
 
   private initFakeFlashLayer(): void {
     this.fakeFlashLayer = this.game.add.graphics(0, 0, this);
-    this.positionFlashLayer(this.fakeFlashLayer);
     this.drawFakeFlashLayer(this.fakeFlashLayer);
+    this.centerLayer(this.fakeFlashLayer);
+    this.resetFlashLayer(this.fakeFlashLayer);
   }
 
   private drawFakeFlashLayer(layer: Phaser.Graphics): void {
@@ -103,22 +106,69 @@ export default class Cell extends Phaser.Group {
     return this.flashTween(this.fakeFlashLayer, duration);
   };
 
-  private initInputCaptureLayer(): void {
-    this.inputCaptureLayer = this.game.add.graphics(0, 0, this);
-    this.inputCaptureLayer.inputEnabled = true;
+  private initHitboxLayer(): void {
+    this.hitboxLayer = this.game.add.graphics(0, 0, this);
+    this.drawHitboxLayer(this.hitboxLayer);
+  }
 
-    shiftAnchor(this.inputCaptureLayer, this.w / 2, this.h / 2);
+  private drawHitboxLayer(layer: Phaser.Graphics): void {
+    layer.beginFill(0, 0);
+    layer.drawRect(0, 0, this.w, this.h);
+    layer.endFill();
+  }
 
-    this.inputCaptureLayer.beginFill(0, 0);
-    this.inputCaptureLayer.drawRect(0, 0, this.w, this.h);
-    this.inputCaptureLayer.endFill();
+  private initInputLayer(): void {
+    this.inputLayer = this.getInputLayerSprite();
+    this.centerLayer(this.inputLayer); // unnecessary?
+    this.addInputHandlers(this.inputLayer);
+  }
 
-    this.inputCaptureLayer.events.onInputDown.add(this.onInputDown);
+  // Only sprites can use Phaser's drag events, so we have to convert a
+  // transparent graphic to a sprite via a graphics' texture.
+  private getInputLayerSprite(): Phaser.Sprite {
+    const layer = this.game.add.graphics(0, 0, this);
+
+    this.drawHitboxLayer(layer);
+    const texture = layer.generateTexture();
+
+    layer.destroy();
+
+    return this.game.add.sprite(0, 0, texture, undefined, this);
+  }
+
+  private addInputHandlers(sprite: Phaser.Sprite): void {
+    sprite.inputEnabled = true;
+    sprite.input.enableDrag();
+
+    sprite.events.onInputDown.add(this.onInputDown);
+    sprite.events.onDragStart.add(labelArgs('start'));
+    sprite.events.onDragUpdate.add(this.onDragUpdate);
+    sprite.events.onDragStop.add(labelArgs('stop'));
   }
 
   private onInputDown = () => {
-    const eventData = { type: 'cell', row: this.row, col: this.col };
+    const eventData: InputTarget = {
+      type: 'cell',
+      row: this.row,
+      col: this.col,
+    };
 
-    this.game.eventBus.inputDown.dispatch(<InputTarget>eventData);
+    console.log(eventData);
+
+    this.game.eventBus.inputDown.dispatch(eventData);
+  };
+
+
+
+  private onDragUpdate = (_, pointer: Phaser.Pointer) => {
+    const { x, y } = pointer;
+    const cell = this.grid.cellContainingPoint(x, y);
+
+    if (cell === null) console.log(null);
+    else console.log(cell.col, cell.row);
+  }
+
+  public containsPoint(x: number, y: number): boolean {
+    return this.hitboxLayer.getBounds().contains(x, y);
   }
 }

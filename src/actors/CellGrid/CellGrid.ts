@@ -25,7 +25,7 @@ export default class CellGrid extends Phaser.Group {
     this.initBorder();
   }
 
-  initCells() {
+  private initCells() {
     const { cols, rows, w, h, game } = this;
     const wCell = w / cols;
     const hCell = h / rows;
@@ -43,15 +43,29 @@ export default class CellGrid extends Phaser.Group {
     }
   }
 
-  initBorder() {
+  private initBorder() {
     this.border = new CellGridBorder(this.game, this, 0, 0, this.w, this.h);
   }
 
-  getCell(row: number, col: number) {
+  private getCell(row: number, col: number) {
     return this.cells[col][row];
   }
 
-  flashCell(opts: FlashOpts): GameAction {
+  public cellContainingPoint(x: number, y: number): Maybe<Cell> {
+    const { cells, cols, rows } = this;
+
+    for (let col = 0; col < cols; col++) {
+      for (let row = 0; row < rows; row++) {
+        const cell = this.getCell(col, row);
+
+        if (cell.containsPoint(x, y)) return cell;
+      }
+    }
+
+    return null;
+  }
+
+  public flashCell(opts: FlashOpts): GameAction {
     const { row, col, duration } = opts;
 
     return {
@@ -60,7 +74,7 @@ export default class CellGrid extends Phaser.Group {
     };
   }
 
-  fakeFlashCell(opts: FlashOpts): GameAction {
+  public fakeFlashCell(opts: FlashOpts): GameAction {
     const { row, col, duration } = opts;
 
     return {
@@ -69,7 +83,7 @@ export default class CellGrid extends Phaser.Group {
     };
   }
 
-  rotate(opts: RotateOpts): GameAction {
+  public rotate(opts: RotateOpts): GameAction {
     const { rotation, duration } = opts;
 
     return {
@@ -78,7 +92,7 @@ export default class CellGrid extends Phaser.Group {
     };
   }
 
-  reflect(opts: ReflectOpts): GameAction {
+  public reflect(opts: ReflectOpts): GameAction {
     const { duration, reflectX, reflectY } = opts;
 
     const targetScale = {
