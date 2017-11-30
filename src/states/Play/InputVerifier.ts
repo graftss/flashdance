@@ -21,7 +21,13 @@ export default class InputVerifier {
   }
 
   private advanceInput(): void {
-    this.nextInputIndex += 1;
+    const nextInputIndex = this.nextInputIndex + 1;
+
+    if (nextInputIndex === this.targetInput.length) {
+      this.onCompleteInput();
+    } else {
+      this.nextInputIndex = nextInputIndex;
+    }
   }
 
   private attachHandlers(game: Game) {
@@ -39,11 +45,19 @@ export default class InputVerifier {
           console.log('correct input');
           this.advanceInput();
         } else {
-          console.log('wrong input');
+          this.onIncorrectInput();
         }
       }
     }
   };
+
+  private onIncorrectInput() {
+    console.log('wrong input');
+  }
+
+  private onCompleteInput() {
+    console.log('input completed');
+  }
 
   private actionToInput = (actionData: GameActionData): Maybe<GameInput> => {
     switch (actionData.type) {
