@@ -2,7 +2,7 @@ import * as Phaser from 'phaser-ce';
 
 import CellGrid from './CellGrid';
 import Game from '../..';
-import { labelArgs, shiftAnchor } from '../../utils';
+import { isEqual, labelArgs, shiftAnchor } from '../../utils';
 
 const flashLayerColor = 0xffffff;
 const fakeFlashLayerColor = 0xff0000;
@@ -117,6 +117,11 @@ export default class Cell extends Phaser.Group {
   }
 
   private drawHitboxLayer(layer: Phaser.Graphics): void {
+    // if (this.col === 1 && this.row === 1) {
+    //   layer.beginFill(0x00ff00, 1);
+    // } else {
+    //   layer.beginFill(0, 0);
+    // }
     layer.beginFill(0, 0);
     layer.drawRect(0, 0, this.w, this.h);
     layer.endFill();
@@ -124,7 +129,6 @@ export default class Cell extends Phaser.Group {
 
   private initInputLayer(): void {
     this.inputLayer = this.getInputLayerSprite();
-    this.centerLayer(this.inputLayer); // unnecessary?
     this.addInputHandlers(this.inputLayer);
   }
 
@@ -166,7 +170,7 @@ export default class Cell extends Phaser.Group {
 
     const { inputTarget } = cell;
 
-    if (inputTarget !== this.lastDragTarget) {
+    if (!isEqual(inputTarget, this.lastDragTarget)) {
       this.lastDragTarget = inputTarget;
       this.game.eventBus.inputDragTarget.dispatch(inputTarget);
     }
@@ -175,6 +179,7 @@ export default class Cell extends Phaser.Group {
   private onDragStop = (): void => {
     this.game.eventBus.inputDragStop.dispatch(this.lastDragTarget);
     this.lastDragTarget = null;
+    this.inputLayer.position.copyFrom(this.hitboxLayer.position);
   }
 
   public containsPoint(x: number, y: number): boolean {

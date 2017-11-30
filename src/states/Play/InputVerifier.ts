@@ -4,6 +4,7 @@ import { cellTarget, flatten, isEqual, mapJust } from '../../utils';
 export default class InputVerifier {
   private targetInput: GameInput[];
   private nextInputIndex: number;
+  private checkpointInputIndex: number;
 
   constructor(
     private game: Game,
@@ -16,6 +17,11 @@ export default class InputVerifier {
 
     eventBus.inputDown.add(this.onInputDown);
     eventBus.inputDragTarget.add(this.onNewDragTarget);
+    eventBus.inputDragStop.add(this.onDragStop);
+  }
+
+  private nextInput(): GameInput {
+    return this.targetInput[this.nextInputIndex];
   }
 
   private onInputDown = (data: InputTarget) => {
@@ -23,7 +29,8 @@ export default class InputVerifier {
 
     if (nextInput.type === 'down' && isEqual(nextInput.target, data)) {
       console.log('correct input');
-      this.advanceInput();
+      this.advanceNextInput();
+      this.updateCheckpointInput();
     } else {
       this.onIncorrectInput();
     }
@@ -34,13 +41,21 @@ export default class InputVerifier {
 
     if (nextInput.type === 'drag' && isEqual(nextInput.target, data)) {
       console.log('correct DRAG input');
-      this.advanceInput();
+      this.advanceNextInput();
     } else {
       this.onIncorrectInput();
     }
   };
 
-  private advanceInput(): void {
+  private onDragStop = (data: InputTarget) => {
+    const nextInput = this.nextInput();
+
+    if (nextInput.type === 'drag') {
+      this.onIncorrectInput();
+    }
+  };
+
+  private advanceNextInput(): void {
     const nextInputIndex = this.nextInputIndex + 1;
 
     if (nextInputIndex === this.targetInput.length) {
@@ -50,7 +65,16 @@ export default class InputVerifier {
     }
   }
 
+  private updateCheckpointInput(): void {
+    const nextInput = this.nextInput();
+
+    switch (nextInput.type) {
+      case 'down': this.checkpointInputIndex = this.nextInputIndex;
+    }
+  }
+
   private onIncorrectInput() {
+    this.nextInputIndex = this.checkpointInputIndex;
     console.log('wrong input');
   }
 
@@ -85,13 +109,10 @@ export default class InputVerifier {
     return flatten(mapJust(this.actionToInput, actionDataList));
   };
 
-  private nextInput(): GameInput {
-    return this.targetInput[this.nextInputIndex];
-  }
-
   public startRound(targetInput: GameActionData[]) {
     this.targetInput = this.actionsToInput(targetInput);
     console.log('input', this.targetInput)
     this.nextInputIndex = 0;
+    this.checkpointInputIndex = 0;
   }
 }
