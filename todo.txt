@@ -3,6 +3,7 @@
     or just around the maze in general
 
 - "fake" flash (not part of input, just a decoy or whatever)
+  -> still need to distinguish it achromatically (cool word gahaha)
 - "number" on flash to denote multiple taps
 - "drag" flash that's like paths in the old game but using touch input
 

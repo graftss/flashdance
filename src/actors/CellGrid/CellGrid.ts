@@ -60,6 +60,15 @@ export default class CellGrid extends Phaser.Group {
     };
   }
 
+  fakeFlashCell(opts: FlashOpts): GameAction {
+    const { row, col, duration } = opts;
+
+    return {
+      duration: duration,
+      tween: this.getCell(row, col).fakeFlash(opts),
+    };
+  }
+
   rotate(opts: RotateOpts): GameAction {
     const { rotation, duration } = opts;
 

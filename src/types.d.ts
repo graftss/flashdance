@@ -55,6 +55,7 @@ type ReflectOpts = {
 type GameActionData =
   { type: 'wait', opts: WaitOpts } |
   { type: 'flash', opts: FlashOpts } |
+  { type: 'fakeflash', opts: FlashOpts } |
   { type: 'rotate', opts: RotateOpts } |
   { type: 'reflect', opts: ReflectOpts }
 

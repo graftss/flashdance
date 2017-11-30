@@ -10,16 +10,17 @@ export default class GameDirector {
 
   constructor(
     private game: Game,
-    private cellGroup: CellGrid,
+    private cellGrid: CellGrid,
   ) {
     this.inputVerifier = new InputVerifier(game);
   }
 
   private buildAction = (actionData: GameActionData): GameAction => {
     switch (actionData.type) {
-      case 'flash': return this.cellGroup.flashCell(actionData.opts);
-      case 'rotate': return this.cellGroup.rotate(actionData.opts);
-      case 'reflect': return this.cellGroup.reflect(actionData.opts);
+      case 'flash': return this.cellGrid.flashCell(actionData.opts);
+      case 'fakeflash': return this.cellGrid.fakeFlashCell(actionData.opts);
+      case 'rotate': return this.cellGrid.rotate(actionData.opts);
+      case 'reflect': return this.cellGrid.reflect(actionData.opts);
       case 'wait': return this.wait(actionData.opts);
     }
   };
