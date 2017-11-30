@@ -13,12 +13,13 @@ export default class Play extends Phaser.State {
     this.director = new GameDirector(game, this.cellGroup);
 
     const actions: GameActionData[] = [
-      { type: 'wait', opts: { duration: 1000 } },
-      { type: 'flash', opts: { row: 1, col: 1, duration: 100 } },
-      { type: 'flash', opts: { row: 2, col: 1, duration: 100 } },
-      { type: 'flash', opts: { row: 0, col: 0, duration: 100 } },
-      { type: 'flash', opts: { row: 2, col: 2, duration: 100 } },
-      { type: 'flash', opts: { row: 0, col: 2, duration: 100 } },
+      { type: 'wait', opts: { duration: 300 } },
+      { type: 'flash', opts: { row: 1, col: 1, duration: 1000 } },
+      { type: 'flash', opts: { row: 2, col: 1, duration: 300 } },
+      { type: 'flash', opts: { row: 2, col: 1, duration: 300 } },
+      { type: 'flash', opts: { row: 0, col: 0, duration: 300 } },
+      { type: 'flash', opts: { row: 2, col: 2, duration: 300 } },
+      { type: 'flash', opts: { row: 0, col: 2, duration: 300 } },
       // { type: 'rotate', opts: { rotation: Math.PI * 2, duration: 400 } },
       // { type: 'reflect', opts: { reflectX: true, reflectY: false, duration: 500 } },
       // { type: 'reflect', opts: { reflectX: true, reflectY: true, duration: 500 } },
