@@ -29,12 +29,19 @@ export default class Cell extends Phaser.Group {
   ) {
     super(game, grid);
 
+    this.attachEventHandlers();
     this.initFlashLayer();
     this.initFakeFlashLayer();
     this.initHitboxLayer();
     this.initInputLayer();
 
     this.inputTarget = { type: 'cell', cell: { col, row } };
+  }
+
+  private attachEventHandlers(): void {
+    const { eventBus } = this.game;
+
+    eventBus.inputEnabled.add(this.setInputEnabled);
   }
 
   private initFlashLayer(): void {
@@ -132,6 +139,10 @@ export default class Cell extends Phaser.Group {
     this.addInputHandlers(this.inputLayer);
   }
 
+  private setInputEnabled = (enabled: boolean): void => {
+    this.inputLayer.inputEnabled = enabled;
+  };
+
   // Only sprites can use Phaser's drag events, so we have to convert a
   // transparent graphic to a sprite via the graphics' texture.
   private getInputLayerSprite(): Phaser.Sprite {
@@ -146,12 +157,16 @@ export default class Cell extends Phaser.Group {
   }
 
   private addInputHandlers(sprite: Phaser.Sprite): void {
+    // setting `inputEnabled` to true initializes `sprite.input`, because
+    // modularity is an illusion
     sprite.inputEnabled = true;
-    sprite.input.enableDrag();
 
+    sprite.input.enableDrag();
     sprite.events.onInputDown.add(this.onInputDown);
     sprite.events.onDragUpdate.add(this.onDragUpdate);
     sprite.events.onDragStop.add(this.onDragStop);
+
+    sprite.inputEnabled = false;
   }
 
   private onInputDown = (): void => {

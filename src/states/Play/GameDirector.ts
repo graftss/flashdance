@@ -43,21 +43,22 @@ export default class GameDirector {
     action.tween.onComplete.add(callback);
   }
 
-  private runActions(actionDataList: GameActionData[]): void {
+  private runActions(actionDataList: GameActionData[], onComplete: Function): void {
     const [first, ...rest] = actionDataList;
     const action = this.buildAction(first);
 
     if (rest.length > 0) {
-      this.onActionComplete(action, () => this.runActions(rest));
+      this.onActionComplete(action, () => this.runActions(rest, onComplete));
     } else {
-      this.onActionComplete(action, () => console.log('actions done!!!'));
+      this.onActionComplete(action, onComplete);
     }
 
     this.startAction(action);
   }
 
   startRound(actionDataList: GameActionData[]): void {
-    this.inputVerifier.startRound(actionDataList);
-    this.runActions(actionDataList);
+    this.runActions(actionDataList, () => {
+      this.inputVerifier.startRound(actionDataList);
+    });
   }
 }

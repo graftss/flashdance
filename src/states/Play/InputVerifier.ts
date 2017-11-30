@@ -9,15 +9,23 @@ export default class InputVerifier {
   constructor(
     private game: Game,
   ) {
-    this.attachHandlers(game);
+    this.attachHandlers();
   }
 
-  private attachHandlers(game: Game) {
-    const { eventBus } = game;
+  private attachHandlers(): void {
+    const { eventBus } = this.game;
 
     eventBus.inputDown.add(this.onInputDown);
     eventBus.inputDragTarget.add(this.onNewDragTarget);
     eventBus.inputDragStop.add(this.onDragStop);
+  }
+
+  private dispatchEnableInput(): void {
+    this.game.eventBus.inputEnabled.dispatch(true);
+  }
+
+  private dispatchDisableInput(): void {
+    this.game.eventBus.inputEnabled.dispatch(false);
   }
 
   private nextInput(): GameInput {
@@ -80,6 +88,7 @@ export default class InputVerifier {
 
   private onCompleteInput() {
     console.log('input completed');
+    this.dispatchDisableInput();
   }
 
   private actionToInput = (actionData: GameActionData): Maybe<GameInput>[] => {
@@ -109,10 +118,11 @@ export default class InputVerifier {
     return flatten(mapJust(this.actionToInput, actionDataList));
   };
 
-  public startRound(targetInput: GameActionData[]) {
-    this.targetInput = this.actionsToInput(targetInput);
-    console.log('input', this.targetInput)
+  public startRound(actionDataList: GameActionData[]) {
+    this.targetInput = this.actionsToInput(actionDataList);
     this.nextInputIndex = 0;
     this.checkpointInputIndex = 0;
+
+    this.dispatchEnableInput();
   }
 }
