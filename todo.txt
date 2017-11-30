@@ -1,5 +1,5 @@
 === up next ===
-- refactor using `GridPos` type
+- hold onto Cell ref instead of InputTarget in last drag thing
 - toggle inputEnabled using event bus
 - show click and drag input graphically, steal ideas from elsewhere
   -> (simon for click)

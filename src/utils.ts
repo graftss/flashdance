@@ -22,4 +22,6 @@ export const mapJust = <S, T>(f: (s: S) => Maybe<T>, list: S[]): T[] => {
   return result;
 };
 
+export const cellTarget = (cell: GridPos): InputTarget => ({ type: 'cell', cell });
+
 export const labelArgs = label => (...args) => console.log(label, ...args);

@@ -39,8 +39,7 @@ type WaitOpts = {
 type FlashOpts = {
   duration: number,
   delay?: number,
-  row: number,
-  col: number,
+  cell: GridPos,
 }
 
 type PathOpts = {
@@ -70,7 +69,7 @@ type GameActionData =
 // Game input
 
 type InputTarget =
-  { type: 'cell', row: number, col: number }
+  { type: 'cell', cell: GridPos }
 
 type GameInput =
   { type: 'down', target: InputTarget } |

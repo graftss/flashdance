@@ -1,5 +1,5 @@
 import Game from '../..';
-import { flatten, isEqual, mapJust } from '../../utils';
+import { cellTarget, flatten, isEqual, mapJust } from '../../utils';
 
 export default class InputVerifier {
   private targetInput: GameInput[];
@@ -61,22 +61,20 @@ export default class InputVerifier {
   private actionToInput = (actionData: GameActionData): Maybe<GameInput>[] => {
     switch (actionData.type) {
       case 'flash': {
-        const { col, row } = actionData.opts;
+        const { cell } = actionData.opts;
 
-        return [{ type: 'down', target: { type: 'cell', col, row } }];
+        return [{ type: 'down', target: cellTarget(cell) }];
       }
 
       case 'path': {
         const { cells } = actionData.opts;
+        const result: GameInput[] = [{ type: 'down', target: cellTarget(cells[0]) }];
 
-        return cells.map((cell, index) => <GameInput>({
-          type: index === 0 ? 'down' : 'drag',
-          target: {
-            type: 'cell',
-            col: cell.col,
-            row: cell.row,
-          },
-        }));
+        for (let i = 1; i < cells.length; i++) {
+          result.push({ type: 'drag', target: cellTarget(cells[i]) });
+        }
+
+        return result;
       }
 
       default: return null;

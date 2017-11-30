@@ -66,7 +66,7 @@ export default class CellGrid extends Phaser.Group {
   }
 
   public flashCell(opts: FlashOpts): GameAction {
-    const { row, col, duration } = opts;
+    const { cell: { col, row }, duration } = opts;
 
     return {
       duration,
@@ -75,7 +75,7 @@ export default class CellGrid extends Phaser.Group {
   }
 
   public fakeFlashCell(opts: FlashOpts): GameAction {
-    const { row, col, duration } = opts;
+    const { cell: { col, row }, duration } = opts;
 
     return {
       duration,

@@ -34,7 +34,7 @@ export default class Cell extends Phaser.Group {
     this.initHitboxLayer();
     this.initInputLayer();
 
-    this.inputTarget = { type: 'cell', col, row };
+    this.inputTarget = { type: 'cell', cell: { col, row } };
   }
 
   private initFlashLayer(): void {
