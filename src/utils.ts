@@ -1,3 +1,7 @@
+import * as lodashIsEqual from 'lodash.isequal';
+
+export const isEqual = lodashIsEqual;
+
 export const shiftAnchor = (obj: PIXI.DisplayObject, x: number, y: number) => {
   obj.pivot.x += x;
   obj.x += x;

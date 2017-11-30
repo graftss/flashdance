@@ -81,8 +81,8 @@ export default class Cell extends Phaser.Group {
   }
 
   onInputDown = () => {
-    const eventData = { row: this.row, col: this.col };
+    const eventData = { type: 'cell', row: this.row, col: this.col };
 
-    this.game.eventBus.inputDownCell.dispatch(eventData);
+    this.game.eventBus.inputDown.dispatch(<InputTarget>eventData);
   }
 }

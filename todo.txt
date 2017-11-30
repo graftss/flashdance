@@ -1,3 +1,6 @@
+- "wait" action, just waits for duration
+
+
 - "fake" flash (not part of input, just a decoy or whatever)
 - "number" on flash to denote multiple taps
 - "drag" flash that's like paths in the old game but using touch input

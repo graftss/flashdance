@@ -1,9 +1,9 @@
 import Game from '../..';
-import { mapJust } from '../../utils';
+import { isEqual, mapJust } from '../../utils';
 
 export default class InputVerifier {
   private targetInput: GameInput[];
-  private inputStep: number;
+  private nextInputIndex: number;
 
   constructor(
     private game: Game,
@@ -11,20 +11,39 @@ export default class InputVerifier {
     this.attachHandlers(game);
   }
 
+  public startRound(targetInput: GameActionData[]) {
+    this.targetInput = this.actionsToInput(targetInput);
+    this.nextInputIndex = 0;
+  }
+
+  private nextInput(): GameInput {
+    return this.targetInput[this.nextInputIndex];
+  }
+
+  private advanceInput(): void {
+    this.nextInputIndex += 1;
+  }
+
   private attachHandlers(game: Game) {
     const { eventBus } = game;
 
-    eventBus.inputDownCell.add(this.onInputDownCell);
+    eventBus.inputDown.add(this.onInputDown);
   }
 
-  private onInputDownCell = ({ row, col }) => {
-    console.log('input down cell:', { row, col });
+  private onInputDown = (data: InputTarget) => {
+    const nextInput = this.nextInput();
+
+    switch (nextInput.type) {
+      case 'down': {
+        if (isEqual(nextInput.target, data)) {
+          console.log('correct input');
+          this.advanceInput();
+        } else {
+          console.log('wrong input');
+        }
+      }
+    }
   };
-
-  public startRound(targetInput: GameActionData[]) {
-    this.targetInput = this.actionsToInput(targetInput);
-    this.inputStep = 0;
-  }
 
   private actionToInput = (actionData: GameActionData): Maybe<GameInput> => {
     switch (actionData.type) {
