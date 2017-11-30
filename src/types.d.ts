@@ -30,6 +30,10 @@ type GameAction = {
   tween: TweenWrapper,
 }
 
+type WaitOpts = {
+  duration: number,
+}
+
 type FlashOpts = {
   duration: number,
   delay?: number,
@@ -49,6 +53,7 @@ type ReflectOpts = {
 }
 
 type GameActionData =
+  { type: 'wait', opts: WaitOpts } |
   { type: 'flash', opts: FlashOpts } |
   { type: 'rotate', opts: RotateOpts } |
   { type: 'reflect', opts: ReflectOpts }

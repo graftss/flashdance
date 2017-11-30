@@ -20,8 +20,18 @@ export default class GameDirector {
       case 'flash': return this.cellGroup.flashCell(actionData.opts);
       case 'rotate': return this.cellGroup.rotate(actionData.opts);
       case 'reflect': return this.cellGroup.reflect(actionData.opts);
+      case 'wait': return this.wait(actionData.opts);
     }
   };
+
+  private wait(opts: WaitOpts): GameAction {
+    const { duration } = opts;
+
+    return {
+      duration,
+      tween: this.game.tweener.nothing(duration),
+    };
+  }
 
   private startAction(action: GameAction): void {
     action.tween.start();

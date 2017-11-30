@@ -13,6 +13,7 @@ export default class Play extends Phaser.State {
     this.director = new GameDirector(game, this.cellGroup);
 
     const actions: GameActionData[] = [
+      { type: 'wait', opts: { duration: 1000 } },
       { type: 'flash', opts: { row: 1, col: 1, duration: 100 } },
       { type: 'flash', opts: { row: 2, col: 1, duration: 100 } },
       { type: 'flash', opts: { row: 0, col: 0, duration: 100 } },
