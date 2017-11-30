@@ -1,6 +1,8 @@
 import * as lodashIsEqual from 'lodash.isequal';
+import * as lodashFlatten from 'lodash.flatten';
 
 export const isEqual = lodashIsEqual;
+export const flatten = lodashFlatten;
 
 export const shiftAnchor = (obj: PIXI.DisplayObject, x: number, y: number) => {
   obj.pivot.x += x;
@@ -9,7 +11,7 @@ export const shiftAnchor = (obj: PIXI.DisplayObject, x: number, y: number) => {
   obj.y += y;
 };
 
-export const mapJust = <S, T>(f: (S) => Maybe<T>, list: S[]): T[] => {
+export const mapJust = <S, T>(f: (s: S) => Maybe<T>, list: S[]): T[] => {
   const result = [];
 
   for (let i = 0; i < list.length; i++) {
@@ -18,6 +20,6 @@ export const mapJust = <S, T>(f: (S) => Maybe<T>, list: S[]): T[] => {
   }
 
   return result;
-}
+};
 
 export const labelArgs = label => (...args) => console.log(label, ...args);

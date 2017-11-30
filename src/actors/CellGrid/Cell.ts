@@ -14,6 +14,9 @@ export default class Cell extends Phaser.Group {
   private hitboxLayer: Phaser.Graphics;
   private inputLayer: Phaser.Sprite;
 
+  public inputTarget: InputTarget;
+  private lastDragTarget: InputTarget;
+
   constructor(
     public game: Game,
     private grid: CellGrid,
@@ -30,6 +33,8 @@ export default class Cell extends Phaser.Group {
     this.initFakeFlashLayer();
     this.initHitboxLayer();
     this.initInputLayer();
+
+    this.inputTarget = { type: 'cell', col, row };
   }
 
   private initFlashLayer(): void {
@@ -124,7 +129,7 @@ export default class Cell extends Phaser.Group {
   }
 
   // Only sprites can use Phaser's drag events, so we have to convert a
-  // transparent graphic to a sprite via a graphics' texture.
+  // transparent graphic to a sprite via the graphics' texture.
   private getInputLayerSprite(): Phaser.Sprite {
     const layer = this.game.add.graphics(0, 0, this);
 
@@ -141,31 +146,35 @@ export default class Cell extends Phaser.Group {
     sprite.input.enableDrag();
 
     sprite.events.onInputDown.add(this.onInputDown);
-    sprite.events.onDragStart.add(labelArgs('start'));
     sprite.events.onDragUpdate.add(this.onDragUpdate);
-    sprite.events.onDragStop.add(labelArgs('stop'));
+    sprite.events.onDragStop.add(this.onDragStop);
   }
 
-  private onInputDown = () => {
-    const eventData: InputTarget = {
-      type: 'cell',
-      row: this.row,
-      col: this.col,
-    };
-
-    console.log(eventData);
-
-    this.game.eventBus.inputDown.dispatch(eventData);
+  private onInputDown = (): void => {
+    this.lastDragTarget = this.inputTarget;
+    this.game.eventBus.inputDown.dispatch(this.inputTarget);
   };
 
-
-
-  private onDragUpdate = (_, pointer: Phaser.Pointer) => {
+  private onDragUpdate = (_, pointer: Phaser.Pointer): void => {
     const { x, y } = pointer;
     const cell = this.grid.cellContainingPoint(x, y);
 
-    if (cell === null) console.log(null);
-    else console.log(cell.col, cell.row);
+    // for now, ignore drags that take place outside of the grid. maybe
+    // in the future this will change, or maybe having to drag outside of
+    // the grid will be a feature, or maybe ill kill myself before it matters
+    if (cell === null) return;
+
+    const { inputTarget } = cell;
+
+    if (inputTarget !== this.lastDragTarget) {
+      this.lastDragTarget = inputTarget;
+      this.game.eventBus.inputDragTarget.dispatch(inputTarget);
+    }
+  };
+
+  private onDragStop = (): void => {
+    this.game.eventBus.inputDragStop.dispatch(this.lastDragTarget);
+    this.lastDragTarget = null;
   }
 
   public containsPoint(x: number, y: number): boolean {

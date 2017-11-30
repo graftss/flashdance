@@ -69,7 +69,7 @@ export default class CellGrid extends Phaser.Group {
     const { row, col, duration } = opts;
 
     return {
-      duration: duration,
+      duration,
       tween: this.getCell(row, col).flash(opts),
     };
   }
@@ -78,7 +78,7 @@ export default class CellGrid extends Phaser.Group {
     const { row, col, duration } = opts;
 
     return {
-      duration: duration,
+      duration,
       tween: this.getCell(row, col).fakeFlash(opts),
     };
   }

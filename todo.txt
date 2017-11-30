@@ -1,13 +1,25 @@
-- add something to visually distinguish orientations of the grid
-  - probably differently-colored and -shaped objects on each corner,
-    or just around the maze in general
+=== up next ===
+- refactor using `GridPos` type
+- toggle inputEnabled using event bus
+- show click and drag input graphically, steal ideas from elsewhere
+  -> (simon for click)
 
+
+=== on deck ===
 - "fake" flash (not part of input, just a decoy or whatever)
   -> still need to distinguish it achromatically (cool word gahaha)
 - "number" on flash to denote multiple taps
 - "drag" flash that's like paths in the old game but using touch input
+  -> draw this action somehow.
+
+- add something to visually distinguish orientations of the grid
+  - probably differently-colored and -shaped objects on each corner,
+    or just around the maze in general
+
+=== loooong term ===
 
 - currency to buy upgrades like +0.01% delay or something, something
   totally unnoticeable and worthless but it takes a ton of currency to
   buy it and you don't know how little it's going to help until afte
   ryou buy it. lmfao
+

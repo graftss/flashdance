@@ -19,6 +19,7 @@ export default class GameDirector {
     switch (actionData.type) {
       case 'flash': return this.cellGrid.flashCell(actionData.opts);
       case 'fakeflash': return this.cellGrid.fakeFlashCell(actionData.opts);
+      case 'path': return this.wait(actionData.opts); // placeholder
       case 'rotate': return this.cellGrid.rotate(actionData.opts);
       case 'reflect': return this.cellGrid.reflect(actionData.opts);
       case 'wait': return this.wait(actionData.opts);

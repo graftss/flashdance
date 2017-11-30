@@ -2,6 +2,8 @@
 
 type Maybe<T> = T | null;
 
+type GridPos = { col: number, row: number }
+
 // Tweening
 
 interface ITweenableAlpha { alpha: number }
@@ -41,6 +43,11 @@ type FlashOpts = {
   col: number,
 }
 
+type PathOpts = {
+  duration: number,
+  cells: GridPos[],
+}
+
 type RotateOpts = {
   duration: number,
   rotation: Radians,
@@ -56,6 +63,7 @@ type GameActionData =
   { type: 'wait', opts: WaitOpts } |
   { type: 'flash', opts: FlashOpts } |
   { type: 'fakeflash', opts: FlashOpts } |
+  { type: 'path', opts: PathOpts } |
   { type: 'rotate', opts: RotateOpts } |
   { type: 'reflect', opts: ReflectOpts }
 
@@ -66,4 +74,4 @@ type InputTarget =
 
 type GameInput =
   { type: 'down', target: InputTarget } |
-  { type: 'drag', target: InputTarget, dragTargets: InputTarget[] }
+  { type: 'drag', target: InputTarget }
