@@ -1,5 +1,8 @@
-// Tweening
+// Utility
 
+type Maybe<T> = T | null;
+
+// Tweening
 
 interface ITweenableAlpha { alpha: number }
 
@@ -49,3 +52,12 @@ type GameActionData =
   { type: 'flash', opts: FlashOpts } |
   { type: 'rotate', opts: RotateOpts } |
   { type: 'reflect', opts: ReflectOpts }
+
+// Game input
+
+type InputTarget =
+  { type: 'cell', row: number, col: number }
+
+type GameInput =
+  { type: 'down', target: InputTarget } |
+  { type: 'drag', target: InputTarget, dragTargets: InputTarget[] }

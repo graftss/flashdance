@@ -24,6 +24,6 @@ export default class Play extends Phaser.State {
       { type: 'reflect', opts: { reflectX: true, reflectY: true, duration: 500 } },
     ];
 
-    this.director.runActions(actions);
+    this.director.startRound(actions);
   }
 }

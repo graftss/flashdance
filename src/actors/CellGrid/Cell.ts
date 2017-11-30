@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser-ce';
 
+import CellGrid from './CellGrid';
 import Game from '../..';
 import { shiftAnchor } from '../../utils';
 
@@ -8,19 +9,22 @@ const borderColor = 0xffffff;
 
 export default class Cell extends Phaser.Group {
   private flashLayer: Phaser.Graphics;
-  private inputCaptureLayer: Phaser.Sprite;
+  private inputCaptureLayer: Phaser.Graphics;
 
   constructor(
     public game: Game,
-    public parent: Phaser.Group,
+    public grid: CellGrid,
     public x: number,
     public y: number,
     public w: number,
     public h: number,
+    public col: number,
+    public row: number,
   ) {
-    super(game, parent);
+    super(game, grid);
 
     this.initFlashLayer();
+    this.initInputCaptureLayer();
   }
 
   initFlashLayer(): void {
@@ -37,12 +41,6 @@ export default class Cell extends Phaser.Group {
 
   vanishFlashLayer = (): void => {
     this.flashLayer.alpha = 0;
-    // this.flashLayer.scale.x = 0;
-    // this.flashLayer.scale.y = 0;
-  }
-
-  initInputCaptureLayer(): void {
-    this.inputCaptureLayer = this.game.add.sprite(0, 0, this);
   }
 
   flash(opts: FlashOpts): TweenWrapper {
@@ -67,5 +65,24 @@ export default class Cell extends Phaser.Group {
     result.onComplete.add(this.vanishFlashLayer);
 
     return result;
+  }
+
+  initInputCaptureLayer(): void {
+    this.inputCaptureLayer = this.game.add.graphics(0, 0, this);
+    this.inputCaptureLayer.inputEnabled = true;
+
+    shiftAnchor(this.inputCaptureLayer, this.w / 2, this.h / 2);
+
+    this.inputCaptureLayer.beginFill(0, 0);
+    this.inputCaptureLayer.drawRect(0, 0, this.w, this.h);
+    this.inputCaptureLayer.endFill();
+
+    this.inputCaptureLayer.events.onInputDown.add(this.onInputDown);
+  }
+
+  onInputDown = () => {
+    const eventData = { row: this.row, col: this.col };
+
+    this.game.eventBus.inputDownCell.dispatch(eventData);
   }
 }

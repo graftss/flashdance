@@ -1,15 +1,21 @@
 import * as Phaser from 'phaser-ce';
 
+import InputVerifier from './InputVerifier';
 import Game from '../..';
 import CellGrid from '../../actors/CellGrid';
+import { mapJust } from '../../utils';
 
 export default class GameDirector {
+  private inputVerifier: InputVerifier;
+
   constructor(
     private game: Game,
     private cellGroup: CellGrid,
-  ) {}
+  ) {
+    this.inputVerifier = new InputVerifier(game);
+  }
 
-  buildAction = (actionData: GameActionData): GameAction => {
+  private buildAction = (actionData: GameActionData): GameAction => {
     switch (actionData.type) {
       case 'flash': return this.cellGroup.flashCell(actionData.opts);
       case 'rotate': return this.cellGroup.rotate(actionData.opts);
@@ -17,27 +23,29 @@ export default class GameDirector {
     }
   };
 
-  startAction(action: GameAction): void {
+  private startAction(action: GameAction): void {
     action.tween.start();
   }
 
-  onActionComplete(action: GameAction, callback: Function) {
+  private onActionComplete(action: GameAction, callback: Function) {
     action.tween.onComplete.add(callback);
   }
 
-  runAction(action: GameAction, nextActionsData: GameActionData[]) {
-    this.onActionComplete(action, () => this.runActions(nextActionsData));
-    this.startAction(action);
-  }
-
-  runActions(actionDataList: GameActionData[]): void {
+  private runActions(actionDataList: GameActionData[]): void {
     const [first, ...rest] = actionDataList;
     const action = this.buildAction(first);
 
     if (rest.length > 0) {
       this.onActionComplete(action, () => this.runActions(rest));
+    } else {
+      this.onActionComplete(action, () => console.log('actions done!!!'));
     }
 
     this.startAction(action);
+  }
+
+  startRound(actionDataList: GameActionData[]): void {
+    this.inputVerifier.startRound(actionDataList);
+    this.runActions(actionDataList);
   }
 }

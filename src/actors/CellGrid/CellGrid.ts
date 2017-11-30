@@ -31,12 +31,11 @@ export default class CellGrid extends Phaser.Group {
     const hCell = h / rows;
 
     let x = 0;
-    for (let i = 0; i < cols; i++) {
-      this.cells[i] = [];
+    for (let col = 0; col < cols; col++) {
+      this.cells[col] = [];
       let y = 0;
-      for (let j = 0; j < rows; j++) {
-        const cell = new Cell(game, this, x, y, wCell, hCell);
-        this.cells[i][j] = cell;
+      for (let row = 0; row < rows; row++) {
+        this.cells[col][row] = new Cell(game, this, x, y, wCell, hCell, col, row);
         y += hCell;
       }
 
