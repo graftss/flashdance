@@ -1,4 +1,5 @@
 === up next ===
+- show drag action
 - show click and drag input graphically, steal ideas from elsewhere
   -> (simon for click)
 

@@ -83,6 +83,15 @@ export default class CellGrid extends Phaser.Group {
     };
   }
 
+  public path(opts: PathOpts): GameAction {
+    const { duration } = opts;
+
+    return {
+      duration,
+      tween: this.game.tweener.nothing(duration), // placeholder
+    }
+  }
+
   public rotate(opts: RotateOpts): GameAction {
     const { rotation, duration } = opts;
 

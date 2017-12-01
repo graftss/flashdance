@@ -15,6 +15,12 @@ interface ITweenableScale { scale: ScaleObject }
 type Radians = number
 interface ITweenableRotation { rotation: number }
 
+// Game appearance
+
+type FlashLayerOpts = {
+  color: number,
+};
+
 // Game actions
 
 // `duration` denotes how long the action should visually appear to take.

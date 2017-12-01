@@ -1,17 +1,18 @@
 import * as Phaser from 'phaser-ce';
 
 import CellGrid from './CellGrid';
+import FlashLayer from './FlashLayer';
+import Hitbox from '../Hitbox';
 import Game from '../..';
 import { isEqual, labelArgs, shiftAnchor } from '../../utils';
 
-const flashLayerColor = 0xffffff;
-const fakeFlashLayerColor = 0xff0000;
-const borderColor = 0xffffff;
+const flashColor = 0xffffff;
+const fakeFlashColor = 0xff0000;
 
 export default class Cell extends Phaser.Group {
-  private flashLayer: Phaser.Graphics;
-  private fakeFlashLayer: Phaser.Graphics;
-  private hitboxLayer: Phaser.Graphics;
+  private flashLayer: FlashLayer;
+  private fakeFlashLayer: FlashLayer;
+  private hitbox: Hitbox;
   private inputLayer: Phaser.Sprite;
 
   public inputTarget: InputTarget;
@@ -29,10 +30,11 @@ export default class Cell extends Phaser.Group {
   ) {
     super(game, grid);
 
+    this.flashLayer = new FlashLayer(game, this, w, h, { color: flashColor });
+    this.fakeFlashLayer = new FlashLayer(game, this, w, h, { color: fakeFlashColor });
+    this.hitbox = new Hitbox(game, this, 0, 0, w, h);
+
     this.attachEventHandlers();
-    this.initFlashLayer();
-    this.initFakeFlashLayer();
-    this.initHitboxLayer();
     this.initInputLayer();
 
     this.inputTarget = { type: 'cell', cell: { col, row } };
@@ -44,95 +46,19 @@ export default class Cell extends Phaser.Group {
     eventBus.inputEnabled.add(this.setInputEnabled);
   }
 
-  private initFlashLayer(): void {
-    this.flashLayer = this.game.add.graphics(0, 0, this);
-    this.drawFlashLayer(this.flashLayer);
-    this.centerLayer(this.flashLayer);
-    this.resetFlashLayer(this.flashLayer);
-  }
-
-  private centerLayer(layer: PIXI.DisplayObjectContainer): void {
-    shiftAnchor(layer, this.w / 2, this.h / 2);
-  }
-
-  private drawFlashLayer(layer: Phaser.Graphics): void {
-    layer.beginFill(flashLayerColor);
-    layer.drawRoundedRect(0, 0, this.w, this.h, this.w / 10);
-    layer.endFill();
-  }
-
-  private initFakeFlashLayer(): void {
-    this.fakeFlashLayer = this.game.add.graphics(0, 0, this);
-    this.drawFakeFlashLayer(this.fakeFlashLayer);
-    this.centerLayer(this.fakeFlashLayer);
-    this.resetFlashLayer(this.fakeFlashLayer);
-  }
-
-  private drawFakeFlashLayer(layer: Phaser.Graphics): void {
-    layer.beginFill(fakeFlashLayerColor);
-    layer.drawRoundedRect(0, 0, this.w, this.h, this.w / 10);
-    layer.endFill();
-  }
-
-  private resetFlashLayer = (layer: Phaser.Graphics): void => {
-    layer.alpha = 0;
-    layer.scale.x = .7;
-    layer.scale.y = .7;
-  }
-
-  private flashTween(
-    layer: Phaser.Graphics,
-    duration: number,
-  ): TweenWrapper {
-    const { alpha, chain, merge, nothing, scale } = this.game.tweener;
-
-    const fadeInDuration = duration / 5;
-    const growDuration = Math.max(40, duration / 3);
-    const shrinkDuration =  duration - growDuration;
-
-    const scaleEffect = chain([
-      scale(layer, .85, growDuration),
-      scale(layer, .75, shrinkDuration),
-    ]);
-
-    const alphaTween = chain([
-      alpha(layer, 1, fadeInDuration),
-      alpha(layer, 0, duration - fadeInDuration),
-    ]);
-
-    const result = merge([scaleEffect, alphaTween]);
-    result.onComplete.add(() => this.resetFlashLayer(layer));
-
-    return result;
+  public containsPoint(x: number, y: number): boolean {
+    return this.hitbox.containsPoint(x, y);
   }
 
   public flash = (opts: FlashOpts): TweenWrapper => {
     const { delay, duration } = opts;
 
-    return this.flashTween(this.flashLayer, delay || duration);
+    return this.flashLayer.flashTween(delay || duration);
   };
 
   public fakeFlash = (opts: FlashOpts): TweenWrapper => {
-    const { duration } = opts;
-
-    return this.flashTween(this.fakeFlashLayer, duration);
+    return this.fakeFlashLayer.flashTween(opts.duration);
   };
-
-  private initHitboxLayer(): void {
-    this.hitboxLayer = this.game.add.graphics(0, 0, this);
-    this.drawHitboxLayer(this.hitboxLayer);
-  }
-
-  private drawHitboxLayer(layer: Phaser.Graphics): void {
-    // if (this.col === 1 && this.row === 1) {
-    //   layer.beginFill(0x00ff00, 1);
-    // } else {
-    //   layer.beginFill(0, 0);
-    // }
-    layer.beginFill(0, 0);
-    layer.drawRect(0, 0, this.w, this.h);
-    layer.endFill();
-  }
 
   private initInputLayer(): void {
     this.inputLayer = this.getInputLayerSprite();
@@ -146,13 +72,7 @@ export default class Cell extends Phaser.Group {
   // Only sprites can use Phaser's drag events, so we have to convert a
   // transparent graphic to a sprite via the graphics' texture.
   private getInputLayerSprite(): Phaser.Sprite {
-    const layer = this.game.add.graphics(0, 0, this);
-
-    this.drawHitboxLayer(layer);
-    const texture = layer.generateTexture();
-
-    layer.destroy();
-
+    const texture = this.hitbox.generateTexture();
     return this.game.add.sprite(0, 0, texture, undefined, this);
   }
 
@@ -194,10 +114,6 @@ export default class Cell extends Phaser.Group {
   private onDragStop = (): void => {
     this.game.eventBus.inputDragStop.dispatch(this.lastDragTarget);
     this.lastDragTarget = null;
-    this.inputLayer.position.copyFrom(this.hitboxLayer.position);
-  }
-
-  public containsPoint(x: number, y: number): boolean {
-    return this.hitboxLayer.getBounds().contains(x, y);
+    this.inputLayer.position.copyFrom(this.hitbox.getPosition());
   }
 }
