@@ -12,6 +12,14 @@ export default class InputVerifier {
     this.attachHandlers();
   }
 
+  public startRound(actionDataList: GameActionData[]) {
+    this.targetInput = this.actionsToInput(actionDataList);
+    this.nextInputIndex = 0;
+    this.checkpointInputIndex = 0;
+
+    this.dispatchEnableInput();
+  }
+
   private attachHandlers(): void {
     const { eventBus } = this.game;
 
@@ -42,7 +50,7 @@ export default class InputVerifier {
     } else {
       this.onIncorrectInput();
     }
-  };
+  }
 
   private onNewDragTarget = (data: InputTarget) => {
     const nextInput = this.nextInput();
@@ -53,7 +61,7 @@ export default class InputVerifier {
     } else {
       this.onIncorrectInput();
     }
-  };
+  }
 
   private onDragStop = (data: InputTarget) => {
     const nextInput = this.nextInput();
@@ -61,7 +69,7 @@ export default class InputVerifier {
     if (nextInput.type === 'drag') {
       this.onIncorrectInput();
     }
-  };
+  }
 
   private advanceNextInput(): void {
     const nextInputIndex = this.nextInputIndex + 1;
@@ -91,7 +99,7 @@ export default class InputVerifier {
     this.dispatchDisableInput();
   }
 
-  private actionToInput = (actionData: GameActionData): Maybe<GameInput>[] => {
+  private actionToInput = (actionData: GameActionData): Array<Maybe<GameInput>> => {
     switch (actionData.type) {
       case 'flash': {
         const { cell } = actionData.opts;
@@ -112,17 +120,9 @@ export default class InputVerifier {
 
       default: return null;
     }
-  };
+  }
 
   private actionsToInput = (actionDataList: GameActionData[]): GameInput[] => {
     return flatten(mapJust(this.actionToInput, actionDataList));
-  };
-
-  public startRound(actionDataList: GameActionData[]) {
-    this.targetInput = this.actionsToInput(actionDataList);
-    this.nextInputIndex = 0;
-    this.checkpointInputIndex = 0;
-
-    this.dispatchEnableInput();
   }
 }

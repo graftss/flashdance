@@ -14,9 +14,12 @@ export const shiftAnchor = (obj: PIXI.DisplayObject, x: number, y: number) => {
 export const mapJust = <S, T>(f: (s: S) => Maybe<T>, list: S[]): T[] => {
   const result = [];
 
-  for (let i = 0; i < list.length; i++) {
-    const item = f(list[i]);
-    if (item !== null) result.push(item);
+  for (const item of list) {
+    const mappedItem = f(item);
+
+    if (mappedItem !== null) {
+      result.push(mappedItem);
+    }
   }
 
   return result;

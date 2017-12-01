@@ -11,31 +11,13 @@ export default class FlashLayer {
     private parent: Phaser.Group,
     private w: number,
     private h: number,
-    private opts: FlashLayerOpts
+    private opts: FlashLayerOpts,
   ) {
     this.layer = game.add.graphics(0, 0, parent);
     this.drawLayer();
     this.center();
     this.reset();
   }
-
-  private drawLayer(): void {
-    const { color } = this.opts;
-
-    this.layer.beginFill(color);
-    this.layer.drawRoundedRect(0, 0, this.w, this.h, this.w / 10);
-    this.layer.endFill();
-  }
-
-  private center(): void {
-    shiftAnchor(this.layer, this.w / 2, this.h / 2);
-  }
-
-  private reset = (): void => {
-    this.layer.alpha = 0;
-    this.layer.scale.x = .7;
-    this.layer.scale.y = .7;
-  };
 
   public flashTween(duration: number): TweenWrapper {
     const { layer, game } = this;
@@ -59,5 +41,23 @@ export default class FlashLayer {
     result.onComplete.add(this.reset);
 
     return result;
+  }
+
+  private drawLayer(): void {
+    const { color } = this.opts;
+
+    this.layer.beginFill(color);
+    this.layer.drawRoundedRect(0, 0, this.w, this.h, this.w / 10);
+    this.layer.endFill();
+  }
+
+  private center(): void {
+    shiftAnchor(this.layer, this.w / 2, this.h / 2);
+  }
+
+  private reset = (): void => {
+    this.layer.alpha = 0;
+    this.layer.scale.x = .7;
+    this.layer.scale.y = .7;
   }
 }

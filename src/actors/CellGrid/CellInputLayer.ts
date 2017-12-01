@@ -39,14 +39,18 @@ export default class CellInputLayer {
     game.eventBus.inputEnabled.add(this.setInputEnabled);
   }
 
+  public containsPoint(x: number, y: number): boolean {
+    return this.hitbox.containsPoint(x, y);
+  }
+
   private setInputEnabled = (enabled: boolean): void => {
     this.sprite.inputEnabled = enabled;
-  };
+  }
 
   private onInputDown = (): void => {
     this.lastDragTarget = this.inputTarget;
     this.game.eventBus.inputDown.dispatch(this.inputTarget);
-  };
+  }
 
   private onDragUpdate = (_, pointer: Phaser.Pointer): void => {
     const { x, y } = pointer;
@@ -55,7 +59,9 @@ export default class CellInputLayer {
     // for now, ignore drags that take place outside of the grid. maybe
     // in the future this will change, or maybe having to drag outside of
     // the grid will be a feature, or maybe ill kill myself before it matters
-    if (cell === null) return;
+    if (cell === null) {
+      return;
+    }
 
     const { inputTarget } = cell;
 
@@ -63,14 +69,10 @@ export default class CellInputLayer {
       this.lastDragTarget = inputTarget;
       this.game.eventBus.inputDragTarget.dispatch(inputTarget);
     }
-  };
+  }
 
   private onDragStop = (): void => {
     this.game.eventBus.inputDragStop.dispatch(this.lastDragTarget);
     this.sprite.position.copyFrom(this.hitbox.getPosition());
-  };
-
-  public containsPoint(x: number, y: number): boolean {
-    return this.hitbox.containsPoint(x, y);
   }
 }

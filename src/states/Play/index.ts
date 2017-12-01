@@ -8,7 +8,7 @@ export default class Play extends Phaser.State {
   private cellGroup: CellGrid;
   private director: GameDirector;
 
-  create(game: Game) {
+  public create(game: Game) {
     this.cellGroup = new CellGrid(game, 100, 100, 300, 300, 3, 3);
     this.director = new GameDirector(game, this.cellGroup);
 

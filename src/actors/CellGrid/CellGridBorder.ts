@@ -3,7 +3,7 @@ import * as Phaser from 'phaser-ce';
 import Game from '../..';
 
 export default class CellGridBorder extends Phaser.Group {
-  border: Phaser.Graphics;
+  private border: Phaser.Graphics;
 
   constructor(
     public game: Game,
@@ -17,7 +17,7 @@ export default class CellGridBorder extends Phaser.Group {
     this.initBorder();
   }
 
-  initBorder() {
+  private initBorder() {
     this.border = this.game.add.graphics(0, 0, this);
 
     this.border.lineStyle(2, 0xffffff);

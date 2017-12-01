@@ -43,14 +43,6 @@ export default class CellGrid extends Phaser.Group {
     }
   }
 
-  private initBorder() {
-    this.border = new CellGridBorder(this.game, this, 0, 0, this.w, this.h);
-  }
-
-  private getCell(row: number, col: number) {
-    return this.cells[col][row];
-  }
-
   public cellContainingPoint(x: number, y: number): Maybe<Cell> {
     const { cells, cols, rows } = this;
 
@@ -58,7 +50,9 @@ export default class CellGrid extends Phaser.Group {
       for (let row = 0; row < rows; row++) {
         const cell = this.getCell(col, row);
 
-        if (cell.containsPoint(x, y)) return cell;
+        if (cell.containsPoint(x, y)) {
+          return cell;
+        }
       }
     }
 
@@ -89,7 +83,7 @@ export default class CellGrid extends Phaser.Group {
     return {
       duration,
       tween: this.game.tweener.nothing(duration), // placeholder
-    }
+    };
   }
 
   public rotate(opts: RotateOpts): GameAction {
@@ -113,5 +107,13 @@ export default class CellGrid extends Phaser.Group {
       duration,
       tween: this.game.tweener.scale(this, targetScale, duration),
     };
+  }
+
+  private initBorder() {
+    this.border = new CellGridBorder(this.game, this, 0, 0, this.w, this.h);
+  }
+
+  private getCell(row: number, col: number) {
+    return this.cells[col][row];
   }
 }

@@ -15,6 +15,12 @@ export default class GameDirector {
     this.inputVerifier = new InputVerifier(game);
   }
 
+  public startRound(actionDataList: GameActionData[]): void {
+    this.runActions(actionDataList, () => {
+      this.inputVerifier.startRound(actionDataList);
+    });
+  }
+
   private buildAction = (actionData: GameActionData): GameAction => {
     switch (actionData.type) {
       case 'flash': return this.cellGrid.flashCell(actionData.opts);
@@ -24,7 +30,7 @@ export default class GameDirector {
       case 'reflect': return this.cellGrid.reflect(actionData.opts);
       case 'wait': return this.wait(actionData.opts);
     }
-  };
+  }
 
   private wait(opts: WaitOpts): GameAction {
     const { duration } = opts;
@@ -39,11 +45,11 @@ export default class GameDirector {
     action.tween.start();
   }
 
-  private onActionComplete(action: GameAction, callback: Function) {
+  private onActionComplete(action: GameAction, callback: () => void) {
     action.tween.onComplete.add(callback);
   }
 
-  private runActions(actionDataList: GameActionData[], onComplete: Function): void {
+  private runActions(actionDataList: GameActionData[], onComplete: () => void): void {
     const [first, ...rest] = actionDataList;
     const action = this.buildAction(first);
 
@@ -54,11 +60,5 @@ export default class GameDirector {
     }
 
     this.startAction(action);
-  }
-
-  startRound(actionDataList: GameActionData[]): void {
-    this.runActions(actionDataList, () => {
-      this.inputVerifier.startRound(actionDataList);
-    });
   }
 }
