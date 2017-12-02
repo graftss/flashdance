@@ -88,7 +88,7 @@ export default class InputVerifier {
   private onIncorrectInput() {
     this.nextInputIndex = this.checkpointInputIndex;
     console.log('wrong input');
-    console.log(this.checkpointInputIndex, this.nextInput())
+    console.log(this.checkpointInputIndex, this.nextInput());
   }
 
   private onCompleteInput() {

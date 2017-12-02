@@ -6,7 +6,7 @@ import { vec2, shiftAnchor } from '../../utils';
 
 export default class FlashLayer {
   private layer: Phaser.Graphics;
-  private origPos: Phaser.Point;
+  private origPos: Vec2;
 
   constructor(
     public game: Game,
@@ -18,26 +18,33 @@ export default class FlashLayer {
     this.layer = game.add.graphics(0, 0, parentCell);
 
     this.center();
-    this.origPos = this.layer.position.clone();
+    this.origPos = { x: this.layer.position.x, y: this.layer.position.y };
 
     this.drawLayer();
     this.reset();
   }
 
   public flashTween(duration: number): TweenWrapper {
-    const { fadeInOut, game, layer, reset, ripple } = this;
+    const result = this.game.tweener.merge([
+      this.ripple(duration),
+      this.fadeInOut(duration, duration / 5),
+    ]);
 
-    const result = game.tweener.merge([ripple(duration), fadeInOut(duration / 5, duration)]);
-    result.onComplete.add(reset);
+    result.onComplete.add(this.reset);
 
     return result;
   }
 
-  public pathTween(path: Array<Vec2>, duration: number): TweenWrapper {
-    const alpha = this.fadeInOut(duration / 10, duration);
-    const movement = this.path(path, duration);
+  public pathTween(path: Vec2[], duration: number): TweenWrapper {
+    const result = this.game.tweener.merge([
+      this.path(path, duration),
+      this.fadeInOut(duration, duration / 10),
+      this.ripple(30),
+    ]);
 
-    return this.game.tweener.merge([alpha, movement]);
+    result.onComplete.add(this.reset);
+
+    return result;
   }
 
   private drawLayer(): void {
@@ -54,7 +61,8 @@ export default class FlashLayer {
     this.layer.alpha = 0;
     this.layer.scale.x = .7;
     this.layer.scale.y = .7;
-    this.layer.position = this.origPos;
+    this.layer.position.x = this.origPos.x;
+    this.layer.position.y = this.origPos.y;
   }
 
   private brighten(duration: number): Phaser.Tween {
@@ -62,10 +70,10 @@ export default class FlashLayer {
   }
 
   private dim(duration: number): Phaser.Tween {
-    return this.game.tweener.alpha(this.layer, 0, duration);
+    return this.game.tweener.alpha(this.layer, 0, duration / 5);
   }
 
-  private fadeInOut = (fadeDuration: number, duration: number): TweenWrapper => {
+  private fadeInOut = (duration: number, fadeDuration: number): TweenWrapper => {
     if (fadeDuration > duration) {
       throw new Error('fadeInOut: `fadeDuration` should be shorter than `duration`');
     }
@@ -73,9 +81,9 @@ export default class FlashLayer {
     const { chain, nothing } = this.game.tweener;
 
     return chain([
-      this.brighten(fadeDuration / 3 * 2),
+      this.brighten(fadeDuration / 4 * 3),
       nothing(duration - fadeDuration),
-      this.dim(fadeDuration / 3),
+      this.dim(fadeDuration / 4),
     ]);
   }
 
@@ -87,8 +95,8 @@ export default class FlashLayer {
     const shrinkDuration =  duration - growDuration;
 
     return chain([
-      scale(layer, .85, growDuration),
-      scale(layer, .75, shrinkDuration),
+      scale(layer, .8, growDuration),
+      scale(layer, .76, shrinkDuration),
     ]);
   }
 
@@ -96,7 +104,7 @@ export default class FlashLayer {
     return this.game.tweener.position(this.layer, position, duration);
   }
 
-  private path(path: Array<Vec2>, duration: number): TweenWrapper {
+  private path(path: Vec2[], duration: number): TweenWrapper {
     const { plus, minus } = vec2;
     const { chain, nothing } = this.game.tweener;
 
