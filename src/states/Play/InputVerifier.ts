@@ -18,6 +18,8 @@ export default class InputVerifier {
     this.checkpointInputIndex = 0;
 
     this.dispatchEnableInput();
+
+    console.log(this.targetInput);
   }
 
   private attachHandlers(): void {
@@ -45,8 +47,8 @@ export default class InputVerifier {
 
     if (nextInput.type === 'down' && isEqual(nextInput.target, data)) {
       console.log('correct input');
+      this.checkpointInputIndex = this.nextInputIndex;
       this.advanceNextInput();
-      this.updateCheckpointInput();
     } else {
       this.onIncorrectInput();
     }
@@ -68,6 +70,8 @@ export default class InputVerifier {
 
     if (nextInput.type === 'drag') {
       this.onIncorrectInput();
+    } else {
+      this.checkpointInputIndex = this.nextInputIndex;
     }
   }
 
@@ -81,17 +85,10 @@ export default class InputVerifier {
     }
   }
 
-  private updateCheckpointInput(): void {
-    const nextInput = this.nextInput();
-
-    switch (nextInput.type) {
-      case 'down': this.checkpointInputIndex = this.nextInputIndex;
-    }
-  }
-
   private onIncorrectInput() {
     this.nextInputIndex = this.checkpointInputIndex;
     console.log('wrong input');
+    console.log(this.checkpointInputIndex, this.nextInput())
   }
 
   private onCompleteInput() {
