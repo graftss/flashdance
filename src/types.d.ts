@@ -4,6 +4,8 @@ type Maybe<T> = T | null;
 
 type GridPos = { col: number, row: number }
 
+type Vec2 = { x: number, y: number }
+
 // Tweening
 
 interface ITweenableAlpha { alpha: number }
@@ -14,6 +16,8 @@ interface ITweenableScale { scale: ScaleObject }
 
 type Radians = number
 interface ITweenableRotation { rotation: number }
+
+interface ITweenablePosition { position: Vec2 }
 
 // Game appearance
 

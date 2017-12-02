@@ -28,3 +28,8 @@ export const mapJust = <S, T>(f: (s: S) => Maybe<T>, list: S[]): T[] => {
 export const cellTarget = (cell: GridPos): InputTarget => ({ type: 'cell', cell });
 
 export const labelArgs = label => (...args) => console.log(label, ...args);
+
+export const vec2 = {
+  plus: (v: Vec2, w: Vec2): Vec2 => ({ x: v.x + w.x, y: v.y + w.y }),
+  minus: (v: Vec2, w: Vec2): Vec2 => ({ x: v.x - w.x, y: v.y - w.y }),
+};

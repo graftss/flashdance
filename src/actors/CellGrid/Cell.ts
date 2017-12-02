@@ -48,4 +48,8 @@ export default class Cell extends Phaser.Group {
   public fakeFlash = (opts: FlashOpts): TweenWrapper => {
     return this.fakeFlashLayer.flashTween(opts.duration);
   }
+
+  public path = (positions: Array<Vec2>, duration: number): TweenWrapper => {
+    return this.flashLayer.pathTween(positions, duration);
+  }
 }

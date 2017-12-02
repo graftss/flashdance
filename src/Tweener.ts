@@ -11,6 +11,14 @@ export default class Tweener {
     return this.game.add.tween({}).to({}, duration);
   }
 
+  public position = (
+    obj: ITweenablePosition,
+    to: Vec2,
+    duration: number,
+  ): Phaser.Tween => {
+    return this.game.add.tween(obj.position).to(to, duration);
+  }
+
   public alpha = (
     obj: ITweenableAlpha,
     to: number,

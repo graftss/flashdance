@@ -3,6 +3,7 @@ import * as Phaser from 'phaser-ce';
 import Cell from './Cell';
 import CellGridBorder from './CellGridBorder';
 import Game from '../..';
+import GridPathLayer from './GridPathLayer';
 import { shiftAnchor } from '../../utils';
 
 export default class CellGrid extends Phaser.Group {
@@ -78,11 +79,15 @@ export default class CellGrid extends Phaser.Group {
   }
 
   public path(opts: PathOpts): GameAction {
-    const { duration } = opts;
+    const { cells, duration } = opts;
+
+    const positions = cells
+      .map(this.getCellByGridPos)
+      .map(cell => cell.position)
 
     return {
       duration,
-      tween: this.game.tweener.nothing(duration), // placeholder
+      tween: this.getCellByGridPos(cells[0]).path(positions, duration),
     };
   }
 
@@ -115,5 +120,9 @@ export default class CellGrid extends Phaser.Group {
 
   private getCell(row: number, col: number) {
     return this.cells[col][row];
+  }
+
+  private getCellByGridPos = ({ col, row }: GridPos) => {
+    return this.getCell(row, col);
   }
 }
