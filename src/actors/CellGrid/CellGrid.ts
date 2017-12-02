@@ -81,13 +81,16 @@ export default class CellGrid extends Phaser.Group {
   public path(opts: PathOpts): GameAction {
     const { cells, duration } = opts;
 
-    const positions = cells
+    const originCell = cells[0];
+    const pathCells = cells.slice(1);
+
+    const pathPositions = pathCells
       .map(this.getCellByGridPos)
-      .map(cell => cell.position)
+      .map(cell => cell.position);
 
     return {
       duration,
-      tween: this.getCellByGridPos(cells[0]).path(positions, duration),
+      tween: this.getCellByGridPos(originCell).path(pathPositions, duration),
     };
   }
 

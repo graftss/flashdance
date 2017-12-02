@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser-ce';
 
+import Cell from './Cell';
 import Game from '../..';
 import { vec2, shiftAnchor } from '../../utils';
 
@@ -9,12 +10,12 @@ export default class FlashLayer {
 
   constructor(
     public game: Game,
-    private parent: Phaser.Group,
+    private parentCell: Cell,
     private w: number,
     private h: number,
     private opts: FlashLayerOpts,
   ) {
-    this.layer = game.add.graphics(0, 0, parent);
+    this.layer = game.add.graphics(0, 0, parentCell);
 
     this.center();
     this.origPos = this.layer.position.clone();
@@ -26,28 +27,17 @@ export default class FlashLayer {
   public flashTween(duration: number): TweenWrapper {
     const { fadeInOut, game, layer, reset, ripple } = this;
 
-    const result = game.tweener.merge([ripple(duration), fadeInOut(duration / 10, duration)]);
+    const result = game.tweener.merge([ripple(duration), fadeInOut(duration / 5, duration)]);
     result.onComplete.add(reset);
 
     return result;
   }
 
-  public pathTween(positions: Array<Vec2>, duration: number) {
-    const { plus, minus } = vec2;
-    const { chain, merge } = this.game.tweener;
+  public pathTween(path: Array<Vec2>, duration: number): TweenWrapper {
+    const alpha = this.fadeInOut(duration / 10, duration);
+    const movement = this.path(path, duration);
 
-    const parentPosition = positions.shift();
-    const pathPositions = positions.map(
-      pos => plus(this.origPos, minus(pos, parentPosition))
-    );
-
-    const movement = chain(pathPositions.map(pos => (
-      this.moveTo(pos, duration / positions.length)
-    )));
-
-    const alpha = this.fadeInOut(duration / 5, duration);
-
-    return merge([alpha, movement]);
+    return this.game.tweener.merge([alpha, movement]);
   }
 
   private drawLayer(): void {
@@ -83,9 +73,9 @@ export default class FlashLayer {
     const { chain, nothing } = this.game.tweener;
 
     return chain([
-      this.brighten(fadeDuration / 2),
+      this.brighten(fadeDuration / 3 * 2),
       nothing(duration - fadeDuration),
-      this.dim(fadeDuration / 2),
+      this.dim(fadeDuration / 3),
     ]);
   }
 
@@ -104,5 +94,26 @@ export default class FlashLayer {
 
   private moveTo(position: Vec2, duration: number): Phaser.Tween {
     return this.game.tweener.position(this.layer, position, duration);
+  }
+
+  private path(path: Array<Vec2>, duration: number): TweenWrapper {
+    const { plus, minus } = vec2;
+    const { chain, nothing } = this.game.tweener;
+
+    const pathStepDuration = duration / (path.length + 2);
+
+    // the `path` positions are relative to `Cell` objects, not our
+    // `layer`; to fix this, we add to each `path` position the difference
+    // between our parent `Cell` and our `layer`
+    const layerToCellOffset = minus(this.origPos, this.parentCell.position);
+    const relativePath = path.map(p => plus(p, layerToCellOffset));
+
+    const pathTweens = relativePath.map(pos => this.moveTo(pos, pathStepDuration));
+
+    return chain([
+      nothing(pathStepDuration),
+      ...pathTweens,
+      nothing(pathStepDuration),
+    ]);
   }
 }
