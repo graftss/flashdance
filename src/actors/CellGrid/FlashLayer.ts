@@ -4,51 +4,60 @@ import Cell from './Cell';
 import Game from '../..';
 import { vec2, shiftAnchor } from '../../utils';
 
-export default class FlashLayer {
-  private layer: Phaser.Graphics;
-  private origPos: Vec2;
+const flashColor = 0xffffff;
+const fakeFlashColor = 0xff0000;
+
+export default class FlashLayer extends Phaser.Group {
+  public layer: Phaser.Graphics;
 
   constructor(
     public game: Game,
-    private parentCell: Cell,
+    public parent: Phaser.Group,
     private w: number,
     private h: number,
     private opts: FlashLayerOpts,
   ) {
-    this.layer = game.add.graphics(0, 0, parentCell);
+    super(game, parent);
+
+    this.layer = game.add.graphics(0, 0, this);
 
     this.center();
-    this.origPos = { x: this.layer.position.x, y: this.layer.position.y };
 
-    this.drawLayer();
     this.reset();
   }
 
-  public flashTween(duration: number): TweenWrapper {
-    const result = this.game.tweener.merge([
-      this.ripple(duration),
-      this.fadeInOut(duration, duration / 5),
-    ]);
+  public flashTween(originCell: Cell, duration: number): GameAction {
+    originCell.addChild(this);
+    const tween = this.flash(duration, flashColor);
 
-    result.onComplete.add(this.reset);
-
-    return result;
+    return { duration, tween };
   }
 
-  public pathTween(path: Vec2[], duration: number): TweenWrapper {
-    const result = this.game.tweener.merge([
+  public fakeFlashTween(originCell: Cell, duration: number): GameAction {
+    originCell.addChild(this);
+    const tween = this.flash(duration, fakeFlashColor);
+
+    return { duration, tween };
+  }
+
+  public pathTween(originCell: Cell, path: Vec2[], duration: number): GameAction {
+    originCell.addChild(this);
+
+    this.drawLayer(flashColor);
+
+    const tween = this.game.tweener.merge([
       this.path(path, duration),
       this.fadeInOut(duration, duration / 10),
       this.ripple(30),
     ]);
 
-    result.onComplete.add(this.reset);
+    tween.onComplete.add(this.reset);
 
-    return result;
+    return { duration, tween };
   }
 
-  private drawLayer(): void {
-    this.layer.beginFill(this.opts.color);
+  private drawLayer(color: number): void {
+    this.layer.beginFill(color);
     this.layer.drawRoundedRect(0, 0, this.w, this.h, this.w / 10);
     this.layer.endFill();
   }
@@ -58,11 +67,11 @@ export default class FlashLayer {
   }
 
   private reset = (): void => {
+    this.layer.clear();
     this.layer.alpha = 0;
     this.layer.scale.x = .7;
     this.layer.scale.y = .7;
-    this.layer.position.x = this.origPos.x;
-    this.layer.position.y = this.origPos.y;
+    this.position = new Phaser.Point(0, 0);
   }
 
   private brighten(duration: number): Phaser.Tween {
@@ -101,7 +110,20 @@ export default class FlashLayer {
   }
 
   private moveTo(position: Vec2, duration: number): Phaser.Tween {
-    return this.game.tweener.position(this.layer, position, duration);
+    return this.game.tweener.position(this, position, duration);
+  }
+
+  private flash(duration: number, color: number): TweenWrapper {
+    this.drawLayer(color);
+
+    const result = this.game.tweener.merge([
+      this.ripple(duration),
+      this.fadeInOut(duration, duration / 5),
+    ]);
+
+    result.onComplete.add(this.reset);
+
+    return result;
   }
 
   private path(path: Vec2[], duration: number): TweenWrapper {
@@ -110,17 +132,9 @@ export default class FlashLayer {
 
     const pathStepDuration = duration / (path.length + 2);
 
-    // the `path` positions are relative to `Cell` objects, not our
-    // `layer`; to fix this, we add to each `path` position the difference
-    // between our parent `Cell` and our `layer`
-    const layerToCellOffset = minus(this.origPos, this.parentCell.position);
-    const relativePath = path.map(p => plus(p, layerToCellOffset));
-
-    const pathTweens = relativePath.map(pos => this.moveTo(pos, pathStepDuration));
-
     return chain([
       nothing(pathStepDuration),
-      ...pathTweens,
+      ...path.map(pos => this.moveTo(pos, pathStepDuration)),
       nothing(pathStepDuration),
     ]);
   }

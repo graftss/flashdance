@@ -7,7 +7,7 @@ import { isEqual } from '../../utils';
 
 export default class CellInputLayer {
   private hitbox: Hitbox;
-  private sprite: Phaser.Sprite;
+  public sprite: Phaser.Sprite;
 
   private lastDragTarget: InputTarget;
 

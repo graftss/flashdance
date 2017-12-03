@@ -2,13 +2,15 @@ import * as Phaser from 'phaser-ce';
 
 import Cell from './Cell';
 import CellGridBorder from './CellGridBorder';
+import FlashLayer from './FlashLayer';
 import Game from '../..';
 import GridPathLayer from './GridPathLayer';
-import { shiftAnchor } from '../../utils';
+import { shiftAnchor, vec2 } from '../../utils';
 
 export default class CellGrid extends Phaser.Group {
   private cells: Cell[][] = [];
   private border: CellGridBorder;
+  private flashLayer: FlashLayer;
 
   constructor(
     public game: Game,
@@ -42,6 +44,8 @@ export default class CellGrid extends Phaser.Group {
 
       x += wCell;
     }
+
+    this.flashLayer = new FlashLayer(this.game, this, wCell, hCell, { color: 0x0000ff });
   }
 
   public cellContainingPoint(x: number, y: number): Maybe<Cell> {
@@ -61,37 +65,29 @@ export default class CellGrid extends Phaser.Group {
   }
 
   public flashCell(opts: FlashOpts): GameAction {
-    const { cell: { col, row }, duration } = opts;
+    const { cell, duration } = opts;
+    const originCell = this.getCellByGridPos(cell);
 
-    return {
-      duration,
-      tween: this.getCell(row, col).flash(opts),
-    };
+    return this.flashLayer.flashTween(originCell, duration);
   }
 
   public fakeFlashCell(opts: FlashOpts): GameAction {
-    const { cell: { col, row }, duration } = opts;
+    const { cell, duration } = opts;
+    const originCell = this.getCellByGridPos(cell);
 
-    return {
-      duration,
-      tween: this.getCell(row, col).fakeFlash(opts),
-    };
+    return this.flashLayer.fakeFlashTween(originCell, duration);
   }
 
   public path(opts: PathOpts): GameAction {
     const { cells, duration } = opts;
+    const originCell = this.getCellByGridPos(cells[0]);
 
-    const originCell = cells[0];
-    const pathCells = cells.slice(1);
-
-    const pathPositions = pathCells
+    const pathPositions = cells
+      .slice(1)
       .map(this.getCellByGridPos)
-      .map(cell => cell.position);
+      .map(cell => vec2.minus(cell.position, originCell.position));
 
-    return {
-      duration,
-      tween: this.getCellByGridPos(originCell).path(pathPositions, duration),
-    };
+    return this.flashLayer.pathTween(originCell, pathPositions, duration);
   }
 
   public rotate(opts: RotateOpts): GameAction {

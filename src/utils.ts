@@ -1,8 +1,4 @@
-import * as lodashIsEqual from 'lodash.isequal';
-import * as lodashFlatten from 'lodash.flatten';
-
-export const isEqual = lodashIsEqual;
-export const flatten = lodashFlatten;
+export { flatten, isEqual } from 'lodash';
 
 export const shiftAnchor = (obj: PIXI.DisplayObject, x: number, y: number) => {
   obj.pivot.x += x;
