@@ -7,6 +7,8 @@ interface ITrailData {
 }
 
 export default class TrailManager {
+  private width: number;
+  private height: number;
   private bmp: Phaser.BitmapData;
   private ctx: CanvasRenderingContext2D;
   private trailed: ITrailData[] = [];
@@ -14,7 +16,10 @@ export default class TrailManager {
   constructor(
     private game: Phaser.Game,
   ) {
-    this.bmp = game.add.bitmapData(game.width, game.height);
+    this.width = game.width;
+    this.height = game.height;
+
+    this.bmp = game.add.bitmapData(this.width, this.height);
     this.ctx = this.bmp.context;
 
     this.bmp.addToWorld();
@@ -37,6 +42,10 @@ export default class TrailManager {
         return;
       }
     }
+  }
+
+  public clear() {
+    this.ctx.clearRect(0, 0, this.width, this.height);
   }
 
   private update(dt: number) {

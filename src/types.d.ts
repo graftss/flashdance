@@ -49,12 +49,13 @@ type WaitOpts = {
 type FlashOpts = {
   duration: number,
   delay?: number,
-  cell: GridPos,
+  origin: GridPos,
 }
 
 type PathOpts = {
   duration: number,
-  cells: GridPos[],
+  origin: GridPos,
+  path: GridPos[],
 }
 
 type RotateOpts = {

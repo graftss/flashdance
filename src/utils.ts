@@ -1,4 +1,4 @@
-export { flatten, isEqual } from 'lodash';
+export { flatten, isEqual, random } from 'lodash';
 
 export const shiftAnchor = (obj: PIXI.DisplayObject, x: number, y: number) => {
   obj.pivot.x += x;

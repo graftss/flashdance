@@ -99,17 +99,17 @@ export default class InputVerifier {
   private actionToInput = (actionData: GameActionData): Array<Maybe<GameInput>> => {
     switch (actionData.type) {
       case 'flash': {
-        const { cell } = actionData.opts;
+        const { origin } = actionData.opts;
 
-        return [{ type: 'down', target: cellTarget(cell) }];
+        return [{ type: 'down', target: cellTarget(origin) }];
       }
 
       case 'path': {
-        const { cells } = actionData.opts;
-        const result: GameInput[] = [{ type: 'down', target: cellTarget(cells[0]) }];
+        const { origin, path } = actionData.opts;
+        const result: GameInput[] = [{ type: 'down', target: cellTarget(origin) }];
 
-        for (let i = 1; i < cells.length; i++) {
-          result.push({ type: 'drag', target: cellTarget(cells[i]) });
+        for (const gridPos of path) {
+          result.push({ type: 'drag', target: cellTarget(gridPos) });
         }
 
         return result;

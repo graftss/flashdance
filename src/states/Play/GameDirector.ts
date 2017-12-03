@@ -1,21 +1,36 @@
 import * as Phaser from 'phaser-ce';
 
+import ActionSequencer from './ActionSequencer';
 import InputVerifier from './InputVerifier';
 import Game from '../..';
 import CellGrid from '../../actors/CellGrid';
 import { mapJust } from '../../utils';
 
 export default class GameDirector {
+  private actionSequencer: ActionSequencer;
   private inputVerifier: InputVerifier;
+  private round: number;
 
   constructor(
     private game: Game,
     private cellGrid: CellGrid,
   ) {
     this.inputVerifier = new InputVerifier(game);
+    this.actionSequencer = new ActionSequencer(cellGrid.rows, cellGrid.cols);
   }
 
-  public startRound(actionDataList: GameActionData[]): void {
+  public start(): void {
+    this.round = 1;
+    this.startNextRound();
+  }
+
+  private startNextRound(): void {
+    this.startRound(this.round);
+  }
+
+  private startRound(round: number): void {
+    const actionDataList = this.actionSequencer.roundActions(round);
+
     this.runActions(actionDataList, () => {
       this.inputVerifier.startRound(actionDataList);
     });
