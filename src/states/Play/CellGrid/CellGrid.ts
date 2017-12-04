@@ -11,7 +11,6 @@ export default class CellGrid extends Phaser.Group {
   private cellHeight: number;
   private cells: Cell[][] = [];
   private border: CellGridBorder;
-  private flashLayer: FlashLayer;
 
   constructor(
     public game: Game,
@@ -27,7 +26,6 @@ export default class CellGrid extends Phaser.Group {
     shiftAnchor(this, w / 2, h / 2);
     this.initCells();
     this.initBorder();
-    this.initFlashLayer();
   }
 
   public cellContainingPoint(x: number, y: number): Maybe<Cell> {
@@ -49,15 +47,17 @@ export default class CellGrid extends Phaser.Group {
   public flashCell(opts: FlashOpts): GameAction {
     const { origin, duration } = opts;
     const originCell = this.getCellByGridPos(origin);
+    const flashLayer = this.newFlashLayer();
 
-    return this.flashLayer.flashTween(originCell, duration);
+    return flashLayer.flashTween(originCell, duration);
   }
 
   public fakeFlashCell(opts: FlashOpts): GameAction {
     const { origin, duration } = opts;
     const originCell = this.getCellByGridPos(origin);
+    const flashLayer = this.newFlashLayer();
 
-    return this.flashLayer.fakeFlashTween(originCell, duration);
+    return flashLayer.fakeFlashTween(originCell, duration);
   }
 
   public path(opts: PathOpts): GameAction {
@@ -65,8 +65,9 @@ export default class CellGrid extends Phaser.Group {
 
     const originCell = this.getCellByGridPos(origin);
     const pathPositions = path.map(this.pathPositionMap(originCell));
+    const flashLayer = this.newFlashLayer();
 
-    return this.flashLayer.pathTween(originCell, pathPositions, duration);
+    return flashLayer.pathTween(originCell, pathPositions, duration);
   }
 
   public rotate(opts: RotateOpts): GameAction {
@@ -114,9 +115,12 @@ export default class CellGrid extends Phaser.Group {
     this.border = new CellGridBorder(this.game, this, 0, 0, this.w, this.h);
   }
 
-  private initFlashLayer(): void {
-    this.flashLayer = new FlashLayer(this.game, this.cellWidth, this.cellHeight);
-    this.addChild(this.flashLayer);
+  private newFlashLayer(): FlashLayer {
+    const flashLayer = new FlashLayer(this.game, this.cellWidth, this.cellHeight);
+
+    this.addChild(flashLayer);
+
+    return flashLayer;
   }
 
   private getCell(row: number, col: number): Cell {

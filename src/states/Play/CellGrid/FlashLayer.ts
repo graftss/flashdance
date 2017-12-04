@@ -12,6 +12,7 @@ export default class FlashLayer extends Phaser.Group {
   public emitter: Phaser.Particles.Arcade.Emitter;
 
   private moving: boolean = false;
+  private lastTrailPos: Phaser.Point = new Phaser.Point(0, 0);
 
   constructor(
     public game: Game,
@@ -22,7 +23,11 @@ export default class FlashLayer extends Phaser.Group {
 
     this.layer = game.add.graphics(0, 0, this);
     this.center();
-    this.reset();
+    this.layer.alpha = 0;
+    this.layer.scale.x = .7;
+    this.layer.scale.y = .7;
+
+    this.destroy = this.destroy.bind(this);
   }
 
   public flashTween(originCell: Cell, duration: number): GameAction {
@@ -44,13 +49,8 @@ export default class FlashLayer extends Phaser.Group {
 
     this.drawLayer(flashColor);
 
-    const tween = this.game.tweener.merge([
-      this.path(path, duration),
-      this.fadeInOut(duration, duration / 10),
-      this.ripple(30),
-    ]);
-
-    tween.onComplete.add(this.reset);
+    const tween = this.path(path, duration);
+    tween.onComplete.add(this.destroy);
 
     return { duration, tween };
   }
@@ -65,20 +65,12 @@ export default class FlashLayer extends Phaser.Group {
     shiftAnchor(this.layer, this.w / 2, this.h / 2);
   }
 
-  private reset = (): void => {
-    this.layer.clear();
-    this.layer.alpha = 0;
-    this.layer.scale.x = .7;
-    this.layer.scale.y = .7;
-    this.position = new Phaser.Point(0, 0);
-  }
-
   private brighten(duration: number): Phaser.Tween {
     return this.game.tweener.alpha(this.layer, 1, duration);
   }
 
   private dim(duration: number): Phaser.Tween {
-    return this.game.tweener.alpha(this.layer, 0, duration / 5);
+    return this.game.tweener.alpha(this.layer, 0, duration);
   }
 
   private fadeInOut = (duration: number, fadeDuration: number): TweenWrapper => {
@@ -89,13 +81,13 @@ export default class FlashLayer extends Phaser.Group {
     const { chain, nothing } = this.game.tweener;
 
     return chain([
-      this.brighten(fadeDuration / 4 * 3),
+      this.brighten(fadeDuration / 2),
       nothing(duration - fadeDuration),
-      this.dim(fadeDuration / 4),
+      this.dim(fadeDuration / 2),
     ]);
   }
 
-  private ripple = (duration: number) => {
+  private ripple = (duration: number): TweenWrapper => {
     const { game, layer } = this;
     const { scale, chain } = game.tweener;
 
@@ -104,7 +96,7 @@ export default class FlashLayer extends Phaser.Group {
 
     return chain([
       scale(layer, .8, growDuration),
-      scale(layer, .76, shrinkDuration),
+      scale(layer, .78, shrinkDuration),
     ]);
   }
 
@@ -134,27 +126,33 @@ export default class FlashLayer extends Phaser.Group {
       this.fadeInOut(duration, duration / 5),
     ]);
 
-    result.onComplete.add(this.reset);
+    result.onComplete.add(this.destroy);
 
     return result;
   }
 
   private path(path: Vec2[], duration: number): TweenWrapper {
+    const { scale, chain, nothing } = this.game.tweener;
     const { plus, minus } = vec2;
-    const { chain, nothing } = this.game.tweener;
-
-    const pathStepDuration = duration / (path.length + 2);
+    const pathStepDuration = (duration - 400) / (path.length);
 
     return chain([
-      nothing(pathStepDuration),
+      this.brighten(150),
+      nothing(50),
       ...path.map(pos => this.moveTo(pos, pathStepDuration)),
-      nothing(pathStepDuration),
+      nothing(50),
+      this.dim(150),
     ]);
   }
 
+  private distanceFromLastTrail() {
+    return this.lastTrailPos.distance(this.position);
+  }
+
   public update() {
-    if (this.moving) {
+    if (this.distanceFromLastTrail() > 20) {
       this.spawnPathParticle();
+      this.lastTrailPos = this.position.clone();
     }
   }
 }

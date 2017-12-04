@@ -37,7 +37,7 @@ export default class ParticleManager extends Phaser.Particles.Arcade.Emitter {
   private emitTrail(x: number, y: number) {
     const trail = this.game.add.sprite(x, y, this.textures.trail);
 
-    this.fade(trail, 500).start();
+    this.fade(trail, 300).start();
   }
 
   private fade(sprite: Phaser.Sprite, duration: number): Phaser.Tween {
