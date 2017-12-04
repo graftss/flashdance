@@ -9,20 +9,17 @@ const fakeFlashColor = 0xff0000;
 
 export default class FlashLayer extends Phaser.Group {
   public layer: Phaser.Graphics;
+  public emitter: Phaser.Particles.Arcade.Emitter;
 
   constructor(
     public game: Game,
-    public parent: Phaser.Group,
     private w: number,
     private h: number,
-    private opts: FlashLayerOpts,
   ) {
-    super(game, parent);
+    super(game);
 
     this.layer = game.add.graphics(0, 0, this);
-
     this.center();
-
     this.reset();
   }
 
@@ -110,7 +107,19 @@ export default class FlashLayer extends Phaser.Group {
   }
 
   private moveTo(position: Vec2, duration: number): Phaser.Tween {
-    return this.game.tweener.position(this, position, duration);
+    return this.game.tweener.position(this, position, duration)
+      .onUpdateCallback(() => {
+        this.spawnPathParticle();
+      });
+  }
+
+  private spawnPathParticle(): void {
+    const { x, y } = this.worldPosition;
+
+    this.game.eventBus.spawnParticle.dispatch({
+      position: { x, y },
+      type: 'path',
+    });
   }
 
   private flash(duration: number, color: number): TweenWrapper {

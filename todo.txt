@@ -2,7 +2,7 @@
 - show drag action
 - show click and drag input graphically, steal ideas from elsewhere
   -> (simon for click)
-
+- particle emitter during paths
 
 === on deck ===
 - "fake" flash (not part of input, just a decoy or whatever)
@@ -15,6 +15,13 @@
   - probably differently-colored and -shaped objects on each corner,
     or just around the maze in general
 
+- make sure the cell sits at the end of the path
+  - impose minimum waiting length at the start and end i guess
+
+- pause between rounds
+
+- lint types.d.ts
+- rename `inputDragTarget` -> `inputDragOver`
 === loooong term ===
 
 - currency to buy upgrades like +0.01% delay or something, something

@@ -4,15 +4,14 @@ import Cell from './Cell';
 import CellGridBorder from './CellGridBorder';
 import FlashLayer from './FlashLayer';
 import Game from '../..';
-import GridPathLayer from './GridPathLayer';
-import TrailManager from './TrailManager';
 import { shiftAnchor, vec2 } from '../../utils';
 
 export default class CellGrid extends Phaser.Group {
+  private cellWidth: number;
+  private cellHeight: number;
   private cells: Cell[][] = [];
   private border: CellGridBorder;
   private flashLayer: FlashLayer;
-  private trailManager: TrailManager;
 
   constructor(
     public game: Game,
@@ -25,11 +24,10 @@ export default class CellGrid extends Phaser.Group {
   ) {
     super(game);
 
-    this.trailManager = new TrailManager(game);
-
     shiftAnchor(this, w / 2, h / 2);
     this.initCells();
     this.initBorder();
+    this.initFlashLayer();
   }
 
   public cellContainingPoint(x: number, y: number): Maybe<Cell> {
@@ -96,33 +94,36 @@ export default class CellGrid extends Phaser.Group {
 
   private initCells() {
     const { cols, rows, w, h, game } = this;
-    const wCell = w / cols;
-    const hCell = h / rows;
+    const cellW = this.cellWidth = w / cols;
+    const cellH = this.cellHeight = h / rows;
 
     let x = 0;
     for (let col = 0; col < cols; col++) {
       this.cells[col] = [];
       let y = 0;
       for (let row = 0; row < rows; row++) {
-        this.cells[col][row] = new Cell(game, this, x, y, wCell, hCell, col, row);
-        y += hCell;
+        this.cells[col][row] = new Cell(game, this, x, y, cellW, cellH, col, row);
+        y += this.cellHeight;
       }
 
-      x += wCell;
+      x += cellW;
     }
-
-    this.flashLayer = new FlashLayer(this.game, this, wCell, hCell, { color: 0x0000ff });
   }
 
-  private initBorder() {
+  private initBorder(): void {
     this.border = new CellGridBorder(this.game, this, 0, 0, this.w, this.h);
   }
 
-  private getCell(row: number, col: number) {
+  private initFlashLayer(): void {
+    this.flashLayer = new FlashLayer(this.game, this.cellWidth, this.cellHeight);
+    this.addChild(this.flashLayer);
+  }
+
+  private getCell(row: number, col: number): Cell {
     return this.cells[col][row];
   }
 
-  private getCellByGridPos = ({ col, row }: GridPos) => {
+  private getCellByGridPos = ({ col, row }: GridPos): Cell => {
     return this.getCell(row, col);
   }
 

@@ -19,11 +19,12 @@ interface ITweenableRotation { rotation: number }
 
 interface ITweenablePosition { position: Vec2 }
 
-// Game appearance
+// Particle effects
 
-type FlashLayerOpts = {
-  color: number,
-};
+type ParticleData = {
+  type: 'path',
+  position: Vec2,
+}
 
 // Game actions
 
