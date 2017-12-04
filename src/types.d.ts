@@ -2,6 +2,8 @@
 
 type Maybe<T> = T | null;
 
+type Dict<T> = { [key: string]: T }
+
 type GridPos = { col: number, row: number }
 
 type Vec2 = { x: number, y: number }
@@ -22,7 +24,7 @@ interface ITweenablePosition { position: Vec2 }
 // Particle effects
 
 type ParticleData = {
-  type: 'path',
+  type: 'trail',
   position: Vec2,
 }
 

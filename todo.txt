@@ -20,6 +20,8 @@
 
 - pause between rounds
 
+- pixel-perfect trail positioning
+
 - lint types.d.ts
 - rename `inputDragTarget` -> `inputDragOver`
 === loooong term ===

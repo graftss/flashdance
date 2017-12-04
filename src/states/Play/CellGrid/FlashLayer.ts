@@ -11,6 +11,8 @@ export default class FlashLayer extends Phaser.Group {
   public layer: Phaser.Graphics;
   public emitter: Phaser.Particles.Arcade.Emitter;
 
+  private moving: boolean = false;
+
   constructor(
     public game: Game,
     private w: number,
@@ -107,19 +109,21 @@ export default class FlashLayer extends Phaser.Group {
   }
 
   private moveTo(position: Vec2, duration: number): Phaser.Tween {
-    return this.game.tweener.position(this, position, duration)
-      .onUpdateCallback(() => {
-        this.spawnPathParticle();
-      });
+    const tween = this.game.tweener.position(this, position, duration);
+    tween.onStart.add(() => this.moving = true);
+    tween.onComplete.add(() => this.moving = false);
+    return tween;
   }
 
   private spawnPathParticle(): void {
-    const { x, y } = this.worldPosition;
-
     this.game.eventBus.spawnParticle.dispatch({
-      position: { x, y },
-      type: 'path',
+      position: this.getWorldCenter(),
+      type: 'trail',
     });
+  }
+
+  private getWorldCenter(): Vec2 {
+    return vec2.plus(this.worldPosition, { x: this.w / 2, y: this.h / 2});
   }
 
   private flash(duration: number, color: number): TweenWrapper {
@@ -146,5 +150,11 @@ export default class FlashLayer extends Phaser.Group {
       ...path.map(pos => this.moveTo(pos, pathStepDuration)),
       nothing(pathStepDuration),
     ]);
+  }
+
+  public update() {
+    if (this.moving) {
+      this.spawnPathParticle();
+    }
   }
 }
