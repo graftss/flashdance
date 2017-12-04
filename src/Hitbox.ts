@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser-ce';
 
-import Game from '..';
+import Game from './Game';
 
 export default class Hitbox {
   private graphic: Phaser.Graphics;

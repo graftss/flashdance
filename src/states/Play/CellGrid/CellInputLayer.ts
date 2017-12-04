@@ -1,9 +1,9 @@
 import * as Phaser from 'phaser-ce';
 
 import Cell from './Cell';
-import Hitbox from '../Hitbox';
-import Game from '../..';
-import { isEqual } from '../../utils';
+import Hitbox from '../../../Hitbox';
+import Game from '../../../Game';
+import { isEqual } from '../../../utils';
 
 export default class CellInputLayer {
   private hitbox: Hitbox;

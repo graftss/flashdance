@@ -1,4 +1,4 @@
-import Game from '../..';
+import Game from '../../Game';
 import { cellTarget, flatten, isEqual, mapJust } from '../../utils';
 
 export default class InputVerifier {
@@ -18,8 +18,6 @@ export default class InputVerifier {
     this.checkpointInputIndex = 0;
 
     this.dispatchEnableInput();
-
-    console.log(this.targetInput);
   }
 
   private attachHandlers(): void {

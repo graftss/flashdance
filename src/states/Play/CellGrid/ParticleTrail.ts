@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser-ce';
 
-import Game from '../..';
+import Game from '../../../Game';
 
 const color = 0xffffff;
 const width = 6;

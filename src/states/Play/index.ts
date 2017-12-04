@@ -1,9 +1,9 @@
 import * as Phaser from 'phaser-ce';
 
+import CellGrid from './CellGrid';
 import GameDirector from './GameDirector';
-import Game from '../..';
-import CellGrid from '../../actors/CellGrid';
-import ParticleManager from '../../actors/ParticleManager';
+import Game from '../../Game';
+import ParticleManager from '../../ParticleManager';
 
 export default class Play extends Phaser.State {
   private cellGrid: CellGrid;

@@ -3,8 +3,8 @@ import * as Phaser from 'phaser-ce';
 import Cell from './Cell';
 import CellGridBorder from './CellGridBorder';
 import FlashLayer from './FlashLayer';
-import Game from '../..';
-import { shiftAnchor, vec2 } from '../../utils';
+import Game from '../../../Game';
+import { shiftAnchor, vec2 } from '../../../utils';
 
 export default class CellGrid extends Phaser.Group {
   private cellWidth: number;

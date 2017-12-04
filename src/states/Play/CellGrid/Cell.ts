@@ -2,8 +2,8 @@ import * as Phaser from 'phaser-ce';
 
 import CellGrid from './CellGrid';
 import CellInputLayer from './CellInputLayer';
-import Game from '../..';
-import { cellTarget, isEqual, labelArgs, shiftAnchor } from '../../utils';
+import Game from '../../../Game';
+import { cellTarget, isEqual, labelArgs, shiftAnchor } from '../../../utils';
 
 const flashColor = 0xffffff;
 const fakeFlashColor = 0xff0000;

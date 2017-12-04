@@ -1,7 +1,6 @@
 import * as Phaser from 'phaser-ce';
 
-import Game from '..';
-import ParticleTrail from './CellGrid/ParticleTrail';
+import Game from './Game';
 
 export default class ParticleManager extends Phaser.Particles.Arcade.Emitter {
   constructor(

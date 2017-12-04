@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser-ce';
 
-import Game from '../..';
+import Game from '../../../Game';
 
 export default class CellGridBorder extends Phaser.Group {
   private border: Phaser.Graphics;

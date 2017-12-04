@@ -2,8 +2,8 @@ import * as Phaser from 'phaser-ce';
 
 import ActionSequencer from './ActionSequencer';
 import InputVerifier from './InputVerifier';
-import Game from '../..';
-import CellGrid from '../../actors/CellGrid';
+import Game from '../../Game';
+import CellGrid from './CellGrid';
 import { mapJust } from '../../utils';
 
 export default class GameDirector {

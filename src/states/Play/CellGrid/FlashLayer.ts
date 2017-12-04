@@ -1,8 +1,8 @@
 import * as Phaser from 'phaser-ce';
 
 import Cell from './Cell';
-import Game from '../..';
-import { vec2, shiftAnchor } from '../../utils';
+import Game from '../../../Game';
+import { vec2, shiftAnchor } from '../../../utils';
 
 const flashColor = 0xffffff;
 const fakeFlashColor = 0xff0000;
