@@ -122,7 +122,15 @@ export default class CellGrid extends Phaser.Group {
   }
 
   private onCorrectInput = (input: GameInput) => {
-    console.log('correct input', input);
+    switch (input.type) {
+      case 'down': {
+        this.getCellByGridPos(input.target.cell).flashBacklight();
+      }
+
+      case 'drag': {
+        this.getCellByGridPos(input.target.cell).brightenBacklight();
+      }
+    }
   }
 
   private onIncorrectInput = ({ expected, observed }: IncorrectGameInput) => {

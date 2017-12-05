@@ -34,4 +34,12 @@ export default class Cell extends Phaser.Group {
   public containsPoint(x: number, y: number): boolean {
     return this.inputLayer.containsPoint(x, y);
   }
+
+  public flashBacklight(): void {
+    this.backlight.flash().start();
+  }
+
+  public brightenBacklight(): void {
+    this.backlight.brighten().start();
+  }
 }

@@ -1,8 +1,8 @@
 === up next ===
+- differentiate `down` and the start of a drag in `GameInput`?
 - show drag action
 - show click and drag input graphically, steal ideas from elsewhere
   -> (simon for click)
-- particle emitter during paths
 
 === on deck ===
 - "fake" flash (not part of input, just a decoy or whatever)

@@ -17,12 +17,17 @@ export default class CellBacklight extends Phaser.Group {
     this.initBacklight();
   }
 
-  public brighten(): void {
-    this.game.add.tween(this.graphics)
-      .to({ alpha: .5 })
+  public flash(): Phaser.Tween {
+    return this.brighten()
+      .to({ alpha: 0 }, 600);
   }
 
-  private initBacklight() {
+  public brighten(): Phaser.Tween {
+    return this.game.add.tween(this.graphics)
+      .to({ alpha: .5}, 200);
+  }
+
+  private initBacklight(): void {
     this.graphics
       .beginFill(0xffffff, 1)
       .drawRoundedRect(0, 0, this.w, this.h, 5)
