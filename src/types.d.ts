@@ -85,6 +85,8 @@ type GameActionData =
 type InputTarget =
   { type: 'cell', cell: GridPos }
 
-type GameInput =
-  { type: 'down', target: InputTarget } |
-  { type: 'drag', target: InputTarget }
+type InputSource = 'down' | 'drag' | 'up'
+
+type GameInput = { type: InputSource, target: InputTarget }
+
+type IncorrectGameInput = { expected: GameInput, observed: GameInput }

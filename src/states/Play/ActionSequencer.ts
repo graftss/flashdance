@@ -8,8 +8,8 @@ const path1 = [[1, 1], [1, 2], [2, 2], [2, 1], [2, 0], [1, 0], [0, 0]].map(toCel
 const testActions: GameActionData[] = [
   { type: 'wait', opts: { duration: 300 } },
   // { type: 'flash', opts: { origin: { row: 1, col: 1 }, duration: 300 } },
-  // { type: 'flash', opts: { origin: { row: 2, col: 1 }, duration: 300 } },
-  // { type: 'flash', opts: { origin: { row: 2, col: 1 }, duration: 300 } },
+  { type: 'flash', opts: { origin: { row: 2, col: 1 }, duration: 300 } },
+  { type: 'flash', opts: { origin: { row: 2, col: 1 }, duration: 300 } },
   // { type: 'fakeflash', opts: { origin: { row: 2, col: 1 }, duration: 300 } },
   // { type: 'flash', opts: { origin: { row: 0, col: 0 }, duration: 300 } },
   // { type: 'flash', opts: { origin: { row: 2, col: 2 }, duration: 300 } },

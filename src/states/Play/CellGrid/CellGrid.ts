@@ -26,7 +26,7 @@ export default class CellGrid extends Phaser.Group {
     shiftAnchor(this, w / 2, h / 2);
     this.initCells();
     this.initBorder();
-
+    this.initEventHandlers();
   }
 
   public cellContainingPoint(x: number, y: number): Maybe<Cell> {
@@ -115,6 +115,20 @@ export default class CellGrid extends Phaser.Group {
   private initBorder(): void {
     this.border = new CellGridBorder(this.game, this, 0, 0, this.w, this.h);
   }
+
+  private initEventHandlers(): void {
+    this.game.eventBus.correctInput.add(this.onCorrectInput);
+    this.game.eventBus.incorrectInput.add(this.onIncorrectInput);
+  }
+
+  private onCorrectInput = (input: GameInput) => {
+    console.log('correct input', input);
+  }
+
+  private onIncorrectInput = ({ expected, observed }: IncorrectGameInput) => {
+    console.log('incorrect input', expected, observed);
+  }
+
 
   private newFlashLayer(): FlashLayer {
     const flashLayer = new FlashLayer(this.game, this, this.cellWidth, this.cellHeight);

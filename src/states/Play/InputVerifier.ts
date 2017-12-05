@@ -23,9 +23,9 @@ export default class InputVerifier {
   private attachHandlers(): void {
     const { eventBus } = this.game;
 
-    eventBus.inputDown.add(this.onInputDown);
-    eventBus.inputDragTarget.add(this.onNewDragTarget);
-    eventBus.inputDragStop.add(this.onDragStop);
+    eventBus.inputDown.add(this.onInput);
+    eventBus.inputDragTarget.add(this.onInput);
+    eventBus.inputDragStop.add(this.onInput);
   }
 
   private dispatchEnableInput(): void {
@@ -36,40 +36,28 @@ export default class InputVerifier {
     this.game.eventBus.inputEnabled.dispatch(false);
   }
 
+  private dispatchCorrectInput(input: GameInput): void {
+    this.game.eventBus.correctInput.dispatch(input);
+  }
+
+  private dispatchIncorrectInput(observed: GameInput): void {
+    this.game.eventBus.incorrectInput.dispatch({
+      expected: this.nextInput(),
+      observed,
+    });
+  }
+
   private nextInput(): GameInput {
     return this.targetInput[this.nextInputIndex];
   }
 
-  private onInputDown = (data: InputTarget) => {
-    const nextInput = this.nextInput();
+  private onInput = (input: GameInput): void => {
+    const expected = this.nextInput();
 
-    if (nextInput.type === 'down' && isEqual(nextInput.target, data)) {
-      console.log('correct input');
-      this.checkpointInputIndex = this.nextInputIndex;
-      this.advanceNextInput();
+    if (isEqual(expected, input)) {
+      this.onCorrectInput(input);
     } else {
-      this.onIncorrectInput();
-    }
-  }
-
-  private onNewDragTarget = (data: InputTarget) => {
-    const nextInput = this.nextInput();
-
-    if (nextInput.type === 'drag' && isEqual(nextInput.target, data)) {
-      console.log('correct DRAG input');
-      this.advanceNextInput();
-    } else {
-      this.onIncorrectInput();
-    }
-  }
-
-  private onDragStop = (data: InputTarget) => {
-    const nextInput = this.nextInput();
-
-    if (nextInput.type === 'drag') {
-      this.onIncorrectInput();
-    } else {
-      this.checkpointInputIndex = this.nextInputIndex;
+      this.onIncorrectInput(input);
     }
   }
 
@@ -83,10 +71,30 @@ export default class InputVerifier {
     }
   }
 
-  private onIncorrectInput() {
+  private saveInputCheckpoint(): void {
+    this.checkpointInputIndex = this.nextInputIndex;
+  }
+
+  private onCorrectInput(input: GameInput) {
+    switch (input.type) {
+      case 'down': {
+        this.saveInputCheckpoint();
+        break;
+      }
+
+      case 'up': {
+        this.saveInputCheckpoint();
+        break;
+      }
+    }
+
+    this.advanceNextInput();
+    this.dispatchCorrectInput(input);
+  }
+
+  private onIncorrectInput(input: GameInput) {
     this.nextInputIndex = this.checkpointInputIndex;
-    console.log('wrong input');
-    console.log(this.checkpointInputIndex, this.nextInput());
+    this.dispatchIncorrectInput(input);
   }
 
   private onCompleteInput() {
@@ -99,16 +107,23 @@ export default class InputVerifier {
       case 'flash': {
         const { origin } = actionData.opts;
 
-        return [{ type: 'down', target: cellTarget(origin) }];
+        return [
+          { type: 'down', target: cellTarget(origin) },
+          { type: 'up', target: cellTarget(origin) },
+        ];
       }
 
       case 'path': {
         const { origin, path } = actionData.opts;
         const result: GameInput[] = [{ type: 'down', target: cellTarget(origin) }];
+        let gridPos;
 
-        for (const gridPos of path) {
+        for (gridPos of path) {
           result.push({ type: 'drag', target: cellTarget(gridPos) });
         }
+
+        // after the for loop, `gridPos` points to the last element of `path`
+        result.push({ type: 'up', target: cellTarget(gridPos)});
 
         return result;
       }
