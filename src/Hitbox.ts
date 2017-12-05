@@ -7,7 +7,7 @@ export default class Hitbox {
 
   constructor(
     public game: Game,
-    private parent: Phaser.Group,
+    public parent: Phaser.Group,
     private x: number,
     private y: number,
     private w: number,

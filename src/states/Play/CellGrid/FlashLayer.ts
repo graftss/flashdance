@@ -16,10 +16,11 @@ export default class FlashLayer extends Phaser.Group {
 
   constructor(
     public game: Game,
+    public parent: Phaser.Group,
     private w: number,
     private h: number,
   ) {
-    super(game);
+    super(game, parent);
 
     this.layer = game.add.graphics(0, 0, this);
     this.center();
@@ -30,26 +31,29 @@ export default class FlashLayer extends Phaser.Group {
     this.destroy = this.destroy.bind(this);
   }
 
+  public moveToCell(cell: Cell) {
+    this.position.copyFrom(cell.position);
+  }
+
   public flashTween(originCell: Cell, duration: number): GameAction {
-    originCell.addChild(this);
     const tween = this.flash(duration, flashColor);
+    tween.onStart.add(() => this.moveToCell(originCell));
 
     return { duration, tween };
   }
 
   public fakeFlashTween(originCell: Cell, duration: number): GameAction {
-    originCell.addChild(this);
     const tween = this.flash(duration, fakeFlashColor);
+    tween.onStart.add(() => this.moveToCell(originCell));
 
     return { duration, tween };
   }
 
   public pathTween(originCell: Cell, path: Vec2[], duration: number): GameAction {
-    originCell.addChild(this);
-
     this.drawLayer(flashColor);
 
     const tween = this.path(path, duration);
+    tween.onStart.add(() => this.moveToCell(originCell));
     tween.onComplete.add(this.destroy);
 
     return { duration, tween };

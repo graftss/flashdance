@@ -1,5 +1,14 @@
 export { flatten, isEqual, random } from 'lodash';
 
+export const copyArray = (arr: any[]): any[] => {
+  const result = [];
+  for (const item of arr) {
+    result.push(item);
+  }
+
+  return result;
+};
+
 export const shiftAnchor = (obj: PIXI.DisplayObject, x: number, y: number) => {
   obj.pivot.x += x;
   obj.x += x;

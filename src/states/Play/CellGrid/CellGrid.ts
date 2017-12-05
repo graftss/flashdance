@@ -4,7 +4,7 @@ import Cell from './Cell';
 import CellGridBorder from './CellGridBorder';
 import FlashLayer from './FlashLayer';
 import Game from '../../../Game';
-import { shiftAnchor, vec2 } from '../../../utils';
+import { copyArray, shiftAnchor, vec2 } from '../../../utils';
 
 export default class CellGrid extends Phaser.Group {
   private cellWidth: number;
@@ -26,6 +26,7 @@ export default class CellGrid extends Phaser.Group {
     shiftAnchor(this, w / 2, h / 2);
     this.initCells();
     this.initBorder();
+
   }
 
   public cellContainingPoint(x: number, y: number): Maybe<Cell> {
@@ -64,7 +65,7 @@ export default class CellGrid extends Phaser.Group {
     const { origin, path, duration } = opts;
 
     const originCell = this.getCellByGridPos(origin);
-    const pathPositions = path.map(this.pathPositionMap(originCell));
+    const pathPositions = path.map(this.pathPositionMap);
     const flashLayer = this.newFlashLayer();
 
     return flashLayer.pathTween(originCell, pathPositions, duration);
@@ -116,9 +117,7 @@ export default class CellGrid extends Phaser.Group {
   }
 
   private newFlashLayer(): FlashLayer {
-    const flashLayer = new FlashLayer(this.game, this.cellWidth, this.cellHeight);
-
-    this.addChild(flashLayer);
+    const flashLayer = new FlashLayer(this.game, this, this.cellWidth, this.cellHeight);
 
     return flashLayer;
   }
@@ -131,10 +130,9 @@ export default class CellGrid extends Phaser.Group {
     return this.getCell(row, col);
   }
 
-  private pathPositionMap = (originCell: Cell) => {
-    return (gridPos: GridPos) => {
-      const cell = this.getCellByGridPos(gridPos);
-      return vec2.minus(cell.position, originCell.position);
-    };
+  private pathPositionMap = (gridPos: GridPos) => {
+    const cell = this.getCellByGridPos(gridPos);
+
+    return vec2.clone(cell.position);
   }
 }
