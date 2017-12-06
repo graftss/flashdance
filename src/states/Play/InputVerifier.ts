@@ -1,6 +1,12 @@
 import Game from '../../Game';
 import { cellTarget, flatten, isEqual, mapJust } from '../../utils';
 
+const logInputPair = (raw: RawInput, game: GameInput, label?: string) => {
+  label && console.log('---', label, '---');
+  console.log('raw: ', raw.type, raw.target.cell.col, raw.target.cell.row);
+  console.log('game: ', game.type, game.target.cell.col, game.target.cell.row);
+};
+
 export default class InputVerifier {
   private targetInput: GameInput[];
   private nextInputIndex: number;
@@ -65,44 +71,37 @@ export default class InputVerifier {
 
     switch (observed.type) {
       case 'down': {
-        if (expected.type === 'down' || expected.type === 'down/drag') {
-          return true;
-        }
+        return expected.type === 'down' || expected.type === 'down/drag';
       }
 
       case 'up': {
-        if (expected.type === 'up' || expected.type === 'up/drag') {
-          return true;
-        }
+        return expected.type === 'up' || expected.type === 'up/drag';
       }
 
       case 'drag': {
-        if (expected.type === 'over/drag') {
-          return true;
-        }
+        return expected.type === 'over/drag';
       }
-
-      default: return false;
     }
+
+    return false;
   }
 
   private advanceNextInput(): void {
-    const nextInputIndex = this.nextInputIndex + 1;
+    this.nextInputIndex = this.nextInputIndex + 1;
+  }
 
-    if (nextInputIndex === this.targetInput.length) {
-      this.onCompleteInput();
-    } else {
-      this.nextInputIndex = nextInputIndex;
-    }
+  private isInputComplete(): boolean {
+    return this.nextInputIndex === this.targetInput.length;
   }
 
   private saveInputCheckpoint(): void {
     this.checkpointInputIndex = this.nextInputIndex;
   }
 
-  private onCorrectInput(expected: GameInput, observed: RawInput) {
+  private onCorrectInput(expected: GameInput, observed: RawInput): void {
+    this.advanceNextInput();
+
     switch (expected.type) {
-      case 'down':
       case 'up':
       case 'up/drag': {
         this.saveInputCheckpoint();
@@ -110,13 +109,19 @@ export default class InputVerifier {
       }
     }
 
-    this.advanceNextInput();
     this.dispatchCorrectInput(expected, observed);
+
+    if (this.isInputComplete()) {
+      return this.onCompleteInput();
+    }
+
+    logInputPair(observed, expected, 'correct');
   }
 
   private onIncorrectInput(expected: GameInput, observed: RawInput) {
     this.nextInputIndex = this.checkpointInputIndex;
     this.dispatchIncorrectInput(expected, observed);
+    logInputPair(observed, expected, 'incorrect');
   }
 
   private onCompleteInput() {

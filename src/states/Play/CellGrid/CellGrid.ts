@@ -148,6 +148,10 @@ export default class CellGrid extends Phaser.Group {
     }
   }
 
+  private onIncorrectInput = ({ expected, observed }: InputPair) => {
+    this.dimAllLitCells();
+  }
+
   private dimAllLitCells(): void {
     const { cols, rows } = this;
 
@@ -160,10 +164,6 @@ export default class CellGrid extends Phaser.Group {
         }
       }
     }
-  }
-
-  private onIncorrectInput = ({ expected, observed }: InputPair) => {
-    console.log('incorrect input', expected, observed);
   }
 
   private newFlashLayer(): FlashLayer {
