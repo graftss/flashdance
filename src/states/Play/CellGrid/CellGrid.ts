@@ -122,13 +122,42 @@ export default class CellGrid extends Phaser.Group {
   }
 
   private onCorrectInput = ({ expected, observed }: InputPair) => {
+    const cell: Cell = this.getCellByGridPos(expected.target.cell);
+
     switch (expected.type) {
       case 'down': {
-        this.getCellByGridPos(expected.target.cell).flashBacklight();
+        cell.brightenBacklight();
+        break;
       }
 
+      case 'up': {
+        cell.dimBacklight();
+        break;
+      }
+
+      case 'down/drag':
       case 'over/drag': {
         this.getCellByGridPos(expected.target.cell).brightenBacklight();
+        break;
+      }
+
+      case 'up/drag': {
+        this.dimAllLitCells();
+        break;
+      }
+    }
+  }
+
+  private dimAllLitCells(): void {
+    const { cols, rows } = this;
+
+    for (let col = 0; col < cols; col++) {
+      for (let row = 0; row < rows; row++) {
+        const cell = this.getCell(col, row);
+
+        if (cell.lit) {
+          cell.dimBacklight();
+        }
       }
     }
   }
@@ -136,7 +165,6 @@ export default class CellGrid extends Phaser.Group {
   private onIncorrectInput = ({ expected, observed }: InputPair) => {
     console.log('incorrect input', expected, observed);
   }
-
 
   private newFlashLayer(): FlashLayer {
     const flashLayer = new FlashLayer(this.game, this, this.cellWidth, this.cellHeight);

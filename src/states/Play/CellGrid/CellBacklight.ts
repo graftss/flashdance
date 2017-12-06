@@ -25,16 +25,16 @@ export default class CellBacklight extends Phaser.Group {
   }
 
   public brighten(): Phaser.Tween {
-    return this.game.tweener.alpha(this.graphics, .4, 200);
+    return this.game.tweener.alpha(this.graphics, .8, 30);
   }
 
   public dim(): Phaser.Tween {
-    return this.game.tweener.alpha(this.graphics, 0, 200);
+    return this.game.tweener.alpha(this.graphics, 0, 75);
   }
 
   private initBacklight(): void {
     this.graphics
-      .beginFill(0xffffff, 1)
+      .beginFill(0x80c0ff, 1)
       .drawRoundedRect(0, 0, this.w, this.h, 5)
       .endFill()
 

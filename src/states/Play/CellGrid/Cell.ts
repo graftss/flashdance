@@ -14,6 +14,8 @@ export default class Cell extends Phaser.Group {
   public inputTarget: InputTarget;
   public inputLayer: CellInputLayer;
 
+  public lit: boolean = false;
+
   constructor(
     public game: Game,
     public parentGrid: CellGrid,
@@ -35,11 +37,13 @@ export default class Cell extends Phaser.Group {
     return this.inputLayer.containsPoint(x, y);
   }
 
-  public flashBacklight(): void {
-    this.backlight.flash().start();
-  }
-
   public brightenBacklight(): void {
     this.backlight.brighten().start();
+    this.lit = true;
+  }
+
+  public dimBacklight(): void {
+    this.backlight.dim().start();
+    this.lit = false;
   }
 }
