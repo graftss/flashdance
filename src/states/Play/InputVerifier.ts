@@ -36,28 +36,53 @@ export default class InputVerifier {
     this.game.eventBus.inputEnabled.dispatch(false);
   }
 
-  private dispatchCorrectInput(input: GameInput): void {
-    this.game.eventBus.correctInput.dispatch(input);
+  private dispatchCorrectInput(expected: GameInput, observed: RawInput): void {
+    this.game.eventBus.correctInput.dispatch({ expected, observed });
   }
 
-  private dispatchIncorrectInput(observed: GameInput): void {
-    this.game.eventBus.incorrectInput.dispatch({
-      expected: this.nextInput(),
-      observed,
-    });
+  private dispatchIncorrectInput(expected: GameInput, observed: RawInput): void {
+    this.game.eventBus.incorrectInput.dispatch({ expected, observed });
   }
 
   private nextInput(): GameInput {
     return this.targetInput[this.nextInputIndex];
   }
 
-  private onInput = (input: GameInput): void => {
+  private onInput = (observed: RawInput): void => {
     const expected = this.nextInput();
 
-    if (isEqual(expected, input)) {
-      this.onCorrectInput(input);
+    if (this.verifyRawInput(expected, observed)) {
+      this.onCorrectInput(expected, observed);
     } else {
-      this.onIncorrectInput(input);
+      this.onIncorrectInput(expected, observed);
+    }
+  }
+
+  private verifyRawInput(expected: GameInput, observed: RawInput): boolean {
+    if (!isEqual(expected.target, observed.target)) {
+      return false;
+    }
+
+    switch (observed.type) {
+      case 'down': {
+        if (expected.type === 'down' || expected.type === 'down/drag') {
+          return true;
+        }
+      }
+
+      case 'up': {
+        if (expected.type === 'up' || expected.type === 'up/drag') {
+          return true;
+        }
+      }
+
+      case 'drag': {
+        if (expected.type === 'over/drag') {
+          return true;
+        }
+      }
+
+      default: return false;
     }
   }
 
@@ -75,26 +100,23 @@ export default class InputVerifier {
     this.checkpointInputIndex = this.nextInputIndex;
   }
 
-  private onCorrectInput(input: GameInput) {
-    switch (input.type) {
-      case 'down': {
-        this.saveInputCheckpoint();
-        break;
-      }
-
-      case 'up': {
+  private onCorrectInput(expected: GameInput, observed: RawInput) {
+    switch (expected.type) {
+      case 'down':
+      case 'up':
+      case 'up/drag': {
         this.saveInputCheckpoint();
         break;
       }
     }
 
     this.advanceNextInput();
-    this.dispatchCorrectInput(input);
+    this.dispatchCorrectInput(expected, observed);
   }
 
-  private onIncorrectInput(input: GameInput) {
+  private onIncorrectInput(expected: GameInput, observed: RawInput) {
     this.nextInputIndex = this.checkpointInputIndex;
-    this.dispatchIncorrectInput(input);
+    this.dispatchIncorrectInput(expected, observed);
   }
 
   private onCompleteInput() {
@@ -115,15 +137,15 @@ export default class InputVerifier {
 
       case 'path': {
         const { origin, path } = actionData.opts;
-        const result: GameInput[] = [{ type: 'down', target: cellTarget(origin) }];
+        const result: GameInput[] = [{ type: 'down/drag', target: cellTarget(origin) }];
         let gridPos;
 
         for (gridPos of path) {
-          result.push({ type: 'drag', target: cellTarget(gridPos) });
+          result.push({ type: 'over/drag', target: cellTarget(gridPos) });
         }
 
         // after the for loop, `gridPos` points to the last element of `path`
-        result.push({ type: 'up', target: cellTarget(gridPos)});
+        result.push({ type: 'up/drag', target: cellTarget(gridPos)});
 
         return result;
       }
