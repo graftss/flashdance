@@ -1,6 +1,5 @@
 import * as Phaser from 'phaser-ce';
 
-import CellBacklight from './CellBacklight';
 import CellGrid from './CellGrid';
 import CellInputLayer from './CellInputLayer';
 import Game from '../../../Game';
@@ -10,7 +9,6 @@ const flashColor = 0xffffff;
 const fakeFlashColor = 0xff0000;
 
 export default class Cell extends Phaser.Group {
-  public backlight: CellBacklight;
   public inputTarget: InputTarget;
   public inputLayer: CellInputLayer;
 
@@ -30,20 +28,9 @@ export default class Cell extends Phaser.Group {
 
     this.inputTarget = cellTarget({ col, row });
     this.inputLayer = new CellInputLayer(game, this, w, h, this.inputTarget);
-    this.backlight = new CellBacklight(game, this, w, h);
   }
 
   public containsPoint(x: number, y: number): boolean {
     return this.inputLayer.containsPoint(x, y);
-  }
-
-  public brightenBacklight(): void {
-    this.backlight.brighten().start();
-    this.lit = true;
-  }
-
-  public dimBacklight(): void {
-    this.backlight.dim().start();
-    this.lit = false;
   }
 }

@@ -4,6 +4,7 @@ import Cell from './Cell';
 import CellGridBorder from './CellGridBorder';
 import FlashLayer from './FlashLayer';
 import Game from '../../../Game';
+import InputLightManager from './InputLightManager';
 import { copyArray, shiftAnchor, vec2 } from '../../../utils';
 
 export default class CellGrid extends Phaser.Group {
@@ -11,6 +12,7 @@ export default class CellGrid extends Phaser.Group {
   private cellHeight: number;
   private cells: Cell[][] = [];
   private border: CellGridBorder;
+  private inputLightManager: InputLightManager;
 
   constructor(
     public game: Game,
@@ -26,6 +28,7 @@ export default class CellGrid extends Phaser.Group {
     shiftAnchor(this, w / 2, h / 2);
     this.initCells();
     this.initBorder();
+    this.initInputLightManager();
     this.initEventHandlers();
   }
 
@@ -94,6 +97,10 @@ export default class CellGrid extends Phaser.Group {
     };
   }
 
+  public getCellPosition(gridPos: GridPos): Vec2 {
+    return vec2.clone(this.getCellByGridPos(gridPos).position);
+  }
+
   private initCells() {
     const { cols, rows, w, h, game } = this;
     const cellW = this.cellWidth = w / cols;
@@ -116,54 +123,49 @@ export default class CellGrid extends Phaser.Group {
     this.border = new CellGridBorder(this.game, this, 0, 0, this.w, this.h);
   }
 
+  private initInputLightManager(): void {
+    this.inputLightManager = new InputLightManager(
+      this.game,
+      this,
+      this.cellWidth,
+      this.cellHeight,
+    );
+  }
+
   private initEventHandlers(): void {
     this.game.eventBus.correctInput.add(this.onCorrectInput);
     this.game.eventBus.incorrectInput.add(this.onIncorrectInput);
   }
 
   private onCorrectInput = ({ expected, observed }: InputPair) => {
-    const cell: Cell = this.getCellByGridPos(expected.target.cell);
+    const gridPos = expected.target.cell;
 
     switch (expected.type) {
       case 'down': {
-        cell.brightenBacklight();
+        this.inputLightManager.addLight(gridPos);
         break;
       }
 
       case 'up': {
-        cell.dimBacklight();
+        this.inputLightManager.removeLight(gridPos);
         break;
       }
 
       case 'down/drag':
       case 'over/drag': {
-        this.getCellByGridPos(expected.target.cell).brightenBacklight();
+        this.inputLightManager.addPathLight(gridPos);
         break;
       }
 
       case 'up/drag': {
-        this.dimAllLitCells();
+        this.inputLightManager.removePath();
         break;
       }
     }
   }
 
   private onIncorrectInput = ({ expected, observed }: InputPair) => {
-    this.dimAllLitCells();
-  }
 
-  private dimAllLitCells(): void {
-    const { cols, rows } = this;
-
-    for (let col = 0; col < cols; col++) {
-      for (let row = 0; row < rows; row++) {
-        const cell = this.getCell(col, row);
-
-        if (cell.lit) {
-          cell.dimBacklight();
-        }
-      }
-    }
   }
 
   private newFlashLayer(): FlashLayer {

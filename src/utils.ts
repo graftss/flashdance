@@ -16,6 +16,12 @@ export const shiftAnchor = (obj: PIXI.DisplayObject, x: number, y: number) => {
   obj.y += y;
 };
 
+// This function assumes the current anchor is at the top-left corner of the
+// display object (which is where Phaser initializes it by default).
+export const centerAnchor = (obj: PIXI.DisplayObject, w: number, h: number) => {
+  shiftAnchor(obj, w / 2, h / 2);
+};
+
 export const mapJust = <S, T>(f: (s: S) => Maybe<T>, list: S[]): T[] => {
   const result = [];
 
