@@ -21,7 +21,12 @@ interface ITweenableRotation { rotation: number }
 
 interface ITweenablePosition { position: Vec2 }
 
-// Particle effects
+// Graphical effects
+
+type InputLightTone =
+  'correct' |
+  'incorrect' |
+  'neutral'
 
 type ParticleData = {
   type: 'trail',

@@ -142,30 +142,29 @@ export default class CellGrid extends Phaser.Group {
 
     switch (expected.type) {
       case 'down': {
-        this.inputLightManager.addLight(gridPos);
-        break;
-      }
-
-      case 'up': {
-        this.inputLightManager.removeLight(gridPos);
+        this.inputLightManager.addLight(gridPos, 'correct');
         break;
       }
 
       case 'down/drag':
       case 'over/drag': {
-        this.inputLightManager.addPathLight(gridPos);
+        this.inputLightManager.addLight(gridPos);
         break;
       }
 
+      case 'up':
       case 'up/drag': {
-        this.inputLightManager.removePath();
+        this.inputLightManager.onCompleteInput();
         break;
       }
     }
   }
 
   private onIncorrectInput = ({ expected, observed }: InputPair) => {
+    const inputPos = observed.target.cell;
 
+    this.inputLightManager.addLight(inputPos, 'incorrect');
+    this.inputLightManager.onIncorrectInput();
   }
 
   private newFlashLayer(): FlashLayer {

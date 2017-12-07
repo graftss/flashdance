@@ -3,15 +3,15 @@ import * as Phaser from 'phaser-ce';
 import InputLight from './InputLight';
 import CellGrid from './CellGrid';
 import Game from '../../../Game';
+import { findIndex, isEqual } from '../../../utils';
 
-type PathLight = {
+interface IInputLightData {
   gridPos: GridPos;
   light: InputLight;
-};
+}
 
 export default class InputLightManager extends Phaser.Group {
-  private lights: Dict<InputLight[]> = {};
-  private path: PathLight[] = [];
+  private lights: IInputLightData[] = [];
 
   constructor(
     public game: Game,
@@ -22,79 +22,74 @@ export default class InputLightManager extends Phaser.Group {
     super(game, parentGrid);
   }
 
-  public addLight(gridPos: GridPos): InputLight {
-    const light = this.spawnLight(gridPos);
+  public addLight(gridPos: GridPos, tone?: InputLightTone): InputLight {
+    const light = this.spawnLight(gridPos, tone);
     light.brighten().start();
 
     return light;
   }
 
-  public removeLight(gridPos: GridPos): void {
-    this.despawnLightAtCell(gridPos);
+  public onCompleteInput(): void {
+    this.lights.forEach(({ light }) => light.setTone('correct'));
+
+    setTimeout(() => this.destroyAllLights(), 120);
   }
 
-  public addPathLight(gridPos: GridPos): InputLight {
-    const light = this.addLight(gridPos);
-    this.path.push({ light, gridPos });
-    return light;
+  public onIncorrectInput(): void {
+    this.lights.reverse();
+
+    setTimeout(() => {
+      this.cascade(({ light }) => light.setTone('incorrect'), 30);
+    }, 200);
+
+    setTimeout(() => {
+      // Wind the lights in backwards
+      this.destroyAllLights();
+    }, 300);
   }
 
-  public removePath(): void {
-    for (let i = 0; i < this.path.length; i++) {
-      const { gridPos, light } = this.path[i];
-      setTimeout(() => {
-        this.despawnLight(gridPos, light);
-      }, i * 30);
-    }
-
-    this.path = [];
-  }
-
-  private spawnLight(gridPos: GridPos): InputLight {
+  private spawnLight(gridPos: GridPos, tone?: InputLightTone): InputLight {
     const { x, y } = this.parentGrid.getCellPosition(gridPos);
     const light = new InputLight(
       this.game, this,
       x, y,
       this.cellWidth, this.cellHeight,
+      tone,
     );
 
-    this.lightsAtCell(gridPos).push(light);
+    this.lights.push({ gridPos, light });
 
     return light;
   }
 
-  private despawnLightAtCell(gridPos: GridPos): void {
-    const lightsAtCell = this.lightsAtCell(gridPos);
-
-    if (lightsAtCell.length > 0) {
-      this.despawnLight(gridPos, lightsAtCell[0]);
+  private destroyLightAtGridPos(gridPos: GridPos): void {
+    for (let i = 0; i < this.lights.length; i++) {
+      if (isEqual(gridPos, this.lights[i].gridPos)) {
+        return this.destroyLight(this.lights[i].light);
+      }
     }
   }
 
-  private despawnLight(gridPos: GridPos, light: InputLight): void {
-    const lightsAtCell = this.lightsAtCell(gridPos);
-    const index = lightsAtCell.indexOf(light);
-
-    if (index === -1) {
-      return;
+  private destroyLight(light: InputLight): void {
+    for (let i = 0; i < this.lights.length; i++) {
+      if (light === this.lights[i].light) {
+        light.dimAndDestroy().start();
+        this.lights.splice(i, 1);
+        return;
+      }
     }
-
-    light.dimAndDestroy().start();
-    lightsAtCell.splice(index, 1);
   }
 
-  private lightsAtCell(gridPos: GridPos): InputLight[] {
-    const lightsKey = this.gridPosKey(gridPos);
+  private destroyAllLights(): void {
+    this.cascade(({ light }) => light.dimAndDestroy().start(), 30);
 
-    const lights = this.lights[lightsKey] || [];
-    this.lights[lightsKey] = lights;
-
-    return lights;
+    this.lights = [];
   }
 
-  private gridPosKey(gridPos: GridPos): string {
-    const { col, row } = gridPos;
-
-    return `${col},${row}`;
+  private cascade(f: (d: IInputLightData) => void, timestep: number): void {
+    for (let i = 0; i < this.lights.length; i++) {
+      const data = this.lights[i];
+      setTimeout(() => f(data), (i + 1) * timestep);
+    }
   }
 }

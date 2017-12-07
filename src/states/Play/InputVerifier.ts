@@ -12,6 +12,10 @@ export default class InputVerifier {
   private nextInputIndex: number;
   private checkpointInputIndex: number;
 
+  // on incorrect input, we stop verifying input until the player disengages
+  // from the screen (i.e. we receive an `up` input)
+  private ignoreInputUntilUp: boolean = false;
+
   constructor(
     private game: Game,
   ) {
@@ -56,6 +60,15 @@ export default class InputVerifier {
 
   private onInput = (observed: RawInput): void => {
     const expected = this.nextInput();
+
+    if (this.ignoreInputUntilUp) {
+      console.log('sup')
+      if (observed.type === 'up') {
+        this.ignoreInputUntilUp = false;
+      }
+
+      return;
+    }
 
     if (this.verifyRawInput(expected, observed)) {
       this.onCorrectInput(expected, observed);
@@ -119,6 +132,7 @@ export default class InputVerifier {
   }
 
   private onIncorrectInput(expected: GameInput, observed: RawInput) {
+    this.ignoreInputUntilUp = true;
     this.nextInputIndex = this.checkpointInputIndex;
     this.dispatchIncorrectInput(expected, observed);
     logInputPair(observed, expected, 'incorrect');

@@ -5,7 +5,7 @@ import Game from '../../../Game';
 import { centerAnchor } from '../../../utils';
 
 export default class InputLight extends Phaser.Group {
-  graphics: Phaser.Graphics;
+  private graphics: Phaser.Graphics;
 
   constructor(
     public game: Game,
@@ -14,6 +14,7 @@ export default class InputLight extends Phaser.Group {
     public y: number,
     private w: number,
     private h: number,
+    private tone: InputLightTone = 'neutral',
   ) {
     super(game, parent);
 
@@ -23,13 +24,7 @@ export default class InputLight extends Phaser.Group {
     centerAnchor(this.graphics, w, h);
 
     this.initBacklight();
-  }
-
-  public flash(): TweenWrapper {
-    return this.game.tweener.chain([
-      this.brighten(),
-      this.dim()
-    ]);
+    this.setTone(tone);
   }
 
   public brighten(): Phaser.Tween {
@@ -47,11 +42,30 @@ export default class InputLight extends Phaser.Group {
     return dimTween;
   }
 
+  public setTone(tone: InputLightTone): void {
+    switch (tone) {
+      case 'neutral': {
+        this.graphics.tint = 0x80c0ff;
+        break;
+      }
+
+      case 'correct': {
+        this.graphics.tint = 0x80ffc0;
+        break;
+      }
+
+      case 'incorrect': {
+        this.graphics.tint = 0xff80c0;
+        break;
+      }
+    }
+  }
+
   private initBacklight(): void {
     this.graphics
-      .beginFill(0x80ffc0, 1)
+      .beginFill(0xffffff, 1)
       .drawRoundedRect(0, 0, this.w, this.h, 5)
-      .endFill()
+      .endFill();
 
     this.graphics.alpha = 0;
   }
