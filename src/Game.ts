@@ -6,6 +6,7 @@ import * as Phaser from 'phaser-ce';
 import EventBus from './EventBus';
 import Tweener from './Tweener';
 import Play from './states/Play';
+import LevelSelect from './states/LevelSelect';
 
 export default class Game extends Phaser.Game {
   public tweener: Tweener;
@@ -15,5 +16,10 @@ export default class Game extends Phaser.Game {
     super(...args);
     this.tweener = new Tweener(this);
     this.eventBus = new EventBus();
+
+    this.state.add('Play', Play);
+    this.state.add('LevelSelect', LevelSelect);
+
+    this.state.start('LevelSelect');
   }
 }
