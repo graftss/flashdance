@@ -28,6 +28,7 @@ export default class GameDirector {
     this.actionSequencer = new ActionSequencer(cellGrid.rows, cellGrid.cols);
 
     this.game.eventBus.gameActionComplete.add(this.onActionCompleteEvent.bind(this));
+    this.game.eventBus.gameRoundComplete.add(this.onRoundComplete.bind(this));
   }
 
   public start(): void {
@@ -40,8 +41,10 @@ export default class GameDirector {
   }
 
   private startRound(round: number): void {
-    this.roundActionData = this.actionSequencer.roundActions(round);
+    this.roundActionData = this.actionSequencer.randomRound(round);
     this.startActionEvent(0);
+
+    console.log('sup', this.roundActionData);
   }
 
   private buildAction = (actionData: GameActionData): GameAction => {
@@ -81,5 +84,10 @@ export default class GameDirector {
     gameActionStart.dispatch({ action, index });
 
     onActionComplete(action, () => gameActionComplete.dispatch({ action, index }));
+  }
+
+  private onRoundComplete(n: number): void {
+    this.round += 1;
+    this.startNextRound();
   }
 }

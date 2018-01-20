@@ -1,4 +1,12 @@
-export { findIndex, flatten, includes, isEqual, random } from 'lodash';
+export {
+  findIndex,
+  flatten,
+  includes,
+  isEqual,
+  random,
+  sample,
+  shuffle,
+} from 'lodash';
 
 export const copyArray = (arr: any[]): any[] => {
   const result = [];

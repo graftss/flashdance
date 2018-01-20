@@ -58,6 +58,10 @@ export default class InputVerifier {
     this.game.eventBus.incorrectInput.dispatch({ expected, observed });
   }
 
+  private dispatchRoundComplete(): void {
+    this.game.eventBus.gameRoundComplete.dispatch(0);
+  }
+
   private nextInput(): GameInput {
     return this.targetInput[this.nextInputIndex];
   }
@@ -143,8 +147,8 @@ export default class InputVerifier {
   }
 
   private onCompleteInput() {
-    console.log('input completed');
     this.dispatchDisableInput();
+    this.dispatchRoundComplete();
   }
 
   private actionToInput = (actionData: GameActionData): Array<Maybe<GameInput>> => {

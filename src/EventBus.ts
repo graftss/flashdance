@@ -13,6 +13,7 @@ export default class EventBus {
 
   public gameActionStart: TypedSignal<GameActionContext> = new TypedSignal();
   public gameActionComplete: TypedSignal<GameActionContext> = new TypedSignal();
+  public gameRoundComplete: TypedSignal<number> = new TypedSignal();
 
   public spawnParticle: TypedSignal<ParticleData> = new TypedSignal();
 }

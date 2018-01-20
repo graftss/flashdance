@@ -1,4 +1,4 @@
-import { cellTarget, random } from '../../utils';
+import { cellTarget, random, sample, shuffle } from '../../utils';
 
 const toCell = ([row, col]) => ({ row, col });
 
@@ -28,18 +28,34 @@ export default class ActionSequencer {
     private gridCols: number,
   ) {}
 
-  public roundActions(difficulty: number): GameActionData[] {
-    const result = [];
+  public randomRound(difficulty: number): GameActionData[] {
+    const flashes = Math.ceil(difficulty / 3) - 1;
+    const obstacles = Math.floor(difficulty / 4);
 
-    for (let i = 0; i < difficulty; i++) {
-      result.push(this.flash(difficulty));
+    const actions = [];
+
+    for (let i = 0; i < flashes - 1; i++) {
+      if (difficulty < 6) {
+        actions.push(this.randomFlash());
+      } else {
+        actions.push(
+          Math.random() < .3 ? this.randomPath(difficulty) : this.randomFlash()
+        );
+      }
     }
 
-    return testActions;
-    // return result;
+    for (let i = 0; i < obstacles; i++) {
+      actions.push(this.randomObstacle());
+    }
+
+    return [
+      { type: 'wait', opts: { duration: 300 } },
+      this.randomFlash(),
+      ...shuffle(actions),
+    ];
   }
 
-  private flash(difficulty: number): GameActionData {
+  private randomFlash(): GameActionData {
     return {
       opts: {
         duration: 500,
@@ -49,10 +65,71 @@ export default class ActionSequencer {
     };
   }
 
+  private randomPath(difficulty: number): GameActionData {
+    return {
+      opts: {
+        duration: 500,
+        origin: path0[0],
+        path: path0.slice(1),
+      },
+      type: 'path',
+    };
+  }
+
   private randomGridPos(): GridPos {
     return {
       col: random(this.gridCols - 1),
       row: random(this.gridRows - 1),
+    };
+  }
+
+  private randomObstacle(): GameActionData {
+    const typeId = sample([0, 1, 2]);
+
+    switch (typeId) {
+      case 0: return this.randomRotate();
+      case 1: return this.randomSingleReflect();
+      case 2: return this.randomFakeFlash();
+    }
+  }
+
+  private randomRotate(): GameActionData {
+    const duration = 400;
+    const rotation = sample([-3, -2, -1, 1, 2, 3]) * Math.PI / 2;
+
+    return {
+      type: 'rotate',
+      opts: {
+        duration,
+        rotation,
+      },
+    };
+  }
+
+  private randomSingleReflect(): GameActionData {
+    const duration = 400;
+    const reflectX = sample([true, false]);
+
+    return {
+      type: 'reflect',
+      opts: {
+        duration,
+        reflectX,
+        reflectY: !reflectX,
+      },
+    };
+  }
+
+  private randomFakeFlash(): GameActionData {
+    const duration = 400;
+    const origin = this.randomGridPos();
+
+    return {
+      type: 'fakeflash',
+      opts: {
+        duration,
+        origin,
+      },
     };
   }
 }
