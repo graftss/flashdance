@@ -76,3 +76,11 @@ export const vec2 = {
 
   scale: (v: Vec2, k: number): Vec2 => ({ x: v.x * k, y: v.y * k }),
 };
+
+export const intersperse = <T>(list: T[], item: T) => (
+  list.reduce((result, listItem) => {
+    result.push(listItem);
+    result.push(item);
+    return result;
+  }, [])
+);
