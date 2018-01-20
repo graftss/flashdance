@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "start": "webpack-dev-server --content-base build --open",
-    "lint": "tslint --project . --format verbose --force"
+    "lint": "tslint --project . --format verbose --force",
+    "build": "webpack"
   },
   "devDependencies": {
     "@types/node": "^8.0.53",

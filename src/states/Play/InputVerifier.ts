@@ -2,7 +2,10 @@ import Game from '../../Game';
 import { cellTarget, flatten, isEqual, mapJust } from '../../utils';
 
 const logInputPair = (raw: RawInput, game: GameInput, label?: string) => {
-  label && console.log('---', label, '---');
+  if (label) {
+    console.log('---', label, '---');
+  }
+
   console.log('raw: ', raw.type, raw.target.cell.col, raw.target.cell.row);
   console.log('game: ', game.type, game.target.cell.col, game.target.cell.row);
 };
@@ -63,7 +66,7 @@ export default class InputVerifier {
     const expected = this.nextInput();
 
     if (this.ignoreInputUntilUp) {
-      console.log('sup')
+      console.log('sup');
       if (observed.type === 'up') {
         this.ignoreInputUntilUp = false;
       }

@@ -63,9 +63,9 @@ export default class InputLightManager extends Phaser.Group {
   }
 
   private destroyLightAtGridPos(gridPos: GridPos): void {
-    for (let i = 0; i < this.lights.length; i++) {
-      if (isEqual(gridPos, this.lights[i].gridPos)) {
-        return this.destroyLight(this.lights[i].light);
+    for (const lightData of this.lights) {
+      if (isEqual(gridPos, lightData.gridPos)) {
+        return this.destroyLight(lightData.light);
       }
     }
   }

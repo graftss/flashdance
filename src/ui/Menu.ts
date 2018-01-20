@@ -9,8 +9,8 @@ export default class Menu extends Phaser.Group {
     super(game);
 
     const textStyle: Phaser.PhaserTextStyle = {
-      font: 'bold 20pt Helvetica',
       fill: 'white',
+      font: 'bold 20pt Helvetica',
     };
 
     game.add.text(20, 20, 'sup', textStyle);

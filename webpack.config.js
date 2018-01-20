@@ -3,7 +3,7 @@ const { join } = require('path');
 module.exports = {
   entry: './src/index.ts',
   output: {
-    path: __dirname,
+    path: join(__dirname, 'build'),
     filename: 'bundle.js'
   },
   resolve: {
