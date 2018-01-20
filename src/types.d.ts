@@ -85,6 +85,11 @@ type GameActionData =
   { type: 'rotate', opts: RotateOpts } |
   { type: 'reflect', opts: ReflectOpts }
 
+type GameActionContext = {
+  action: GameAction,
+  index: number,
+}
+
 // Game input
 
 type InputTarget =

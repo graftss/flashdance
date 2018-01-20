@@ -6,8 +6,17 @@ import Game from '../../Game';
 import CellGrid from './CellGrid';
 import { mapJust } from '../../utils';
 
+const onActionComplete = (action: GameAction, callback: () => any): void => {
+  action.tween.onComplete.add(callback);
+};
+
+const startAction = (action: GameAction): void => {
+  action.tween.start();
+};
+
 export default class GameDirector {
   private actionSequencer: ActionSequencer;
+  private roundActionData: GameActionData[];
   private inputVerifier: InputVerifier;
   private round: number;
 
@@ -17,6 +26,8 @@ export default class GameDirector {
   ) {
     this.inputVerifier = new InputVerifier(game);
     this.actionSequencer = new ActionSequencer(cellGrid.rows, cellGrid.cols);
+
+    this.game.eventBus.gameActionComplete.add(this.onActionCompleteEvent.bind(this));
   }
 
   public start(): void {
@@ -29,11 +40,8 @@ export default class GameDirector {
   }
 
   private startRound(round: number): void {
-    const actionDataList = this.actionSequencer.roundActions(round);
-
-    this.runActions(actionDataList, () => {
-      this.inputVerifier.startRound(actionDataList);
-    });
+    this.roundActionData = this.actionSequencer.roundActions(round);
+    this.startActionEvent(0);
   }
 
   private buildAction = (actionData: GameActionData): GameAction => {
@@ -56,24 +64,32 @@ export default class GameDirector {
     };
   }
 
-  private startAction(action: GameAction): void {
-    action.tween.start();
+  private startAction(actionData: GameActionData): GameAction {
+    const action = this.buildAction(actionData);
+
+    startAction(action);
+
+    return action;
   }
 
-  private onActionComplete(action: GameAction, callback: () => void) {
-    action.tween.onComplete.add(callback);
-  }
+  private onActionCompleteEvent(context: GameActionContext): void {
+    const nextIndex = context.index + 1;
 
-  private runActions(actionDataList: GameActionData[], onComplete: () => void): void {
-    const [first, ...rest] = actionDataList;
-    const action = this.buildAction(first);
-
-    if (rest.length > 0) {
-      this.onActionComplete(action, () => this.runActions(rest, onComplete));
+    if (this.roundActionData[nextIndex] !== undefined) {
+      this.startActionEvent(nextIndex);
     } else {
-      this.onActionComplete(action, onComplete);
+      this.inputVerifier.startRound(this.roundActionData);
     }
+  }
 
-    this.startAction(action);
+  private startActionEvent(index: number): void {
+    const { gameActionStart, gameActionComplete } = this.game.eventBus;
+
+    const actionData = this.roundActionData[index];
+    const action = this.startAction(actionData);
+
+    gameActionStart.dispatch({ action, index });
+
+    onActionComplete(action, () => gameActionComplete.dispatch({ action, index }));
   }
 }

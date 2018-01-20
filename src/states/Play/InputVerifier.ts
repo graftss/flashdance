@@ -8,8 +8,9 @@ const logInputPair = (raw: RawInput, game: GameInput, label?: string) => {
 };
 
 export default class InputVerifier {
+  public nextInputIndex: number;
+
   private targetInput: GameInput[];
-  private nextInputIndex: number;
   private checkpointInputIndex: number;
 
   // on incorrect input, we stop verifying input until the player disengages

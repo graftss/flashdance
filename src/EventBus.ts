@@ -11,5 +11,8 @@ export default class EventBus {
   public correctInput: TypedSignal<InputPair> = new TypedSignal();
   public incorrectInput: TypedSignal<InputPair> = new TypedSignal();
 
+  public gameActionStart: TypedSignal<GameActionContext> = new TypedSignal();
+  public gameActionComplete: TypedSignal<GameActionContext> = new TypedSignal();
+
   public spawnParticle: TypedSignal<ParticleData> = new TypedSignal();
 }

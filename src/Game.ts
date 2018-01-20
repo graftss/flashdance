@@ -20,6 +20,6 @@ export default class Game extends Phaser.Game {
     this.state.add('Play', Play);
     this.state.add('LevelSelect', LevelSelect);
 
-    this.state.start('LevelSelect');
+    this.state.start('Play');
   }
 }
