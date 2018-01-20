@@ -71,4 +71,13 @@ export default class Tweener {
       start: first.start.bind(first),
     };
   }
+
+  public waitGameAction(opts: WaitOpts): GameAction {
+    const { duration } = opts;
+
+    return {
+      duration,
+      tween: this.nothing(duration),
+    };
+  }
 }

@@ -7,6 +7,14 @@ import Game from '../../../Game';
 import InputLightManager from './InputLightManager';
 import { copyArray, shiftAnchor, vec2 } from '../../../utils';
 
+export const cellGridActionTypes = [
+  'fakeflash',
+  'flash',
+  'path',
+  'reflect',
+  'rotate',
+];
+
 export default class CellGrid extends Phaser.Group {
   private cellWidth: number;
   private cellHeight: number;
@@ -48,7 +56,21 @@ export default class CellGrid extends Phaser.Group {
     return null;
   }
 
-  public flashCell(opts: FlashOpts): GameAction {
+  public buildAction(actionData: GameActionData): GameAction {
+    switch (actionData.type) {
+      case 'flash': return this.flashCell(actionData.opts);
+      case 'fakeflash': return this.fakeFlashCell(actionData.opts);
+      case 'path': return this.path(actionData.opts);
+      case 'rotate': return this.rotate(actionData.opts);
+      case 'reflect': return this.reflect(actionData.opts);
+    }
+  }
+
+  public getCellPosition(gridPos: GridPos): Vec2 {
+    return vec2.clone(this.getCellByGridPos(gridPos).position);
+  }
+
+  private flashCell(opts: FlashOpts): GameAction {
     const { origin, duration } = opts;
     const originCell = this.getCellByGridPos(origin);
     const flashLayer = this.newFlashLayer();
@@ -56,7 +78,7 @@ export default class CellGrid extends Phaser.Group {
     return flashLayer.flashTween(originCell, duration);
   }
 
-  public fakeFlashCell(opts: FlashOpts): GameAction {
+  private fakeFlashCell(opts: FlashOpts): GameAction {
     const { origin, duration } = opts;
     const originCell = this.getCellByGridPos(origin);
     const flashLayer = this.newFlashLayer();
@@ -64,7 +86,7 @@ export default class CellGrid extends Phaser.Group {
     return flashLayer.fakeFlashTween(originCell, duration);
   }
 
-  public path(opts: PathOpts): GameAction {
+  private path(opts: PathOpts): GameAction {
     const { origin, path, duration } = opts;
 
     const originCell = this.getCellByGridPos(origin);
@@ -74,7 +96,7 @@ export default class CellGrid extends Phaser.Group {
     return flashLayer.pathTween(originCell, pathPositions, duration);
   }
 
-  public rotate(opts: RotateOpts): GameAction {
+  private rotate(opts: RotateOpts): GameAction {
     const { rotation, duration } = opts;
 
     return {
@@ -83,7 +105,7 @@ export default class CellGrid extends Phaser.Group {
     };
   }
 
-  public reflect(opts: ReflectOpts): GameAction {
+  private reflect(opts: ReflectOpts): GameAction {
     const { duration, reflectX, reflectY } = opts;
 
     const targetScale = {
@@ -95,10 +117,6 @@ export default class CellGrid extends Phaser.Group {
       duration,
       tween: this.game.tweener.scale(this, targetScale, duration),
     };
-  }
-
-  public getCellPosition(gridPos: GridPos): Vec2 {
-    return vec2.clone(this.getCellByGridPos(gridPos).position);
   }
 
   private initCells() {

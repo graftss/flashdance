@@ -3,8 +3,8 @@ import * as Phaser from 'phaser-ce';
 import ActionSequencer from './ActionSequencer';
 import InputVerifier from './InputVerifier';
 import Game from '../../Game';
-import CellGrid from './CellGrid';
-import { mapJust } from '../../utils';
+import CellGrid, { cellGridActionTypes } from './CellGrid';
+import { includes, mapJust } from '../../utils';
 
 const onActionComplete = (action: GameAction, callback: () => any): void => {
   action.tween.onComplete.add(callback);
@@ -45,23 +45,13 @@ export default class GameDirector {
   }
 
   private buildAction = (actionData: GameActionData): GameAction => {
-    switch (actionData.type) {
-      case 'flash': return this.cellGrid.flashCell(actionData.opts);
-      case 'fakeflash': return this.cellGrid.fakeFlashCell(actionData.opts);
-      case 'path': return this.cellGrid.path(actionData.opts);
-      case 'rotate': return this.cellGrid.rotate(actionData.opts);
-      case 'reflect': return this.cellGrid.reflect(actionData.opts);
-      case 'wait': return this.wait(actionData.opts);
+    if (includes(cellGridActionTypes, actionData.type)) {
+      return this.cellGrid.buildAction(actionData);
     }
-  }
 
-  private wait(opts: WaitOpts): GameAction {
-    const { duration } = opts;
-
-    return {
-      duration,
-      tween: this.game.tweener.nothing(duration),
-    };
+    switch (actionData.type) {
+      case 'wait': return this.game.tweener.waitGameAction(actionData.opts);
+    }
   }
 
   private startAction(actionData: GameActionData): GameAction {
