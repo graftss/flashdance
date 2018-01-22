@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser-ce';
 
+import Background from './Background';
 import CellGrid from './CellGrid';
 import GameDirector from './GameDirector';
 import Game from '../../Game';
@@ -7,16 +8,22 @@ import ParticleManager from '../../ParticleManager';
 
 export default class Play extends Phaser.State {
   public game: Game;
+  private background: Background;
   private cellGrid: CellGrid;
   private director: GameDirector;
   private particleManager: ParticleManager;
 
   public create(game: Game) {
     this.initCellGrid();
+
     this.director = new GameDirector(game, this.cellGrid);
+
     this.particleManager = new ParticleManager(game);
 
     this.director.start();
+
+    this.background = new Background(game, game.width, game.height);
+    this.world.sendToBack(this.background);
   }
 
   private initCellGrid(): void {

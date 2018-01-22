@@ -9,7 +9,7 @@ export default class RetroPlasma extends Phaser.Filter {
     game: Game,
   ) {
     const uniforms = {
-      pixelSize: { type: '1i', value: 10 },
+      pixelSize: { type: '1i', value: 12 },
     };
 
     const fragmentSrc = `

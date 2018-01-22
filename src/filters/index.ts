@@ -1,8 +1,10 @@
 import BlurX from './BlurX';
 import BlurY from './BlurY';
+import FBMClouds from './FBMClouds';
 
-export default {
+export {
   BlurX,
   BlurY,
+  FBMClouds,
 };
 
