@@ -4,9 +4,9 @@ import 'phaser';
 import * as Phaser from 'phaser-ce';
 
 import EventBus from './EventBus';
-import Tweener from './Tweener';
-import Play from './states/Play';
 import LevelSelect from './states/LevelSelect';
+import Play from './states/Play';
+import Tweener from './Tweener';
 
 export default class Game extends Phaser.Game {
   public tweener: Tweener;

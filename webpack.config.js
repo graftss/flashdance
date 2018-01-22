@@ -16,10 +16,10 @@ module.exports = {
   },
   module: {
     loaders: [
-      { test: /\.ts$/, enforce: 'pre', loader: 'tslint-loader' },
       { test: /p2\.js$/, loader: 'expose-loader?p2' },
       { test: /pixi\.js$/, loader: 'expose-loader?PIXI' },
       { test: /phaser-split\.js$/, loader: 'expose-loader?Phaser' },
+      { test: /\.ts$/, enforce: 'pre', loader: 'tslint-loader' },
       { test: /\.ts$/, loader: 'ts-loader' },
     ]
   }
