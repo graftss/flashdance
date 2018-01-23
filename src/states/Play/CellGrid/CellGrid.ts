@@ -18,7 +18,7 @@ export const cellGridActionTypes = [
 ];
 
 export default class CellGrid extends Phaser.Group {
-  private background: Fragment;
+  private background: Phaser.Sprite;
   private border: CellGridBorder;
   private borderThickness: number = 3;
   private cellHeight: number;
@@ -43,6 +43,9 @@ export default class CellGrid extends Phaser.Group {
     this.initInputLightManager();
     this.initEventHandlers();
     this.initBackground();
+
+    this.bringToTop(this.inputLightManager);
+    this.sendToBack(this.background);
   }
 
   public cellContainingPoint(x: number, y: number): Maybe<Cell> {
@@ -195,8 +198,14 @@ export default class CellGrid extends Phaser.Group {
   private initBackground(): void {
     const { borderThickness: bt, game, h, w } = this;
 
-    const filter = new FBMClouds(game);
-    this.background = new Fragment(game, w + 2, h + 2, [filter], this);
+    const graphics = this.game.add.graphics(0, 0, this);
+    graphics.beginFill(0, 0.4);
+    graphics.drawRect(0, 0, w + 1, h + 1);
+    graphics.endFill();
+
+    const texture = graphics.generateTexture();
+
+    this.background = this.game.add.sprite(0, 0, texture, null, this);
   }
 
   private newFlashLayer(): FlashLayer {

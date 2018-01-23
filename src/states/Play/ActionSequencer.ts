@@ -39,7 +39,8 @@ export default class ActionSequencer {
       ...shuffle(raw),
     ];
 
-    return intersperse(shuffled, waitAction(150));
+    // return intersperse(shuffled, waitAction(150));
+    return [{ type: 'wait', opts: { duration: 300 }}, this.randomFlash(), this.randomRotate()];
   }
 
   private randomFlash(): GameActionData {
@@ -88,11 +89,11 @@ export default class ActionSequencer {
     console.log({ rotation, turns, duration });
 
     return {
-      type: 'rotate',
       opts: {
         duration,
         rotation,
       },
+      type: 'rotate',
     };
   }
 
@@ -101,12 +102,12 @@ export default class ActionSequencer {
     const reflectX = sample([true, false]);
 
     return {
-      type: 'reflect',
       opts: {
         duration,
         reflectX,
         reflectY: !reflectX,
       },
+      type: 'reflect',
     };
   }
 
@@ -115,11 +116,18 @@ export default class ActionSequencer {
     const origin = this.randomGridPos();
 
     return {
-      type: 'fakeflash',
       opts: {
         duration,
         origin,
       },
+      type: 'fakeflash',
+    };
+  }
+
+  private wait(duration: number): GameActionData {
+    return {
+      opts: { duration },
+      type: 'wait',
     };
   }
 }

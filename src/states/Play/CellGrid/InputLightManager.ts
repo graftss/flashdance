@@ -57,6 +57,8 @@ export default class InputLightManager extends Phaser.Group {
       tone,
     );
 
+    console.log('hi', light)
+
     this.lights.push({ gridPos, light });
 
     return light;

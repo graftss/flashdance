@@ -14,8 +14,6 @@ export default class Fragment extends Phaser.Group {
   ) {
     super(game, parent);
 
-    // the -2's here seem to be necessary for pixel alignment...
-    // not sure what that's about
     this.sprite = game.add.sprite();
     this.sprite.width = width;
     this.sprite.height = height;
