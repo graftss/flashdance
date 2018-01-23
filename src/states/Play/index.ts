@@ -1,14 +1,15 @@
 import * as Phaser from 'phaser-ce';
 
-import Background from './Background';
 import CellGrid from './CellGrid';
+import Fragment from '../../Fragment';
 import GameDirector from './GameDirector';
 import Game from '../../Game';
 import ParticleManager from '../../ParticleManager';
+import { FBMClouds } from '../../filters';
 
 export default class Play extends Phaser.State {
   public game: Game;
-  private background: Background;
+  private background: Fragment;
   private cellGrid: CellGrid;
   private director: GameDirector;
   private particleManager: ParticleManager;
@@ -22,7 +23,7 @@ export default class Play extends Phaser.State {
 
     this.director.start();
 
-    this.background = new Background(game, game.width, game.height);
+    this.background = new Fragment(game, game.width, game.height, [new FBMClouds(game)]);
     this.world.sendToBack(this.background);
   }
 

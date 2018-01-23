@@ -2,7 +2,9 @@ import * as Phaser from 'phaser-ce';
 
 import Cell from './Cell';
 import CellGridBorder from './CellGridBorder';
+import { FBMClouds } from '../../../filters';
 import FlashLayer from './FlashLayer';
+import Fragment from '../../../Fragment';
 import Game from '../../../Game';
 import InputLightManager from './InputLightManager';
 import { copyArray, shiftAnchor, vec2 } from '../../../utils';
@@ -16,10 +18,12 @@ export const cellGridActionTypes = [
 ];
 
 export default class CellGrid extends Phaser.Group {
-  private cellWidth: number;
-  private cellHeight: number;
-  private cells: Cell[][] = [];
+  private background: Fragment;
   private border: CellGridBorder;
+  private borderThickness: number = 3;
+  private cellHeight: number;
+  private cellWidth: number;
+  private cells: Cell[][] = [];
   private inputLightManager: InputLightManager;
 
   constructor(
@@ -38,6 +42,7 @@ export default class CellGrid extends Phaser.Group {
     this.initBorder();
     this.initInputLightManager();
     this.initEventHandlers();
+    this.initBackground();
   }
 
   public cellContainingPoint(x: number, y: number): Maybe<Cell> {
@@ -138,7 +143,9 @@ export default class CellGrid extends Phaser.Group {
   }
 
   private initBorder(): void {
-    this.border = new CellGridBorder(this.game, this, 0, 0, this.w, this.h);
+    const { borderThickness, game, h, w } = this;
+
+    this.border = new CellGridBorder(game, this, 0, 0, w, h, borderThickness);
   }
 
   private initInputLightManager(): void {
@@ -183,6 +190,13 @@ export default class CellGrid extends Phaser.Group {
 
     this.inputLightManager.addLight(inputPos, 'incorrect');
     this.inputLightManager.onIncorrectInput();
+  }
+
+  private initBackground(): void {
+    const { borderThickness: bt, game, h, w } = this;
+
+    const filter = new FBMClouds(game);
+    this.background = new Fragment(game, w + 2, h + 2, [filter], this);
   }
 
   private newFlashLayer(): FlashLayer {

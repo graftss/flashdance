@@ -81,10 +81,10 @@ export default class FBMClouds extends Phaser.Filter {
                       clamp(length(q),0.0,1.0));
 
           color = mix(color,
-                      vec3(1,0.66667,1),
+                      vec3(1.0,1.0,0.66667),
                       clamp(length(r.x),0.0,1.0));
 
-          gl_FragColor = vec4((.6*f*f+f*f*f+.5*f)*color,1.);
+          gl_FragColor = vec4((.6*f*f+f*f*f+.5*f)*color,0.5);
       }
     `;
 
