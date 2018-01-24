@@ -2,8 +2,14 @@ import * as Phaser from 'phaser-ce';
 
 import Game from '../../../Game';
 
+const upTint = 0x00ff00;
+const downTint = 0xff0000;
+
+const totalTint = upTint + downTint;
+
 export default class CellGridBorder extends Phaser.Group {
   private border: Phaser.Graphics;
+  private orientor: Phaser.Graphics;
 
   constructor(
     public game: Game,
@@ -17,6 +23,7 @@ export default class CellGridBorder extends Phaser.Group {
     super(game, parent);
 
     this.initBorder();
+    this.initOrientor();
   }
 
   private initBorder(): void {
@@ -24,16 +31,30 @@ export default class CellGridBorder extends Phaser.Group {
 
     if (this.border) this.border.destroy();
 
-    this.border = this.game.add.graphics(-thickness, -thickness, this);
+    const border = this.game.add.graphics(-thickness, -thickness, this);
+    border.lineStyle(thickness, 0xffffff);
+    border.drawRect(0, 0, this.w + 2 * thickness, this.h + 2 * thickness);
 
-    this.border.lineStyle(thickness, 0xffffff);
-    this.border.beginFill(0, 0);
-    this.border.drawRect(0, 0, this.w + 2 * thickness, this.h + 2 * thickness);
+    this.border = border;
   }
 
-  public setThickness(thickness: number): void {
-    this.thickness = thickness;
+  // The orientor shows the grid's current orientation, by showing
+  // both a particular direction and the side of the grid facing up.
+  private initOrientor(): void {
+    const { thickness, w } = this;
+    const d = 20;
 
-    this.initBorder();
+    const orientor = this.game.add.graphics(w / 2, -thickness, this);
+    orientor.tint = upTint;
+
+    orientor.beginFill(0xffffff);
+    orientor.drawCircle(0, 0, d);
+    orientor.endFill();
+
+    this.orientor = orientor;
+  }
+
+  public flip(): void {
+    this.orientor.tint = totalTint - this.orientor.tint;
   }
 }

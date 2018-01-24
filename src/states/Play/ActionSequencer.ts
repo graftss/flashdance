@@ -40,7 +40,7 @@ export default class ActionSequencer {
     ];
 
     // return intersperse(shuffled, waitAction(150));
-    return [{ type: 'wait', opts: { duration: 300 }}, this.randomFlash(), this.randomRotate()];
+    return this.debug_reflect();
   }
 
   private randomFlash(): GameActionData {
@@ -98,7 +98,7 @@ export default class ActionSequencer {
   }
 
   private randomSingleReflect(): GameActionData {
-    const duration = 400;
+    const duration = 1000;
     const reflectX = sample([true, false]);
 
     return {
@@ -129,5 +129,21 @@ export default class ActionSequencer {
       opts: { duration },
       type: 'wait',
     };
+  }
+
+  private debug_rotate(): GameActionData[] {
+    return [
+      this.wait(300),
+      this.randomFlash(),
+      this.randomRotate(),
+    ];
+  }
+
+  private debug_reflect(): GameActionData[] {
+    return [
+      this.wait(300),
+      this.randomFlash(),
+      this.randomSingleReflect(),
+    ];
   }
 }

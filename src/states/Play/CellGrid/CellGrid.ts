@@ -18,7 +18,7 @@ export const cellGridActionTypes = [
 ];
 
 export default class CellGrid extends Phaser.Group {
-  private background: Phaser.Sprite;
+  private background: Phaser.Graphics;
   private border: CellGridBorder;
   private borderThickness: number = 3;
   private cellHeight: number;
@@ -115,15 +115,26 @@ export default class CellGrid extends Phaser.Group {
 
   private reflect(opts: ReflectOpts): GameAction {
     const { duration, reflectX, reflectY } = opts;
+    const { alpha, merge, scale } = this.game.tweener;
 
     const targetScale = {
       x: this.scale.x * (reflectX ? -1 : 1),
       y: this.scale.y * (reflectY ? -1 : 1),
     };
+    const scaleTween = scale(this, targetScale, duration);
+
+    let pastHalf = false;
+    scaleTween.onUpdateCallback((_, t) => {
+      if (t >= 0.5 && !pastHalf) {
+        pastHalf = true;
+        this.border.flip();
+        this.background.alpha = 0.8 - this.background.alpha;
+      }
+    });
 
     return {
       duration,
-      tween: this.game.tweener.scale(this, targetScale, duration),
+      tween: scaleTween,
     };
   }
 
@@ -199,13 +210,13 @@ export default class CellGrid extends Phaser.Group {
     const { borderThickness: bt, game, h, w } = this;
 
     const graphics = this.game.add.graphics(0, 0, this);
-    graphics.beginFill(0, 0.4);
+    graphics.alpha = 0.3;
+
+    graphics.beginFill();
     graphics.drawRect(0, 0, w + 1, h + 1);
     graphics.endFill();
 
-    const texture = graphics.generateTexture();
-
-    this.background = this.game.add.sprite(0, 0, texture, null, this);
+    this.background = graphics;
   }
 
   private newFlashLayer(): FlashLayer {
