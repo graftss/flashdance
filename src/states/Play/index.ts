@@ -28,9 +28,11 @@ export default class Play extends Phaser.State {
   }
 
   private initCellGrid(): void {
-    const gridSize = 300;
-    const gridX = (this.game.width - gridSize) / 2;
-    const gridY = (this.game.height - gridSize) / 2;
+    const { height, width } = this.game;
+
+    const gridSize = Math.min(width, height) / 1.5;
+    const gridX = (width - gridSize) / 2;
+    const gridY = (height - gridSize) / 2;
 
     this.cellGrid = new CellGrid(this.game, gridX, gridY, gridSize, gridSize, 3, 3);
   }
