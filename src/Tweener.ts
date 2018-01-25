@@ -43,6 +43,21 @@ export default class Tweener {
     return this.game.add.tween(obj.scale).to(normalizeScale(to), duration);
   }
 
+  public tint = (
+    obj: ITweenableTint,
+    to: number,
+    duration: number,
+  ): Phaser.Tween => {
+    const { interpolateColor } = Phaser.Color;
+
+    const from = obj.tint;
+    const tween = this.game.add.tween({ t: 0 }).to({ t: 1 }, duration);
+
+    tween.onUpdateCallback((_, t) => obj.tint = interpolateColor(from, to, 1, t));
+
+    return tween;
+  }
+
   // Note that the merged tween completes when the first tween does
   public merge = <T extends TweenWrapper>(tweens: T[]): T => {
     if (tweens.length === 0) {

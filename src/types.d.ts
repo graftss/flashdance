@@ -21,6 +21,8 @@ interface ITweenableRotation { rotation: number }
 
 interface ITweenablePosition { position: Vec2 }
 
+interface ITweenableTint { tint: number }
+
 // Graphical effects
 
 type InputLightTone =
