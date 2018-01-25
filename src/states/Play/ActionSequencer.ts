@@ -40,7 +40,7 @@ export default class ActionSequencer {
     ];
 
     // return intersperse(shuffled, waitAction(150));
-    return this.debug_reflect();
+    return this.debug_input_lights();
   }
 
   private randomFlash(): GameActionData {
@@ -144,6 +144,14 @@ export default class ActionSequencer {
       this.wait(300),
       this.randomFlash(),
       this.randomSingleReflect(),
+    ];
+  }
+
+  private debug_input_lights(): GameActionData[] {
+    return [
+      this.wait(300),
+      this.randomFlash(),
+      this.randomPath(5),
     ];
   }
 }

@@ -23,8 +23,8 @@ export default class Play extends Phaser.State {
 
     this.director.start();
 
-    this.background = new Fragment(game, game.width, game.height, [new FBMClouds(game)]);
-    this.world.sendToBack(this.background);
+    // this.background = new Fragment(game, game.width, game.height, [new FBMClouds(game)]);
+    // this.world.sendToBack(this.background);
   }
 
   private initCellGrid(): void {

@@ -28,7 +28,7 @@ export default class InputLight extends Phaser.Group {
   }
 
   public brighten(): Phaser.Tween {
-    return this.game.tweener.alpha(this.graphics, .8, 30);
+    return this.game.tweener.alpha(this.graphics, .6, 30);
   }
 
   public dim(): Phaser.Tween {
@@ -68,5 +68,6 @@ export default class InputLight extends Phaser.Group {
       .endFill();
 
     this.graphics.alpha = 0;
+    this.graphics.scale = new Phaser.Point(0.7, 0.7);
   }
 }
