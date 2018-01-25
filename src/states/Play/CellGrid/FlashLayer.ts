@@ -10,6 +10,7 @@ const fakeFlashColor = 0xff0000;
 export default class FlashLayer extends Phaser.Group {
   public layer: Phaser.Graphics;
   public emitter: Phaser.Particles.Arcade.Emitter;
+  public trail: Phaser.Sprite[] = [];
 
   private moving: boolean = false;
   private lastTrailPos: Phaser.Point = new Phaser.Point(0, 0);
@@ -111,17 +112,6 @@ export default class FlashLayer extends Phaser.Group {
     return tween;
   }
 
-  private spawnPathParticle(): void {
-    this.game.eventBus.spawnParticle.dispatch({
-      position: this.getWorldCenter(),
-      type: 'trail',
-    });
-  }
-
-  private getWorldCenter(): Vec2 {
-    return vec2.plus(this.worldPosition, { x: this.w / 2, y: this.h / 2});
-  }
-
   private flash(duration: number, color: number): TweenWrapper {
     this.drawLayer(color);
 
@@ -147,16 +137,5 @@ export default class FlashLayer extends Phaser.Group {
       nothing(50),
       this.dim(150),
     ]);
-  }
-
-  private distanceFromLastTrail() {
-    return this.lastTrailPos.distance(this.position);
-  }
-
-  public update() {
-    if (this.distanceFromLastTrail() > 20) {
-      this.spawnPathParticle();
-      this.lastTrailPos = this.position.clone();
-    }
   }
 }

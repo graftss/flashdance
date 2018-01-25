@@ -39,8 +39,7 @@ export default class ActionSequencer {
       ...shuffle(raw),
     ];
 
-    // return intersperse(shuffled, waitAction(150));
-    return this.debug_input_lights();
+    return intersperse(shuffled, waitAction(150));
   }
 
   private randomFlash(): GameActionData {
@@ -152,6 +151,28 @@ export default class ActionSequencer {
       this.wait(300),
       this.randomFlash(),
       this.randomPath(5),
+    ];
+  }
+
+  private debug_particle_trail(): GameActionData[] {
+    return [
+      this.randomPath(5),
+      {
+        type: 'rotate',
+        opts: {
+          duration: 300,
+          rotation: Math.PI * 3 / 2,
+        },
+      },
+      // this.randomSingleReflect(),
+      {
+        type: 'path',
+        opts: {
+          origin: path1[0],
+          path: path1.slice(1),
+          duration: 3000,
+        },
+      },
     ];
   }
 }
