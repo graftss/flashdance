@@ -8,6 +8,14 @@ type GridPos = { col: number, row: number }
 
 type Vec2 = { x: number, y: number }
 
+// UI
+
+type MenuOptionData = {
+  label: string,
+  onHover: (pos: Vec2) => void,
+  onSelect: (pos: Vec2) => void,
+}
+
 // Tweening
 
 interface ITweenableAlpha { alpha: number }

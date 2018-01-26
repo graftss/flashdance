@@ -1,19 +1,27 @@
 import * as Phaser from 'phaser-ce';
 
 import Game from '../Game';
+import MenuOption from './MenuOption';
 
 export default class Menu extends Phaser.Group {
+  private options: MenuOption[]
+
   constructor(
     public game: Game,
+    private optionData: MenuOptionData[]
   ) {
     super(game);
 
-    const textStyle: Phaser.PhaserTextStyle = {
-      fill: 'white',
-      font: 'bold 20pt Helvetica',
-    };
+    const top = 60;
+    const rowHeight = 20;
 
-    game.add.text(20, 20, 'sup', textStyle);
-    console.log('hello');
+    this.options = optionData.map(({ label }, index) => {
+      const y = top + rowHeight * index;
+
+      const option = new MenuOption(game, label, 0, y, game.width, rowHeight);
+
+      this.addChild(option);
+      return option;
+    });
   }
 }

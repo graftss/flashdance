@@ -8,6 +8,6 @@ export default class LevelSelect extends Phaser.State {
   public menu: Menu;
 
   public create(game: Game) {
-    this.menu = new Menu(game);
+
   }
 }
