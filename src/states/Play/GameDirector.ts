@@ -43,8 +43,6 @@ export default class GameDirector {
   private startRound(round: number): void {
     this.roundActionData = this.actionSequencer.randomRound(round);
     this.startActionEvent(0);
-
-    console.log('sup', this.roundActionData);
   }
 
   private buildAction = (actionData: GameActionData): GameAction => {

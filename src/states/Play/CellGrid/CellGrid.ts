@@ -12,6 +12,7 @@ import { copyArray, shiftAnchor, vec2 } from '../../../utils';
 export const cellGridActionTypes = [
   'fakeflash',
   'flash',
+  'multiflash',
   'path',
   'reflect',
   'rotate',
@@ -67,6 +68,7 @@ export default class CellGrid extends Phaser.Group {
   public buildAction(actionData: GameActionData): GameAction {
     switch (actionData.type) {
       case 'flash': return this.flashCell(actionData.opts);
+      case 'multiflash': return this.multiflashCell(actionData.opts);
       case 'fakeflash': return this.fakeFlashCell(actionData.opts);
       case 'path': return this.path(actionData.opts);
       case 'rotate': return this.rotate(actionData.opts);
@@ -79,27 +81,35 @@ export default class CellGrid extends Phaser.Group {
   }
 
   private flashCell(opts: FlashOpts): GameAction {
-    const { origin, duration } = opts;
+    const { duration, origin } = opts;
     const originCell = this.getCellByGridPos(origin);
-    const flashLayer = this.newFlashLayer();
+    const flashLayer = this.newFlashLayer(false);
 
     return flashLayer.flashTween(originCell, duration);
   }
 
-  private fakeFlashCell(opts: FlashOpts): GameAction {
-    const { origin, duration } = opts;
+  private multiflashCell(opts: MultiflashOpts): GameAction {
+    const { count, duration, origin } = opts;
     const originCell = this.getCellByGridPos(origin);
-    const flashLayer = this.newFlashLayer();
+    const flashLayer = this.newFlashLayer(false);
+
+    return flashLayer.multiflashTween(originCell, count, duration);
+  }
+
+  private fakeFlashCell(opts: FlashOpts): GameAction {
+    const { duration, origin } = opts;
+    const originCell = this.getCellByGridPos(origin);
+    const flashLayer = this.newFlashLayer(true);
 
     return flashLayer.fakeFlashTween(originCell, duration);
   }
 
   private path(opts: PathOpts): GameAction {
-    const { origin, path, duration } = opts;
+    const { duration, origin, path } = opts;
 
     const originCell = this.getCellByGridPos(origin);
     const pathPositions = path.map(this.pathPositionMap);
-    const flashLayer = this.newFlashLayer();
+    const flashLayer = this.newFlashLayer(false);
 
     return flashLayer.pathTween(originCell, pathPositions, duration);
   }
@@ -219,8 +229,14 @@ export default class CellGrid extends Phaser.Group {
     this.background = graphics;
   }
 
-  private newFlashLayer(): FlashLayer {
-    const flashLayer = new FlashLayer(this.game, this, this.cellWidth, this.cellHeight);
+  private newFlashLayer(isFake: boolean): FlashLayer {
+    const flashLayer = new FlashLayer(
+      this.game,
+      this,
+      this.cellWidth,
+      this.cellHeight,
+      isFake,
+    );
 
     return flashLayer;
   }

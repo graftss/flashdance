@@ -50,7 +50,7 @@ type ParticleData = {
 
 type TweenWrapper = {
   start: Function,
-  onStart: Phaser.Signal
+  onStart: Phaser.Signal,
   onComplete: Phaser.Signal,
 };
 
@@ -65,7 +65,12 @@ type WaitOpts = {
 
 type FlashOpts = {
   duration: number,
-  delay?: number,
+  origin: GridPos,
+}
+
+type MultiflashOpts = {
+  count: number,
+  duration: number,
   origin: GridPos,
 }
 
@@ -90,6 +95,7 @@ type GameActionData =
   { type: 'wait', opts: WaitOpts } |
   { type: 'flash', opts: FlashOpts } |
   { type: 'fakeflash', opts: FlashOpts } |
+  { type: 'multiflash', opts: MultiflashOpts } |
   { type: 'path', opts: PathOpts } |
   { type: 'rotate', opts: RotateOpts } |
   { type: 'reflect', opts: ReflectOpts }

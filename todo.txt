@@ -1,4 +1,5 @@
 === up next ===
+- refactor `initLayer` in flash layer
 
 === on deck ===
 - "number" on flash to denote multiple taps

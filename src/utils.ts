@@ -4,7 +4,9 @@ export {
   includes,
   isEqual,
   random,
+  range,
   sample,
+  sampleSize,
   shuffle,
 } from 'lodash';
 
@@ -89,4 +91,28 @@ export const destroy = (obj?: { destroy: () => any }) => {
   if (obj !== undefined) {
     obj.destroy();
   }
+};
+
+export const xprod = <T, U>(ts: T[], us: U[]): [T, U][] => {
+  const result = [];
+
+  for (const t of ts) {
+    for (const u of us) {
+      result.push([t, u]);
+    }
+  }
+
+  return result;
+};
+
+export const repeat = <T>(count: number, ts: T[]): T[] => {
+  const result = [];
+
+  for (let n = 0; n < count; n++) {
+    for (const t of ts) {
+      result.push(t);
+    }
+  }
+
+  return result;
 };

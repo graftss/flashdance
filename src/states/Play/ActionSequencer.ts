@@ -43,7 +43,8 @@ export default class ActionSequencer {
       ...shuffle(raw),
     ];
 
-    return intersperse(shuffled, waitAction(150));
+    return this.debug_multiflash();
+    // return intersperse(shuffled, waitAction(150));
   }
 
   private randomFlash(): GameActionData {
@@ -53,6 +54,17 @@ export default class ActionSequencer {
         origin: this.randomGridPos(),
       },
       type: 'flash',
+    };
+  }
+
+  private randomMultiflash(): GameActionData {
+    return {
+      opts: {
+        duration: 300,
+        origin: this.randomGridPos(),
+        count: random(2, 4),
+      },
+      type: 'multiflash',
     };
   }
 
@@ -177,6 +189,13 @@ export default class ActionSequencer {
         },
         type: 'path',
       },
+    ];
+  }
+
+  private debug_multiflash(): GameActionData[] {
+    return [
+      this.wait(300),
+      this.randomMultiflash(),
     ];
   }
 }

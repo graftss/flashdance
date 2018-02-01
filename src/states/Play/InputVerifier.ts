@@ -1,5 +1,5 @@
 import Game from '../../Game';
-import { cellTarget, flatten, isEqual, mapJust } from '../../utils';
+import { cellTarget, flatten, isEqual, mapJust, repeat } from '../../utils';
 
 const logInputPair = (raw: RawInput, game: GameInput, label?: string) => {
   if (label) {
@@ -160,6 +160,17 @@ export default class InputVerifier {
           { type: 'down', target: cellTarget(origin) },
           { type: 'up', target: cellTarget(origin) },
         ];
+      }
+
+      case 'multiflash': {
+        const { count, origin } = actionData.opts;
+
+        const flashInput: GameInput[] = [
+          { type: 'down', target: cellTarget(origin) },
+          { type: 'up', target: cellTarget(origin) },
+        ];
+
+        return repeat(count, flashInput);
       }
 
       case 'path': {
