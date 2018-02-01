@@ -2,8 +2,16 @@ import * as Phaser from 'phaser-ce';
 
 import Game from '../Game';
 
+const colors = {
+  unfocused: '#ffffff',
+  focused: '#dddddd',
+  selected: '#ffffff',
+};
+
 export default class MenuOption extends Phaser.Group {
-  private mouseOver: boolean;
+  public game: Game;
+
+  private mouseOver: boolean = false;
   private text: Phaser.Text;
   private textStyle: Phaser.PhaserTextStyle = {
     boundsAlignH: 'center',
@@ -27,8 +35,9 @@ export default class MenuOption extends Phaser.Group {
     this.text = game.add.text(0, 0, label, this.textStyle, this);
     this.text.setTextBounds(0, 0, w, h);
     this.text.inputEnabled = true;
+    this.text.addColor(colors.unfocused, 0);
 
-    this.text.events.onInputDown.add(onSelect);
+    this.text.events.onInputDown.add(this.onInputDown);
     this.text.events.onInputOver.add(this.onInputOver);
     this.text.events.onInputOut.add(this.onInputOut);
   }
@@ -37,15 +46,21 @@ export default class MenuOption extends Phaser.Group {
     this.text.inputEnabled = value;
   }
 
+  private onInputDown = () => {
+    this.text.addColor(colors.selected, 0);
+    this.menuOptionData.onSelect();
+  }
+
   private onInputOver = () => {
     if (this.mouseOver) {
       return;
     }
 
     this.mouseOver = true;
+    this.text.addColor(colors.focused, 0);
 
     console.log('over');
-  };
+  }
 
   private onInputOut = () => {
     if (!this.mouseOver) {
@@ -53,6 +68,7 @@ export default class MenuOption extends Phaser.Group {
     }
 
     this.mouseOver = false;
+    this.text.addColor(colors.unfocused, 0);
 
     console.log('out');
   }

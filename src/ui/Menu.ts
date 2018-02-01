@@ -17,8 +17,12 @@ export default class Menu extends Phaser.Group {
     super(game);
 
     this.options = optionData.map((data, index) => {
-      const y = rowHeight * index;
-      const option = new MenuOption(game, 0, y, game.width, rowHeight, data);
+      const option = new MenuOption(
+        game,
+        0, rowHeight * index,
+        game.width, rowHeight,
+        data,
+      );
 
       this.addChild(option);
       return option;
