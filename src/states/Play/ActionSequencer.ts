@@ -20,13 +20,17 @@ export default class ActionSequencer {
     const raw = [];
 
     for (let i = 0; i < flashes - 1; i++) {
+      let nextInputAction: GameActionData;
+
       if (difficulty < 6) {
-        raw.push(this.randomFlash());
+        nextInputAction = this.randomFlash();
       } else {
-        raw.push(
-          Math.random() < .3 ? this.randomPath(difficulty) : this.randomFlash()
-        );
+        nextInputAction = Math.random() < .3 ?
+          this.randomPath(difficulty) :
+          this.randomFlash();
       }
+
+      raw.push(nextInputAction);
     }
 
     for (let i = 0; i < obstacles; i++) {
@@ -158,20 +162,20 @@ export default class ActionSequencer {
     return [
       this.randomPath(5),
       {
-        type: 'rotate',
         opts: {
           duration: 300,
           rotation: Math.PI * 3 / 2,
         },
+        type: 'rotate',
       },
       // this.randomSingleReflect(),
       {
-        type: 'path',
         opts: {
+          duration: 3000,
           origin: path1[0],
           path: path1.slice(1),
-          duration: 3000,
         },
+        type: 'path',
       },
     ];
   }

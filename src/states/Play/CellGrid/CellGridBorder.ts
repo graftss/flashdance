@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser-ce';
 
 import Game from '../../../Game';
+import { destroy } from '../../../utils';
 
 const upTint = 0x00ff00;
 const downTint = 0xff0000;
@@ -27,15 +28,13 @@ export default class CellGridBorder extends Phaser.Group {
   }
 
   private initBorder(): void {
-    const { thickness } = this;
+    const { game, h, thickness, w } = this;
 
-    if (this.border) this.border.destroy();
+    destroy(this.border);
 
-    const border = this.game.add.graphics(-thickness, -thickness, this);
-    border.lineStyle(thickness, 0xffffff);
-    border.drawRect(0, 0, this.w + 2 * thickness, this.h + 2 * thickness);
-
-    this.border = border;
+    this.border = game.add.graphics(-thickness, -thickness, this)
+      .lineStyle(thickness, 0xffffff)
+      .drawRect(0, 0, w + 2 * thickness, h + 2 * thickness);
   }
 
   // The orientor shows the grid's current orientation, by showing

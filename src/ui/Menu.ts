@@ -4,11 +4,11 @@ import Game from '../Game';
 import MenuOption from './MenuOption';
 
 export default class Menu extends Phaser.Group {
-  private options: MenuOption[]
+  private options: MenuOption[];
 
   constructor(
     public game: Game,
-    private optionData: MenuOptionData[]
+    private optionData: MenuOptionData[],
   ) {
     super(game);
 
