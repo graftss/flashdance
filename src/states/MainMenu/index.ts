@@ -5,23 +5,38 @@ import Menu from '../../ui/Menu';
 
 export default class MainMenu extends Phaser.State {
   public game: Game;
-  public menu: Menu;
-  private optionData: MenuOptionData[];
+  private mainMenu: Menu;
+  private courseMenu: Menu;
 
-  public create(game: Game) {
-    this.optionData = [
+  public create() {
+    this.initMainMenu();
+    this.initCourseMenu();
+  }
+
+  private initMainMenu() {
+    const mainMenuOptions = [
       {
-        label: 'sup',
-        onHover: () => 'hovered sup',
-        onSelect: () => 'selected sup',
+        label: 'play',
+        onSelect: () => this.game.state.start('Play'),
       },
       {
-        label: 'yoyoyoyoyoyyyoyo',
-        onHover: () => 'hovered yoyo',
-        onSelect: () => 'selected yoyo',
+        label: 'options',
+        onSelect: () => {
+          const delta = { x: 100, y: 0 };
+          this.mainMenu.transition(delta, 1000).start();
+        },
       },
     ];
 
-    this.menu = new Menu(game, this.optionData);
+    this.mainMenu = new Menu(this.game, 0, 80, 80, mainMenuOptions);
+  }
+
+  private initCourseMenu() {
+    const courseMenuOptions = [
+      {
+        label: 'simon',
+        onSelect: () => this.game.state.start('Play'),
+      }
+    ];
   }
 }

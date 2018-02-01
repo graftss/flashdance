@@ -1,5 +1,7 @@
 import * as Phaser from 'phaser-ce';
 
+import { vec2 } from './utils';
+
 const normalizeScale = (target: ScaleTarget): ScaleObject => (
   typeof target === 'number' ? { x: target, y: target } : target
 );
@@ -17,6 +19,14 @@ export default class Tweener {
     duration: number,
   ): Phaser.Tween => {
     return this.game.add.tween(obj.position).to(to, duration);
+  }
+
+  public positionBy = (
+    obj: ITweenablePosition,
+    delta: Vec2,
+    duration: number,
+  ): Phaser.Tween => {
+    return this.position(obj, vec2.plus(obj.position, delta), duration);
   }
 
   public alpha = (

@@ -12,8 +12,7 @@ type Vec2 = { x: number, y: number }
 
 type MenuOptionData = {
   label: string,
-  onHover: (pos: Vec2) => void,
-  onSelect: (pos: Vec2) => void,
+  onSelect: () => void,
 }
 
 // Tweening
