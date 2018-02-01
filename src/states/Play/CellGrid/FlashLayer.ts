@@ -69,7 +69,7 @@ export default class FlashLayer extends Phaser.Group {
   public pathTween(originCell: Cell, path: Vec2[], duration: number): GameAction {
     const tween = this.path(path, duration);
     tween.onStart.add(() => this.moveToCell(originCell));
-    tween.onComplete.add(this.destroy);
+    tween.onComplete.add(() => this.destroy());
 
     return { duration, tween };
   }

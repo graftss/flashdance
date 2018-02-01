@@ -2,7 +2,6 @@
 - refactor `initLayer` in flash layer
 
 === on deck ===
-- "number" on flash to denote multiple taps
 - "long hold" flash
 
 - add something to visually distinguish orientations of the grid

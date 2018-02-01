@@ -20,21 +20,11 @@ export default class ActionSequencer {
     const raw = [];
 
     for (let i = 0; i < flashes - 1; i++) {
-      let nextInputAction: GameActionData;
-
-      if (difficulty < 6) {
-        nextInputAction = this.randomFlash();
-      } else {
-        nextInputAction = Math.random() < .3 ?
-          this.randomPath(difficulty) :
-          this.randomFlash();
-      }
-
-      raw.push(nextInputAction);
+      raw.push(this.randomInputAction(difficulty));
     }
 
     for (let i = 0; i < obstacles; i++) {
-      raw.push(this.randomObstacle());
+      raw.push(this.randomObstacle(difficulty));
     }
 
     const shuffled = [
@@ -43,8 +33,24 @@ export default class ActionSequencer {
       ...shuffle(raw),
     ];
 
-    return this.debug_multiflash();
-    // return intersperse(shuffled, waitAction(150));
+    // return this.debug_multiflash();
+    return intersperse(shuffled, waitAction(150));
+  }
+
+  private randomInputAction(difficulty: number): GameActionData {
+    if (difficulty < 6) {
+      return this.randomFlash();
+    } else {
+      const rand = Math.random();
+
+      if (rand < 0.5) {
+        return this.randomFlash();
+      } else if (rand < 0.75) {
+        return this.randomPath(difficulty);
+      } else {
+        return this.randomMultiflash();
+      }
+    }
   }
 
   private randomFlash(): GameActionData {
@@ -60,7 +66,7 @@ export default class ActionSequencer {
   private randomMultiflash(): GameActionData {
     return {
       opts: {
-        duration: 300,
+        duration: 600,
         origin: this.randomGridPos(),
         count: random(2, 4),
       },
@@ -79,14 +85,7 @@ export default class ActionSequencer {
     };
   }
 
-  private randomGridPos(): GridPos {
-    return {
-      col: random(this.gridCols - 1),
-      row: random(this.gridRows - 1),
-    };
-  }
-
-  private randomObstacle(): GameActionData {
+  private randomObstacle(difficulty: number): GameActionData {
     const typeId = sample([0, 1, 2]);
 
     switch (typeId) {
@@ -100,8 +99,6 @@ export default class ActionSequencer {
     const turns = sample([-3, -2, -1, 1, 2, 3]);
     const duration = Math.abs(turns * 400);
     const rotation = turns * Math.PI / 2;
-
-    console.log({ rotation, turns, duration });
 
     return {
       opts: {
@@ -143,6 +140,13 @@ export default class ActionSequencer {
     return {
       opts: { duration },
       type: 'wait',
+    };
+  }
+
+  private randomGridPos(): GridPos {
+    return {
+      col: random(this.gridCols - 1),
+      row: random(this.gridRows - 1),
     };
   }
 
