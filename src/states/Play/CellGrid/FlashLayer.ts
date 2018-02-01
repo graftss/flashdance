@@ -51,7 +51,7 @@ export default class FlashLayer extends Phaser.Group {
   }
 
   public pathTween(originCell: Cell, path: Vec2[], duration: number): GameAction {
-    this.drawLayer(flashColor);
+    this.initLayer(flashColor);
 
     const tween = this.path(path, duration);
     tween.onStart.add(() => this.moveToCell(originCell));
@@ -60,7 +60,7 @@ export default class FlashLayer extends Phaser.Group {
     return { duration, tween };
   }
 
-  private drawLayer(color: number): void {
+  private initLayer(color: number): void {
     this.layer.beginFill(color);
     this.layer.drawRoundedRect(0, 0, this.w, this.h, this.w / 10);
     this.layer.endFill();
@@ -113,7 +113,7 @@ export default class FlashLayer extends Phaser.Group {
   }
 
   private flash(duration: number, color: number): TweenWrapper {
-    this.drawLayer(color);
+    this.initLayer(color);
 
     const result = this.game.tweener.merge([
       this.ripple(duration),

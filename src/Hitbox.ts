@@ -1,12 +1,12 @@
 import * as Phaser from 'phaser-ce';
 
 import Game from './Game';
-import { destroyIfDefined } from './utils';
+import { destroy } from './utils';
 
 export default class Hitbox {
   private graphic: Phaser.Graphics;
   private border: Phaser.Graphics;
-  private inputSource: Phaser.Sprite;
+  private inputTarget: Phaser.Sprite;
 
   constructor(
     public game: Game,
@@ -15,8 +15,13 @@ export default class Hitbox {
     public y: number,
     public w: number,
     public h: number,
+    inputEnabled: boolean = false,
   ) {
     this.initGraphic();
+
+    if (inputEnabled) {
+      this.initInputTarget();
+    }
   }
 
   public containsPoint(x: number, y: number): boolean {
@@ -48,7 +53,7 @@ export default class Hitbox {
     graphic.drawRect(0, 0, w, h);
     graphic.endFill();
 
-    destroyIfDefined(this.graphic);
+    destroy(this.graphic);
     this.graphic = graphic;
   }
 
@@ -60,17 +65,17 @@ export default class Hitbox {
     border.drawRect(0, 0, w, h);
     border.endFill();
 
-    destroyIfDefined(this.border);
+    destroy(this.border);
     this.border = border;
   }
 
-  private initInputSource(): void {
+  private initInputTarget(): void {
     const { parent, x, y } = this;
 
-    const inputSource = this.game.add.sprite(x, y, this.generateTexture(), null, parent);
-    inputSource.inputEnabled = true;
+    const inputTarget = this.game.add.sprite(x, y, this.generateTexture(), null, parent);
+    inputTarget.inputEnabled = true;
 
-    destroyIfDefined(this.inputSource);
-    this.inputSource = inputSource;
+    destroy(this.inputTarget);
+    this.inputTarget = inputTarget;
   }
 }

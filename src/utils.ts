@@ -85,7 +85,7 @@ export const intersperse = <T>(list: T[], item: T) => (
   }, [])
 );
 
-export const destroyIfDefined = (obj?: { destroy: () => any }) => {
+export const destroy = (obj?: { destroy: () => any }) => {
   if (obj !== undefined) {
     obj.destroy();
   }

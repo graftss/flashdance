@@ -64,10 +64,10 @@ export default class InputLight extends Phaser.Group {
   private initBacklight(): void {
     this.graphics
       .beginFill(0xffffff, 1)
-      .drawRoundedRect(0, 0, this.w, this.h, 5)
+      .drawRoundedRect(0, 0, this.w, this.h, this.w / 10)
       .endFill();
 
     this.graphics.alpha = 0;
-    // this.graphics.scale = new Phaser.Point(0.7, 0.7);
+    this.graphics.scale = new Phaser.Point(0.8, 0.8);
   }
 }
