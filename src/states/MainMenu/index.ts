@@ -5,8 +5,8 @@ import Menu from '../../ui/Menu';
 
 export default class MainMenu extends Phaser.State {
   public game: Game;
-  private menuStack: Menu[] = [];
 
+  private menuStack: Menu[] = [];
   private courseMenu: Menu;
   private mainMenu: Menu;
   private optionMenu: Menu;
@@ -27,9 +27,21 @@ export default class MainMenu extends Phaser.State {
   private initMainMenu() {
     const mainMenuOptions = [
       {
-        label: 'play',
+        label: 'courses',
         onSelect: () => {
           this.pushMenu(this.courseMenu).start();
+        },
+      },
+      {
+        label: 'challenges',
+        onSelect: () => {
+          console.log('open challenge menu');
+        },
+      },
+      {
+        label: 'practice',
+        onSelect: () => {
+          console.log('open practice menu');
         },
       },
       {
