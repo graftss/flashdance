@@ -33,8 +33,8 @@ export default class ActionSequencer {
       ...shuffle(raw),
     ];
 
-    // return this.debug_multiflash();
-    return intersperse(shuffled, waitAction(150));
+    return this.debug_reflect();
+    // return intersperse(shuffled, waitAction(150));
   }
 
   private randomInputAction(difficulty: number): GameActionData {
@@ -163,6 +163,9 @@ export default class ActionSequencer {
       this.wait(300),
       this.randomFlash(),
       this.randomSingleReflect(),
+      this.randomSingleReflect(),
+      this.randomSingleReflect(),
+      this.randomRotate(),
     ];
   }
 

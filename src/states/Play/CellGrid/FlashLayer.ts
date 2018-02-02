@@ -104,7 +104,9 @@ export default class FlashLayer extends Phaser.Group {
 
     const dotDiameter = this.w / (dotPlaces * 2);
 
-    dotPositions.forEach(({ x, y }) => this.multiflashDots.drawCircle(x, y, dotDiameter));
+    dotPositions.forEach(
+      ({ x, y }) => this.multiflashDots.drawCircle(x, y, dotDiameter)
+    );
 
     this.multiflashDots.endFill();
   }

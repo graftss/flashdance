@@ -10,7 +10,10 @@ const totalTint = upTint + downTint;
 
 export default class CellGridBorder extends Phaser.Group {
   private border: Phaser.Graphics;
-  private orientor: Phaser.Graphics;
+  private orientor: Phaser.Group;
+  private topMarker: Phaser.Graphics;
+  private bottomMarker: Phaser.Graphics;
+  private showTop: boolean = true;
 
   constructor(
     public game: Game,
@@ -41,19 +44,39 @@ export default class CellGridBorder extends Phaser.Group {
   // both a particular direction and the side of the grid facing up.
   private initOrientor(): void {
     const { thickness, w } = this;
-    const d = 20;
+    const ballDiameter = 30;
+    const markerSize = ballDiameter / 3;
+    const cx = w / 2;
+    const cy = -(thickness + ballDiameter);
 
-    const orientor = this.game.add.graphics(w / 2, -thickness, this);
-    orientor.tint = upTint;
+    this.orientor = this.game.add.group(this);
 
-    orientor.beginFill(0xffffff);
-    orientor.drawCircle(0, 0, d);
-    orientor.endFill();
+    const ball = this.game.add.graphics(cx, cy, this.orientor)
+      .beginFill(0xffffff)
+      .drawCircle(0, 0, ballDiameter)
+      .endFill();
 
-    this.orientor = orientor;
+    this.topMarker = this.game.add.graphics(cx, cy, this.orientor)
+      .beginFill(0)
+      .drawRect(-markerSize, -markerSize / 3, 2 * markerSize, markerSize * 2 / 3)
+      .drawRect(-markerSize / 3, -markerSize, markerSize * 2 / 3, 2 * markerSize)
+      .endFill();
+
+    this.bottomMarker = this.game.add.graphics(cx, cy, this.orientor)
+      .beginFill(0)
+      .drawRect(-markerSize, -markerSize / 3, 2 * markerSize, markerSize * 2 / 3)
+      .endFill();
   }
 
   public flip(): void {
-    this.orientor.tint = totalTint - this.orientor.tint;
+    this.showTop = !this.showTop;
+
+    if (this.showTop) {
+      this.topMarker.alpha = 1;
+      this.bottomMarker.alpha = 0;
+    } else {
+      this.topMarker.alpha = 0;
+      this.bottomMarker.alpha = 1;
+    }
   }
 }

@@ -4,11 +4,6 @@
 === on deck ===
 - "long hold" flash
 
-- add something to visually distinguish orientations of the grid
-  - probably differently-colored and -shaped objects on each corner,
-    or just around the maze in general
-  - half-moon facing up and down to denote the two faces
-
 - queue a pause during a round that pauses after the round's over
 
 - lint types.d.ts
