@@ -1,5 +1,5 @@
 === up next ===
-- refactor `initLayer` in flash layer
+
 
 === on deck ===
 - "long hold" flash
@@ -13,6 +13,10 @@
     going on. then when the course is selected, you zoom into it and
     the grid border appears in the distance before filling the game area.
 
+- course mode:
+  - x lives to make it through y rounds which are themed around certain
+    obstacles or length or flashes or whatever.
+  - eg one course to introduce each new mechanic
 
 === loooong term ===
 

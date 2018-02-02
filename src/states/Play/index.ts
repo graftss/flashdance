@@ -4,7 +4,6 @@ import CellGrid from './CellGrid';
 import Fragment from '../../Fragment';
 import GameDirector from './GameDirector';
 import Game from '../../Game';
-import ParticleManager from '../../ParticleManager';
 import { FBMClouds } from '../../filters';
 
 export default class Play extends Phaser.State {
@@ -12,14 +11,11 @@ export default class Play extends Phaser.State {
   private background: Fragment;
   private cellGrid: CellGrid;
   private director: GameDirector;
-  private particleManager: ParticleManager;
 
   public create(game: Game) {
     this.initCellGrid();
 
     this.director = new GameDirector(game, this.cellGrid);
-
-    this.particleManager = new ParticleManager(game);
 
     this.director.start();
 
