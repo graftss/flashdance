@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser-ce';
 
+import Background from './Background';
 import Game from '../../Game';
 import Menu from '../../ui/Menu';
 

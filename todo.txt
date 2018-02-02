@@ -12,6 +12,7 @@
   - in main menu, it's a gigantic ass cell with flashing lights and paths
     going on. then when the course is selected, you zoom into it and
     the grid border appears in the distance before filling the game area.
+  - when you transition to the play state, the lights all flicker out
 
 - course mode:
   - x lives to make it through y rounds which are themed around certain
