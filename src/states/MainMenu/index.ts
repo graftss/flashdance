@@ -7,6 +7,7 @@ import Menu from '../../ui/Menu';
 export default class MainMenu extends Phaser.State {
   public game: Game;
 
+  private background: Background;
   private menuStack: Menu[] = [];
   private courseMenu: Menu;
   private mainMenu: Menu;
@@ -18,11 +19,16 @@ export default class MainMenu extends Phaser.State {
   };
 
   public create() {
+    this.initBackground();
     this.initMainMenu();
     this.initCourseMenu();
     this.initOptionMenu();
 
     this.menuStack = [this.mainMenu];
+  }
+
+  private initBackground() {
+    this.background = new Background(this.game);
   }
 
   private initMainMenu() {
