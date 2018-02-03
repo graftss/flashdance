@@ -3,9 +3,9 @@ import * as Phaser from 'phaser-ce';
 import Game from '../Game';
 
 const colors = {
-  unfocused: '#ffffff',
   focused: '#bbbbbb',
   selected: '#bbbbbb',
+  unfocused: '#ffffff',
 };
 
 export default class MenuOption extends Phaser.Group {

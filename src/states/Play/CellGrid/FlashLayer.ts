@@ -21,7 +21,7 @@ const getMultiflashDotPositions = (count: number, w: number, h: number): Vec2[] 
 
 export default class FlashLayer extends Phaser.Group {
   public layer: Phaser.Group;
-  public flashGraphic: Phaser.Graphics
+  public flashGraphic: Phaser.Graphics;
   public multiflashDots: Phaser.Graphics;
   public emitter: Phaser.Particles.Arcade.Emitter;
 
@@ -93,7 +93,7 @@ export default class FlashLayer extends Phaser.Group {
     const dotDiameter = this.w / (dotPlaces * 2);
 
     dotPositions.forEach(
-      ({ x, y }) => this.multiflashDots.drawCircle(x, y, dotDiameter)
+      ({ x, y }) => this.multiflashDots.drawCircle(x, y, dotDiameter),
     );
 
     this.multiflashDots.endFill();

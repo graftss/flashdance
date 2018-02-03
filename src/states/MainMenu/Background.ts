@@ -22,7 +22,7 @@ export default class Background extends Phaser.Group {
     this.initGrid();
     this.initLightTexture();
 
-    setInterval(() => this.newRandomLight().start(), 10)
+    setInterval(() => this.newRandomLight().start(), 10);
   }
 
   private initGrid(): void {
@@ -42,32 +42,32 @@ export default class Background extends Phaser.Group {
     graphic.destroy();
   }
 
-  private cellInUse(col: number, row: number): boolean {
+  private cellInUse({ col, row }: GridPos): boolean {
     return Boolean(this.grid.get(col, row));
   }
 
-  private setCellUse(value: number, col: number, row: number): void {
+  private setCellUse(value: number, { col, row }: GridPos): void {
     this.grid.set(value, col, row);
   }
 
-  private newLight(col: number, row: number): TweenWrapper {
+  private newLight({ col, row }: GridPos): TweenWrapper {
     const { cellMargin, cellSize, game, lightTexture } = this;
     const x = cellMargin + col * (cellMargin + cellSize);
     const y = cellMargin + row * (cellMargin + cellSize);
 
-    this.setCellUse(1, col, row);
+    this.setCellUse(1, { col, row });
 
-    const { tween } = new FlashLayer(
+    const flashLayer = new FlashLayer(
       this.game,
       this,
       new Phaser.Point(x, y),
       this.cellSize,
       this.cellSize,
       false,
-    )
-      .flashTween(500);
+    );
 
-    tween.onComplete.add(() => this.setCellUse(0, col, row));
+    const { tween } = flashLayer.flashTween(300);
+    tween.onComplete.add(() => this.setCellUse(0, { col, row }));
 
     return tween;
   }
@@ -78,8 +78,8 @@ export default class Background extends Phaser.Group {
     for (let n = 0; n < maxTries; n++) {
       const col = random(0, this.cols - 1);
       const row = random(0, this.rows - 1);
-      if (!this.cellInUse(col, row)) {
-        return this.newLight(col, row);
+      if (!this.cellInUse({ col, row })) {
+        return this.newLight({ col, row });
       }
     }
 

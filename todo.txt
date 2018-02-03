@@ -1,5 +1,4 @@
 === up next ===
-- use GridPos type in Background
 
 === on deck ===
 - "long hold" flash
@@ -18,6 +17,8 @@
   - x lives to make it through y rounds which are themed around certain
     obstacles or length or flashes or whatever.
   - eg one course to introduce each new mechanic
+
+- stop all updating when window doesn't have focus
 
 === loooong term ===
 

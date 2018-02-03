@@ -66,9 +66,9 @@ export default class ActionSequencer {
   private randomMultiflash(): GameActionData {
     return {
       opts: {
+        count: random(2, 4),
         duration: 600,
         origin: this.randomGridPos(),
-        count: random(2, 4),
       },
       type: 'multiflash',
     };

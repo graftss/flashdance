@@ -151,7 +151,7 @@ export default class InputVerifier {
     this.dispatchRoundComplete();
   }
 
-  private actionToInput = (actionData: GameActionData): Array<Maybe<GameInput>> => {
+  private actionToInput = (actionData: GameActionData): Maybe<GameInput>[] => {
     switch (actionData.type) {
       case 'flash': {
         const { origin } = actionData.opts;

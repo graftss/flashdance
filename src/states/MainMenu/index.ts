@@ -7,6 +7,7 @@ import Menu from '../../ui/Menu';
 export default class MainMenu extends Phaser.State {
   public game: Game;
 
+  private objects: Phaser.Group;
   private background: Background;
   private menuStack: Menu[] = [];
   private courseMenu: Menu;
@@ -19,16 +20,19 @@ export default class MainMenu extends Phaser.State {
   };
 
   public create() {
-    this.initBackground();
+    this.objects = this.game.add.group();
+
     this.initMainMenu();
     this.initCourseMenu();
     this.initOptionMenu();
+    this.initBackground();
 
     this.menuStack = [this.mainMenu];
   }
 
   private initBackground() {
     this.background = new Background(this.game);
+    this.objects.add(this.background);
   }
 
   private initMainMenu() {
@@ -60,6 +64,7 @@ export default class MainMenu extends Phaser.State {
     ];
 
     this.mainMenu = new Menu(this.game, 0, 150, 80, mainMenuOptions);
+    this.objects.add(this.mainMenu);
   }
 
   private initCourseMenu() {
@@ -75,6 +80,7 @@ export default class MainMenu extends Phaser.State {
 
     this.courseMenu = new Menu(game, 0, 80, 80, courseMenuOptions);
     this.moveMenuOffscreenRight(this.courseMenu);
+    this.objects.add(this.courseMenu);
   }
 
   private initOptionMenu() {
@@ -94,6 +100,7 @@ export default class MainMenu extends Phaser.State {
 
     this.optionMenu = new Menu(game, 0, 80, 80, optionMenuOptions);
     this.moveMenuOffscreenRight(this.optionMenu);
+    this.objects.add(this.optionMenu);
   }
 
   private getActiveMenu(): Menu {
