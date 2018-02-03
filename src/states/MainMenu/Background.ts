@@ -24,8 +24,7 @@ export default class Background extends Phaser.Group {
   }
 
   public run(speed: number): void {
-    this.runInterval = setInterval(() => this.runRandomLights(3), 1000 / speed);
-    // this.runRandomLights(3);
+    this.runInterval = setInterval(() => this.runRandomLights(2), 1000 / speed);
   }
 
   public stop(): void {
@@ -90,7 +89,7 @@ export default class Background extends Phaser.Group {
 
   private newRandomPath(): Maybe<TweenWrapper> {
     const maxTries = 5;
-    const maxPathLength = random(2, 8);
+    const maxPathLength = 10;
     let gridPos;
 
     // choose the random initial cell
@@ -108,6 +107,9 @@ export default class Background extends Phaser.Group {
     }
 
     const path = [gridPos];
+    const visited = ({ col, row }) => (
+      path.filter(pos => pos.col === col && pos.row === row).length > 0
+    );
 
     // choose a random cell adjacent to the last cell added to the path
     for (let m = 0; m < maxPathLength; m++) {
@@ -115,7 +117,7 @@ export default class Background extends Phaser.Group {
       let giveUp = true;
 
       for (const adjPos of adjacents) {
-        if (!this.cellInUse(adjPos)) {
+        if (!this.cellInUse(adjPos) && !visited(adjPos)) {
           path.push(adjPos);
           giveUp = false;
           break;
@@ -130,7 +132,7 @@ export default class Background extends Phaser.Group {
 
     const { x, y } = this.cellCoords(gridPos);
     const pathCoords = path.slice(1).map(pos => this.cellCoords(pos));
-    const { tween } = this.newFlashLayer(x, y).pathTween(pathCoords, path.length * 300);
+    const { tween } = this.newFlashLayer(x, y).pathTween(pathCoords, path.length * 150);
 
     path.forEach(pos => this.setCellUse(1, pos));
     tween.onComplete.add(() => path.forEach(pos => this.setCellUse(0, pos)));
@@ -146,7 +148,7 @@ export default class Background extends Phaser.Group {
 
   private runRandomLights(count: number): void {
     for (let n = 0; n < count; n++) {
-      Math.random() > .03 ?
+      Math.random() > .01 ?
         this.runLight(this.newRandomLight()) :
         this.runLight(this.newRandomPath());
     }

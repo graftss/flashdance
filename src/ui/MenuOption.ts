@@ -30,20 +30,26 @@ export default class MenuOption extends Phaser.Group {
   ) {
     super(game);
 
+    this.initText();
+  }
+
+  public setInputEnabled(value: boolean) {
+    this.text.inputEnabled = value;
+  }
+
+  private initText() {
+    const { game, h, menuOptionData, w } = this;
     const { label, onSelect } = menuOptionData;
 
     this.text = game.add.text(0, 0, label, this.textStyle, this);
     this.text.setTextBounds(0, 0, w, h);
     this.text.inputEnabled = true;
     this.text.addColor(colors.unfocused, 0);
+    this.text.addFontWeight('bold', 0);
 
     this.text.events.onInputDown.add(this.onInputDown);
     this.text.events.onInputOver.add(this.onInputOver);
     this.text.events.onInputOut.add(this.onInputOut);
-  }
-
-  public setInputEnabled(value: boolean) {
-    this.text.inputEnabled = value;
   }
 
   private onInputDown = () => {
