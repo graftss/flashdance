@@ -83,25 +83,25 @@ export default class CellGrid extends Phaser.Group {
   private flashCell(opts: FlashOpts): GameAction {
     const { duration, origin } = opts;
     const originCell = this.getCellByGridPos(origin);
-    const flashLayer = this.newFlashLayer(false);
+    const flashLayer = this.newFlashLayer(originCell.position.clone(), false);
 
-    return flashLayer.flashTween(originCell.position, duration);
+    return flashLayer.flashTween(duration);
   }
 
   private multiflashCell(opts: MultiflashOpts): GameAction {
     const { count, duration, origin } = opts;
     const originCell = this.getCellByGridPos(origin);
-    const flashLayer = this.newFlashLayer(false);
+    const flashLayer = this.newFlashLayer(originCell.position.clone(), false);
 
-    return flashLayer.multiflashTween(originCell.position, count, duration);
+    return flashLayer.multiflashTween(count, duration);
   }
 
   private fakeFlashCell(opts: FlashOpts): GameAction {
     const { duration, origin } = opts;
     const originCell = this.getCellByGridPos(origin);
-    const flashLayer = this.newFlashLayer(true);
+    const flashLayer = this.newFlashLayer(originCell.position.clone(), true);
 
-    return flashLayer.fakeFlashTween(originCell.position, duration);
+    return flashLayer.fakeFlashTween(duration);
   }
 
   private path(opts: PathOpts): GameAction {
@@ -109,9 +109,9 @@ export default class CellGrid extends Phaser.Group {
 
     const originCell = this.getCellByGridPos(origin);
     const pathPositions = path.map(this.pathPositionMap);
-    const flashLayer = this.newFlashLayer(false);
+    const flashLayer = this.newFlashLayer(originCell.position.clone(), false);
 
-    return flashLayer.pathTween(originCell.position, pathPositions, duration);
+    return flashLayer.pathTween(pathPositions, duration);
   }
 
   private rotate(opts: RotateOpts): GameAction {
@@ -229,10 +229,11 @@ export default class CellGrid extends Phaser.Group {
     this.background = graphics;
   }
 
-  private newFlashLayer(isFake: boolean): FlashLayer {
+  private newFlashLayer(position: Phaser.Point, isFake: boolean): FlashLayer {
     const flashLayer = new FlashLayer(
       this.game,
       this,
+      position,
       this.cellWidth,
       this.cellHeight,
       isFake,

@@ -3,7 +3,7 @@ import { cellTarget, intersperse, random, sample, shuffle } from '../../utils';
 const toCell = ([row, col]) => ({ row, col });
 
 const path0 = [[0, 0], [1, 0], [2, 0]].map(toCell);
-const path1 = [[1, 1], [1, 2], [2, 2], [2, 1], [2, 0], [1, 0], [2, 0]].map(toCell);
+const path1 = [[1, 1], [1, 2], [2, 2], [2, 1], [2, 0], [1, 0], [0, 0]].map(toCell);
 
 const waitAction = duration => ({ type: 'wait', opts: { duration }});
 

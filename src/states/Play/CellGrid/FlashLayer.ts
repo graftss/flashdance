@@ -28,6 +28,7 @@ export default class FlashLayer extends Phaser.Group {
   constructor(
     public game: Game,
     public parent: Phaser.Group,
+    public position: Phaser.Point,
     private w: number,
     private h: number,
     private isFake: boolean,
@@ -37,31 +38,26 @@ export default class FlashLayer extends Phaser.Group {
     this.initLayerGroup(isFake ? fakeFlashColor : flashColor);
   }
 
-  public flashTween(position: Phaser.Point, duration: number): GameAction {
+  public flashTween(duration: number): GameAction {
     const tween = this.flash(duration, flashColor);
-    tween.onStart.add(() => this.position.copyFrom(position));
 
     return { duration, tween };
   }
 
-  public fakeFlashTween(position: Phaser.Point, duration: number): GameAction {
+  public fakeFlashTween(duration: number): GameAction {
     const tween = this.flash(duration, fakeFlashColor);
-    tween.onStart.add(() => this.position.copyFrom(position));
 
     return { duration, tween };
   }
 
-  public multiflashTween(position: Phaser.Point, count: number, duration: number): GameAction {
+  public multiflashTween(count: number, duration: number): GameAction {
     const tween = this.multiflash(count, duration, flashColor);
-    tween.onStart.add(() => this.position.copyFrom(position));
 
     return { duration, tween };
   }
 
-  public pathTween(position: Phaser.Point, path: Vec2[], duration: number): GameAction {
+  public pathTween(path: Vec2[], duration: number): GameAction {
     const tween = this.path(path, duration);
-    tween.onStart.add(() => this.position.copyFrom(position));
-    tween.onComplete.add(() => this.destroy());
 
     return { duration, tween };
   }
@@ -167,12 +163,16 @@ export default class FlashLayer extends Phaser.Group {
     const { plus, minus } = vec2;
     const pathStepDuration = (duration - 400) / (path.length);
 
-    return chain([
+    const result = chain([
       this.brighten(150),
       nothing(50),
       ...path.map(pos => this.moveTo(pos, pathStepDuration)),
       nothing(50),
       this.dim(150),
     ]);
+
+    result.onComplete.add(() => this.destroy());
+
+    return result;
   }
 }

@@ -1,7 +1,6 @@
 import * as Phaser from 'phaser-ce';
 
 import Array2D from '../../Array2D';
-import BackgroundLight from './BackgroundLight';
 import FlashLayer from '../Play/CellGrid/FlashLayer';
 import Game from '../../Game';
 import { random } from '../../utils';
@@ -58,8 +57,15 @@ export default class Background extends Phaser.Group {
 
     this.setCellUse(1, col, row);
 
-    const { tween } = new FlashLayer(this.game, this, this.cellSize, this.cellSize, false)
-      .flashTween(new Phaser.Point(x, y), 500);
+    const { tween } = new FlashLayer(
+      this.game,
+      this,
+      new Phaser.Point(x, y),
+      this.cellSize,
+      this.cellSize,
+      false,
+    )
+      .flashTween(500);
 
     tween.onComplete.add(() => this.setCellUse(0, col, row));
 
