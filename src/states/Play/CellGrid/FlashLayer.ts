@@ -24,10 +24,6 @@ export default class FlashLayer extends Phaser.Group {
   public flashGraphic: Phaser.Graphics
   public multiflashDots: Phaser.Graphics;
   public emitter: Phaser.Particles.Arcade.Emitter;
-  public trail: Phaser.Sprite[] = [];
-
-  private moving: boolean = false;
-  private lastTrailPos: Phaser.Point = new Phaser.Point(0, 0);
 
   constructor(
     public game: Game,
@@ -41,34 +37,30 @@ export default class FlashLayer extends Phaser.Group {
     this.initLayerGroup(isFake ? fakeFlashColor : flashColor);
   }
 
-  public moveToCell(cell: Cell) {
-    this.position.copyFrom(cell.position);
-  }
-
-  public flashTween(originCell: Cell, duration: number): GameAction {
+  public flashTween(position: Phaser.Point, duration: number): GameAction {
     const tween = this.flash(duration, flashColor);
-    tween.onStart.add(() => this.moveToCell(originCell));
+    tween.onStart.add(() => this.position.copyFrom(position));
 
     return { duration, tween };
   }
 
-  public fakeFlashTween(originCell: Cell, duration: number): GameAction {
+  public fakeFlashTween(position: Phaser.Point, duration: number): GameAction {
     const tween = this.flash(duration, fakeFlashColor);
-    tween.onStart.add(() => this.moveToCell(originCell));
+    tween.onStart.add(() => this.position.copyFrom(position));
 
     return { duration, tween };
   }
 
-  public multiflashTween(originCell: Cell, count: number, duration: number): GameAction {
+  public multiflashTween(position: Phaser.Point, count: number, duration: number): GameAction {
     const tween = this.multiflash(count, duration, flashColor);
-    tween.onStart.add(() => this.moveToCell(originCell));
+    tween.onStart.add(() => this.position.copyFrom(position));
 
     return { duration, tween };
   }
 
-  public pathTween(originCell: Cell, path: Vec2[], duration: number): GameAction {
+  public pathTween(position: Phaser.Point, path: Vec2[], duration: number): GameAction {
     const tween = this.path(path, duration);
-    tween.onStart.add(() => this.moveToCell(originCell));
+    tween.onStart.add(() => this.position.copyFrom(position));
     tween.onComplete.add(() => this.destroy());
 
     return { duration, tween };
@@ -147,10 +139,7 @@ export default class FlashLayer extends Phaser.Group {
   }
 
   private moveTo(position: Vec2, duration: number): Phaser.Tween {
-    const tween = this.game.tweener.position(this, position, duration);
-    tween.onStart.add(() => this.moving = true);
-    tween.onComplete.add(() => this.moving = false);
-    return tween;
+    return this.game.tweener.position(this, position, duration);
   }
 
   private flash(duration: number, color: number): TweenWrapper {

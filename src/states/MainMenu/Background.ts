@@ -2,11 +2,12 @@ import * as Phaser from 'phaser-ce';
 
 import Array2D from '../../Array2D';
 import BackgroundLight from './BackgroundLight';
+import FlashLayer from '../Play/CellGrid/FlashLayer';
 import Game from '../../Game';
 import { random } from '../../utils';
 
 export default class Background extends Phaser.Group {
-  private cellSize: number = 200;
+  private cellSize: number = 30;
   private cellMargin: number = 3;
 
   private cols: number;
@@ -22,7 +23,7 @@ export default class Background extends Phaser.Group {
     this.initGrid();
     this.initLightTexture();
 
-    setInterval(() => this.newRandomLight(), 350);
+    setInterval(() => this.newRandomLight().start(), 10)
   }
 
   private initGrid(): void {
@@ -50,17 +51,22 @@ export default class Background extends Phaser.Group {
     this.grid.set(value, col, row);
   }
 
-  private newLight(col: number, row: number): BackgroundLight {
+  private newLight(col: number, row: number): TweenWrapper {
     const { cellMargin, cellSize, game, lightTexture } = this;
     const x = cellMargin + col * (cellMargin + cellSize);
     const y = cellMargin + row * (cellMargin + cellSize);
 
     this.setCellUse(1, col, row);
 
-    return new BackgroundLight(game, x, y, lightTexture);
+    const { tween } = new FlashLayer(this.game, this, this.cellSize, this.cellSize, false)
+      .flashTween(new Phaser.Point(x, y), 500);
+
+    tween.onComplete.add(() => this.setCellUse(0, col, row));
+
+    return tween;
   }
 
-  private newRandomLight(): Maybe<BackgroundLight> {
+  private newRandomLight(): Maybe<TweenWrapper> {
     const maxTries = 3;
 
     for (let n = 0; n < maxTries; n++) {

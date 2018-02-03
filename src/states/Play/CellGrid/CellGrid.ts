@@ -85,7 +85,7 @@ export default class CellGrid extends Phaser.Group {
     const originCell = this.getCellByGridPos(origin);
     const flashLayer = this.newFlashLayer(false);
 
-    return flashLayer.flashTween(originCell, duration);
+    return flashLayer.flashTween(originCell.position, duration);
   }
 
   private multiflashCell(opts: MultiflashOpts): GameAction {
@@ -93,7 +93,7 @@ export default class CellGrid extends Phaser.Group {
     const originCell = this.getCellByGridPos(origin);
     const flashLayer = this.newFlashLayer(false);
 
-    return flashLayer.multiflashTween(originCell, count, duration);
+    return flashLayer.multiflashTween(originCell.position, count, duration);
   }
 
   private fakeFlashCell(opts: FlashOpts): GameAction {
@@ -101,7 +101,7 @@ export default class CellGrid extends Phaser.Group {
     const originCell = this.getCellByGridPos(origin);
     const flashLayer = this.newFlashLayer(true);
 
-    return flashLayer.fakeFlashTween(originCell, duration);
+    return flashLayer.fakeFlashTween(originCell.position, duration);
   }
 
   private path(opts: PathOpts): GameAction {
@@ -111,7 +111,7 @@ export default class CellGrid extends Phaser.Group {
     const pathPositions = path.map(this.pathPositionMap);
     const flashLayer = this.newFlashLayer(false);
 
-    return flashLayer.pathTween(originCell, pathPositions, duration);
+    return flashLayer.pathTween(originCell.position, pathPositions, duration);
   }
 
   private rotate(opts: RotateOpts): GameAction {
