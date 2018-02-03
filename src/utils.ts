@@ -1,3 +1,5 @@
+import { random } from 'lodash';
+
 export {
   findIndex,
   flatten,
@@ -116,3 +118,15 @@ export const repeat = <T>(count: number, ts: T[]): T[] => {
 
   return result;
 };
+
+export const randomGridPos = (cols: number, rows: number): GridPos => ({
+  col: random(0, cols - 1),
+  row: random(0, rows - 1),
+});
+
+export const adjacentGridPos = ({ col, row }: GridPos): GridPos[] => ([
+  { col, row: row + 1 },
+  { col, row: row - 1 },
+  { col: col + 1, row },
+  { col: col - 1, row },
+]);

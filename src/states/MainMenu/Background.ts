@@ -3,7 +3,7 @@ import * as Phaser from 'phaser-ce';
 import Array2D from '../../Array2D';
 import FlashLayer from '../Play/CellGrid/FlashLayer';
 import Game from '../../Game';
-import { random } from '../../utils';
+import { adjacentGridPos, random, randomGridPos, shuffle } from '../../utils';
 
 export default class Background extends Phaser.Group {
   private cellSize: number = 30;
@@ -25,6 +25,7 @@ export default class Background extends Phaser.Group {
 
   public run(speed: number): void {
     this.runInterval = setInterval(() => this.runRandomLights(3), 1000 / speed);
+    // this.runRandomLights(3);
   }
 
   public stop(): void {
@@ -38,31 +39,37 @@ export default class Background extends Phaser.Group {
   }
 
   private cellInUse({ col, row }: GridPos): boolean {
-    return Boolean(this.grid.get(col, row));
+    // if the input position is invalid, say that it's in use
+    return this.grid.isValidPosition(col, row) ?
+      Boolean(this.grid.get(col, row)) :
+      true;
   }
 
   private setCellUse(value: number, { col, row }: GridPos): void {
     this.grid.set(value, col, row);
   }
 
-  private newLight({ col, row }: GridPos): TweenWrapper {
-    const { cellMargin, cellSize, game } = this;
+  private cellCoords({ col, row }: GridPos): Vec2 {
+    const { cellMargin, cellSize } = this;
     const x = cellMargin + col * (cellMargin + cellSize);
     const y = cellMargin + row * (cellMargin + cellSize);
 
-    this.setCellUse(1, { col, row });
+    return { x, y };
+  }
 
-    const flashLayer = new FlashLayer(
-      this.game,
-      this,
-      new Phaser.Point(x, y),
-      this.cellSize,
-      this.cellSize,
-      'background',
-    );
+  private newFlashLayer(x: number, y: number) {
+    const { cellSize, game } = this;
+    const pos = new Phaser.Point(x, y);
 
-    const { tween } = flashLayer.flashTween(300);
-    tween.onComplete.add(() => this.setCellUse(0, { col, row }));
+    return new FlashLayer(game, this, pos, cellSize, cellSize, 'background');
+  }
+
+  private newLight(gridPos: GridPos): TweenWrapper {
+    const { x, y } = this.cellCoords(gridPos);
+    const { tween } = this.newFlashLayer(x, y).flashTween(300);
+
+    this.setCellUse(1, gridPos);
+    tween.onComplete.add(() => this.setCellUse(0, gridPos));
 
     return tween;
   }
@@ -71,14 +78,64 @@ export default class Background extends Phaser.Group {
     const maxTries = 3;
 
     for (let n = 0; n < maxTries; n++) {
-      const col = random(0, this.cols - 1);
-      const row = random(0, this.rows - 1);
-      if (!this.cellInUse({ col, row })) {
-        return this.newLight({ col, row });
+      const gridPos = randomGridPos(this.cols, this.rows);
+
+      if (!this.cellInUse(gridPos)) {
+        return this.newLight(gridPos);
       }
     }
 
     return null;
+  }
+
+  private newRandomPath(): Maybe<TweenWrapper> {
+    const maxTries = 5;
+    const maxPathLength = random(2, 8);
+    let gridPos;
+
+    // choose the random initial cell
+    for (let n = 0; n < maxTries; n++) {
+      gridPos = randomGridPos(this.cols, this.rows);
+
+      if (this.cellInUse(gridPos)) {
+        continue;
+      }
+    }
+
+    // if we didn't find an unoccupied initial cell, just give up
+    if (gridPos === undefined) {
+      return null;
+    }
+
+    const path = [gridPos];
+
+    // choose a random cell adjacent to the last cell added to the path
+    for (let m = 0; m < maxPathLength; m++) {
+      const adjacents = shuffle(adjacentGridPos(path[path.length - 1]));
+      let giveUp = true;
+
+      for (const adjPos of adjacents) {
+        if (!this.cellInUse(adjPos)) {
+          path.push(adjPos);
+          giveUp = false;
+          break;
+        }
+      }
+
+      // if none of the adjacent cells were free, end the path generation
+      if (giveUp) {
+        break;
+      }
+    }
+
+    const { x, y } = this.cellCoords(gridPos);
+    const pathCoords = path.slice(1).map(pos => this.cellCoords(pos));
+    const { tween } = this.newFlashLayer(x, y).pathTween(pathCoords, path.length * 300);
+
+    path.forEach(pos => this.setCellUse(1, pos));
+    tween.onComplete.add(() => path.forEach(pos => this.setCellUse(0, pos)));
+
+    return tween;
   }
 
   private runLight(light: Maybe<TweenWrapper>) {
@@ -89,7 +146,9 @@ export default class Background extends Phaser.Group {
 
   private runRandomLights(count: number): void {
     for (let n = 0; n < count; n++) {
-      this.runLight(this.newRandomLight());
+      Math.random() > .03 ?
+        this.runLight(this.newRandomLight()) :
+        this.runLight(this.newRandomPath());
     }
   }
 }

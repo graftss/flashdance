@@ -7,6 +7,10 @@ export default class Array2D<T> {
 
   }
 
+  public isValidPosition(col: number, row: number): boolean {
+    return col >= 0 && col < this.cols && row >= 0 && row < this.rows;
+  }
+
   public get = (col: number, row: number): T => {
     return this.data[this.dataIndex(col, row)];
   }
@@ -36,10 +40,6 @@ export default class Array2D<T> {
     this.sanityCheckPosition(col, row);
 
     return this.cols * row + col;
-  }
-
-  private isValidPosition(col: number, row: number): boolean {
-    return col >= 0 && col < this.cols && row >= 0 && row < this.rows;
   }
 
   private sanityCheckPosition(col: number, row: number): void {
