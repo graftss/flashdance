@@ -28,6 +28,7 @@ export default class MainMenu extends Phaser.State {
     this.initBackground();
 
     this.menuStack = [this.mainMenu];
+    this.background.run(80);
   }
 
   private initBackground() {

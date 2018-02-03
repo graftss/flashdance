@@ -12,7 +12,7 @@ export default class Background extends Phaser.Group {
   private cols: number;
   private rows: number;
   private grid: Array2D<number>;
-  private lightTexture: Phaser.RenderTexture;
+  private runInterval;
 
   constructor(
     public game: Game,
@@ -20,26 +20,21 @@ export default class Background extends Phaser.Group {
     super(game);
 
     this.initGrid();
-    this.initLightTexture();
+    this.alpha = 0.3;
+  }
 
-    setInterval(() => this.newRandomLight().start(), 10);
+  public run(speed: number): void {
+    this.runInterval = setInterval(() => this.runRandomLights(3), 1000 / speed);
+  }
+
+  public stop(): void {
+    clearInterval(this.runInterval);
   }
 
   private initGrid(): void {
     this.cols = Math.floor(this.game.width / (this.cellSize + this.cellMargin));
     this.rows = Math.floor(this.game.height / (this.cellSize + this.cellMargin));
     this.grid = new Array2D(this.cols, this.rows);
-  }
-
-  private initLightTexture() {
-    const graphic = this.game.add.graphics(0, 0)
-      .beginFill(0xff0000, 0.4)
-      .drawRoundedRect(0, 0, this.cellSize, this.cellSize, this.cellSize / 5)
-      .endFill();
-
-    this.lightTexture = graphic.generateTexture();
-
-    graphic.destroy();
   }
 
   private cellInUse({ col, row }: GridPos): boolean {
@@ -51,7 +46,7 @@ export default class Background extends Phaser.Group {
   }
 
   private newLight({ col, row }: GridPos): TweenWrapper {
-    const { cellMargin, cellSize, game, lightTexture } = this;
+    const { cellMargin, cellSize, game } = this;
     const x = cellMargin + col * (cellMargin + cellSize);
     const y = cellMargin + row * (cellMargin + cellSize);
 
@@ -84,5 +79,17 @@ export default class Background extends Phaser.Group {
     }
 
     return null;
+  }
+
+  private runLight(light: Maybe<TweenWrapper>) {
+    if (light !== null) {
+      light.start();
+    }
+  }
+
+  private runRandomLights(count: number): void {
+    for (let n = 0; n < count; n++) {
+      this.runLight(this.newRandomLight());
+    }
   }
 }
