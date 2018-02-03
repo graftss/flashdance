@@ -3,7 +3,7 @@ import { cellTarget, intersperse, random, sample, shuffle } from '../../utils';
 const toCell = ([row, col]) => ({ row, col });
 
 const path0 = [[0, 0], [1, 0], [2, 0]].map(toCell);
-const path1 = [[1, 1], [1, 2], [2, 2], [2, 1], [2, 0], [1, 0], [0, 0]].map(toCell);
+const path1 = [[1, 1], [1, 2], [2, 2], [2, 1], [2, 0], [1, 0], [2, 0]].map(toCell);
 
 const waitAction = duration => ({ type: 'wait', opts: { duration }});
 
@@ -33,7 +33,7 @@ export default class ActionSequencer {
       ...shuffle(raw),
     ];
 
-    return this.debug_reflect();
+    return this.debug_path();
     // return intersperse(shuffled, waitAction(150));
   }
 
@@ -177,20 +177,14 @@ export default class ActionSequencer {
     ];
   }
 
-  private debug_particle_trail(): GameActionData[] {
+  private debug_path(): GameActionData[] {
     return [
+      this.wait(500),
       this.randomPath(5),
-      {
-        opts: {
-          duration: 300,
-          rotation: Math.PI * 3 / 2,
-        },
-        type: 'rotate',
-      },
       // this.randomSingleReflect(),
       {
         opts: {
-          duration: 3000,
+          duration: 1000,
           origin: path1[0],
           path: path1.slice(1),
         },
