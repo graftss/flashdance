@@ -236,7 +236,7 @@ export default class CellGrid extends Phaser.Group {
       position,
       this.cellWidth,
       this.cellHeight,
-      isFake,
+      isFake ? 'fake' : 'flash',
     );
 
     return flashLayer;

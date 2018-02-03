@@ -5,9 +5,13 @@ import Cell from './Cell';
 import Game from '../../../Game';
 import { vec2, shiftAnchor } from '../../../utils';
 
+type FlashLayerContext = 'flash' | 'fake' | 'background';
+
+const backgroundFlashColor = 0x999999;
 const flashColor = 0xffffff;
 const fakeFlashColor = 0xff0000;
 const multiflashDotColor = 0x666666;
+
 const dotPlaces = 3;
 
 const getMultiflashDotPositions = (count: number, w: number, h: number): Vec2[] => {
@@ -31,11 +35,11 @@ export default class FlashLayer extends Phaser.Group {
     public position: Phaser.Point,
     private w: number,
     private h: number,
-    private isFake: boolean,
+    private context: FlashLayerContext = 'flash',
   ) {
     super(game, parent);
 
-    this.initLayerGroup(isFake ? fakeFlashColor : flashColor);
+    this.initLayerGroup(this.contextColor(context));
   }
 
   public flashTween(duration: number): GameAction {
@@ -174,5 +178,13 @@ export default class FlashLayer extends Phaser.Group {
     result.onComplete.add(() => this.destroy());
 
     return result;
+  }
+
+  private contextColor(context: FlashLayerContext): number {
+    switch (context) {
+      case 'flash': return flashColor;
+      case 'fake': return fakeFlashColor;
+      case 'background': return backgroundFlashColor;
+    }
   }
 }

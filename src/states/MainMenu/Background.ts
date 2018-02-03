@@ -58,7 +58,7 @@ export default class Background extends Phaser.Group {
       new Phaser.Point(x, y),
       this.cellSize,
       this.cellSize,
-      false,
+      'background',
     );
 
     const { tween } = flashLayer.flashTween(300);
