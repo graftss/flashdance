@@ -31,6 +31,10 @@ export default class MainMenu extends Phaser.State {
     this.background.run(80);
   }
 
+  public shutdown() {
+    this.background.stop();
+  }
+
   private initBackground() {
     this.background = new Background(this.game);
     this.objects.add(this.background);
