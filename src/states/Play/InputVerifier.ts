@@ -177,15 +177,16 @@ export default class InputVerifier {
         const { path } = actionData.opts;
         const [origin, ...rest] = path;
 
-        const result: GameInput[] = [{ type: 'down/drag', target: cellTarget(origin) }];
+        const posToDragInput = type => (gridPos: GridPos): GameInput => ({
+          target: cellTarget(gridPos),
+          type,
+        });
 
-        for (let gridPos of rest) {
-          result.push({ type: 'over/drag', target: cellTarget(gridPos) });
-        }
-
-        result.push({ type: 'up/drag', target: cellTarget(rest[rest.length - 1])});
-
-        return result;
+        return [
+          posToDragInput('down/drag')(origin),
+          ...rest.map(posToDragInput('over/drag')),
+          posToDragInput('up/drag')(rest[rest.length - 1]),
+        ];
       }
 
       default: return null;
