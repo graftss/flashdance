@@ -64,8 +64,6 @@ export default class MenuOption extends Phaser.Group {
 
     this.mouseOver = true;
     this.text.addColor(colors.focused, 0);
-
-    console.log('over');
   }
 
   private onInputOut = () => {
@@ -75,7 +73,5 @@ export default class MenuOption extends Phaser.Group {
 
     this.mouseOver = false;
     this.text.addColor(colors.unfocused, 0);
-
-    console.log('out');
   }
 }

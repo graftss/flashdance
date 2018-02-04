@@ -41,7 +41,7 @@ export default class MainMenu extends Phaser.State {
   }
 
   private initMainMenu() {
-    const mainMenuOptions = [
+    const mainMenuOptions = [[
       {
         label: 'courses',
         onSelect: () => {
@@ -66,7 +66,7 @@ export default class MainMenu extends Phaser.State {
           this.pushMenu(this.optionMenu).start();
         },
       },
-    ];
+    ]];
 
     this.mainMenu = new Menu(this.game, 0, 150, 80, mainMenuOptions);
     this.objects.add(this.mainMenu);
@@ -75,12 +75,27 @@ export default class MainMenu extends Phaser.State {
   private initCourseMenu() {
     const { game } = this;
 
+    const nameToOption = (label: string): MenuOptionData => ({
+      label,
+      onSelect: () => this.game.state.start('Play', true, true, label),
+    });
+
+    const col0 = [
+      'flash',
+      'path',
+      'multiflash',
+      'rotate',
+    ].map(nameToOption);
+
+    const col1 = [
+      'reflect',
+      'reflect 2',
+      'fake flash',
+    ].map(nameToOption);
+
     const courseMenuOptions = [
-      {
-        label: 'simon',
-        onSelect: () => game.state.start('Play'),
-      },
-      this.backOptionData,
+      col0,
+      [...col1, this.backOptionData],
     ];
 
     this.courseMenu = new Menu(game, 0, 80, 80, courseMenuOptions);
@@ -91,7 +106,7 @@ export default class MainMenu extends Phaser.State {
   private initOptionMenu() {
     const { game } = this;
 
-    const optionMenuOptions = [
+    const optionMenuOptions = [[
       {
         label: 'delete saved data',
         onSelect: () => console.log('deleting saved data'),
@@ -101,7 +116,7 @@ export default class MainMenu extends Phaser.State {
         onSelect: () => console.log('toggling colorblind mode'),
       },
       this.backOptionData,
-    ];
+    ]];
 
     this.optionMenu = new Menu(game, 0, 80, 80, optionMenuOptions);
     this.moveMenuOffscreenRight(this.optionMenu);

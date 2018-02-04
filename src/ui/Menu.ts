@@ -5,32 +5,36 @@ import MenuOption from './MenuOption';
 import { vec2 } from '../utils';
 
 export default class Menu extends Phaser.Group {
-  private options: MenuOption[];
+  private optionColumns: MenuOption[][];
 
   constructor(
     public game: Game,
     public x: number,
     public y: number,
     private rowHeight: number,
-    private optionData: MenuOptionData[],
+    private optionDataColumns: MenuOptionData[][],
   ) {
     super(game);
 
-    this.options = optionData.map((data, index) => {
-      const option = new MenuOption(
-        game,
-        0, rowHeight * index,
-        game.width, rowHeight,
-        data,
-      );
+    const width = game.width / this.optionDataColumns.length;
 
-      this.addChild(option);
-      return option;
-    });
+    this.optionColumns = optionDataColumns.map((column, colIndex) => (
+      column.map((data, rowIndex) => {
+        const option = new MenuOption(
+          game,
+          width * colIndex, rowHeight * rowIndex,
+          width, rowHeight,
+          data,
+        );
+
+        this.addChild(option);
+        return option;
+      })
+    ));
   }
 
   public setInputEnabled(value: boolean) {
-    this.options.forEach(opt => opt.setInputEnabled(value));
+    this.forEachOption(opt => opt.setInputEnabled(value));
   }
 
   public transition(delta: Vec2, duration: number): Phaser.Tween {
@@ -40,5 +44,9 @@ export default class Menu extends Phaser.Group {
     tween.onComplete.add(() => this.setInputEnabled(true));
 
     return tween;
+  }
+
+  private forEachOption(f: (MenuOption) => void): void {
+    this.optionColumns.forEach(col => col.forEach(f));
   }
 }
