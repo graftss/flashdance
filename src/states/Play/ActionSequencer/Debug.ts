@@ -4,7 +4,7 @@ export default class DebugActionSequencer
   extends BaseActionSequencer implements IActionSequencer {
 
   public randomRound(difficulty: number) {
-    return this.debugPath();
+    return this.debugXReflect();
   }
 
   private debugRotate(): GameActionData[] {
@@ -23,6 +23,14 @@ export default class DebugActionSequencer
       this.reflect(),
       this.reflect(),
       this.rotate(),
+    ];
+  }
+
+  private debugXReflect(): GameActionData[] {
+    return [
+      this.wait(300),
+      this.flash(),
+      this.xReflect(),
     ];
   }
 

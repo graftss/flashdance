@@ -47,6 +47,7 @@ export default class Play extends Phaser.State {
 
     switch (levelData.type) {
       case 'tutorial': return new ActionSequencer.Tutorial(c, r, levelData.level);
+      case 'debug': return new ActionSequencer.Debug(c, r);
 
       default: return new ActionSequencer.Arcade(c, r);
     }

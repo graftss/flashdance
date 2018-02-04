@@ -54,7 +54,8 @@ type TutorialLevel =
   'x-reflect'
 
 type LevelData =
-  { type: 'tutorial', level: TutorialLevel }
+  { type: 'debug' } |
+  { type: 'tutorial', level: TutorialLevel };
 
 // Game actions
 

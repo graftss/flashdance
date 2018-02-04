@@ -120,6 +120,19 @@ export default class BaseActionSequencer {
     };
   }
 
+  protected xReflect(difficulty: number = 0): GameActionData {
+    const duration = Math.max(250, 750 - difficulty * 15);
+
+    return {
+      opts: {
+        duration,
+        reflectX: true,
+        reflectY: true,
+      },
+      type: 'reflect',
+    };
+  }
+
   protected fakeFlash(difficulty: number = 0): GameActionData {
     const duration = Math.max(200, 400 - difficulty * 20);
 
