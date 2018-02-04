@@ -90,7 +90,6 @@ type MultiflashOpts = {
 
 type PathOpts = {
   duration: number,
-  origin: GridPos,
   path: GridPos[],
 }
 

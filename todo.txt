@@ -1,5 +1,6 @@
 === up next ===
-- refactor path data to combine origin and path. thats so dumb how it is now lol
+- make `ActionSequencer` an interface to allow different kinds of them
+  for different game modes
 
 === on deck ===
 - there should still be some kind of trail behind paths

@@ -105,10 +105,11 @@ export default class CellGrid extends Phaser.Group {
   }
 
   private path(opts: PathOpts): GameAction {
-    const { duration, origin, path } = opts;
+    const { duration, path } = opts;
+    const [origin, ...rest] = path;
 
     const originCell = this.getCellByGridPos(origin);
-    const pathPositions = path.map(this.pathPositionMap);
+    const pathPositions = rest.map(this.pathPositionMap);
     const flashLayer = this.newFlashLayer(originCell.position.clone(), false);
 
     return flashLayer.pathTween(pathPositions, duration);

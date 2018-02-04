@@ -95,14 +95,9 @@ export default class ActionSequencer {
       path.push(sample(adjacents));
     }
 
-    // remove the origin from the path
-    path.shift();
-    console.log('hey', origin, path);
-
     return {
       opts: {
         duration: path.length * 250,
-        origin,
         path,
       },
       type: 'path',
