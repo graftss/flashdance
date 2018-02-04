@@ -4,49 +4,49 @@ export default class DebugActionSequencer
   extends BaseActionSequencer implements IActionSequencer {
 
   public randomRound(difficulty: number) {
-    return this.path();
+    return this.debugPath();
   }
 
-  private rotate(): GameActionData[] {
+  private debugRotate(): GameActionData[] {
     return [
       this.wait(300),
-      this.randomFlash(),
-      this.randomRotate(),
+      this.flash(),
+      this.rotate(),
     ];
   }
 
-  private reflect(): GameActionData[] {
+  private debugReflect(): GameActionData[] {
     return [
       this.wait(300),
-      this.randomFlash(),
-      this.randomSingleReflect(),
-      this.randomSingleReflect(),
-      this.randomSingleReflect(),
-      this.randomRotate(),
+      this.flash(),
+      this.reflect(),
+      this.reflect(),
+      this.reflect(),
+      this.rotate(),
     ];
   }
 
-  private inputLights(): GameActionData[] {
+  private debugInputLights(): GameActionData[] {
     return [
       this.wait(300),
-      this.randomFlash(),
-      this.randomPath(5),
+      this.flash(),
+      this.path(5),
     ];
   }
 
-  private path(): GameActionData[] {
+  private debugPath(): GameActionData[] {
     return [
       this.wait(500),
-      this.randomPath(5),
-      // this.randomSingleReflect(),
-      this.randomPath(5),
+      this.path(5),
+      // this.reflect(),
+      this.path(5),
     ];
   }
 
-  private multiflash(): GameActionData[] {
+  private debugMultiflash(): GameActionData[] {
     return [
       this.wait(300),
-      this.randomMultiflash(),
+      this.multiflash(),
     ];
   }
 }

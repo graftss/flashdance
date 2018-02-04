@@ -11,23 +11,23 @@ export default class BaseActionSequencer {
     protected gridRows: number,
   ) {}
 
-  protected randomInputAction(difficulty: number = 0): GameActionData {
+  protected input(difficulty: number = 0): GameActionData {
     if (difficulty < 6) {
-      return this.randomFlash(difficulty);
+      return this.flash(difficulty);
     } else {
       const rand = Math.random();
 
       if (rand < 0.5) {
-        return this.randomFlash(difficulty);
+        return this.flash(difficulty);
       } else if (rand < 0.75) {
-        return this.randomPath(difficulty);
+        return this.path(difficulty);
       } else {
-        return this.randomMultiflash(difficulty);
+        return this.multiflash(difficulty);
       }
     }
   }
 
-  protected randomFlash(difficulty: number = 0): GameActionData {
+  protected flash(difficulty: number = 0): GameActionData {
     const duration = Math.max(100, 300 - 10 * difficulty);
 
     return {
@@ -39,7 +39,7 @@ export default class BaseActionSequencer {
     };
   }
 
-  protected randomMultiflash(difficulty: number = 0): GameActionData {
+  protected multiflash(difficulty: number = 0): GameActionData {
     const duration = Math.max(300, 600 - 10 * difficulty);
 
     return {
@@ -52,7 +52,7 @@ export default class BaseActionSequencer {
     };
   }
 
-  protected randomPath(difficulty: number): GameActionData {
+  protected path(difficulty: number): GameActionData {
     const origin = this.randomGridPos();
     const path = [origin];
     const pathLength = 4; // should scale with difficulty
@@ -79,17 +79,17 @@ export default class BaseActionSequencer {
     };
   }
 
-  protected randomObstacle(difficulty: number = 0): GameActionData {
+  protected obstacle(difficulty: number = 0): GameActionData {
     const typeId = sample([0, 1, 2]);
 
     switch (typeId) {
-      case 0: return this.randomRotate(difficulty);
-      case 1: return this.randomSingleReflect(difficulty);
-      case 2: return this.randomFakeFlash(difficulty);
+      case 0: return this.rotate(difficulty);
+      case 1: return this.reflect(difficulty);
+      case 2: return this.fakeFlash(difficulty);
     }
   }
 
-  protected randomRotate(difficulty: number = 0): GameActionData {
+  protected rotate(difficulty: number = 0): GameActionData {
     const durationPerTurn = Math.max(200, 400 - difficulty * 10);
 
     const turns = sample([-3, -2, -1, 1, 2, 3]);
@@ -105,7 +105,7 @@ export default class BaseActionSequencer {
     };
   }
 
-  protected randomSingleReflect(difficulty: number = 0): GameActionData {
+  protected reflect(difficulty: number = 0): GameActionData {
     const duration = Math.max(250, 750 - difficulty * 15);
 
     const reflectX = sample([true, false]);
@@ -120,7 +120,7 @@ export default class BaseActionSequencer {
     };
   }
 
-  protected randomFakeFlash(difficulty: number = 0): GameActionData {
+  protected fakeFlash(difficulty: number = 0): GameActionData {
     const duration = Math.max(200, 400 - difficulty * 20);
 
     return {

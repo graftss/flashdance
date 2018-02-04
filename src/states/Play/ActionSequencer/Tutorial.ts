@@ -30,8 +30,12 @@ export default class TutorialActionSequencer
     ][difficulty];
 
     return flatMap(range(flashes), () => [
-      this.randomFlash(difficulty),
+      this.flash(difficulty),
       this.wait(170),
     ]);
+  }
+
+  private fakeFlashRound(difficulty: number): GameActionData[] {
+    return [];
   }
 }

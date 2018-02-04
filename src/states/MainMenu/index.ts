@@ -89,8 +89,8 @@ export default class MainMenu extends Phaser.State {
 
     const col1Names: TutorialLevel[] = [
       'reflect',
+      'rotate',
       'x-reflect',
-      'fake flash',
     ];
 
     const tutorialMenuOptions = [
