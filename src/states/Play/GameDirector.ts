@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser-ce';
 
-import ActionSequencer from './ActionSequencer';
+import { ArcadeActionSequencer } from './ActionSequencer';
 import InputVerifier from './InputVerifier';
 import Game from '../../Game';
 import CellGrid, { cellGridActionTypes } from './CellGrid';
@@ -15,7 +15,7 @@ const startAction = (action: GameAction): void => {
 };
 
 export default class GameDirector {
-  private actionSequencer: ActionSequencer;
+  private actionSequencer: IActionSequencer;
   private roundActionData: GameActionData[];
   private inputVerifier: InputVerifier;
   private round: number;
@@ -25,7 +25,7 @@ export default class GameDirector {
     private cellGrid: CellGrid,
   ) {
     this.inputVerifier = new InputVerifier(game);
-    this.actionSequencer = new ActionSequencer(cellGrid.rows, cellGrid.cols);
+    this.actionSequencer = new ArcadeActionSequencer(cellGrid.rows, cellGrid.cols);
 
     this.game.eventBus.gameActionComplete.add(this.onActionCompleteEvent.bind(this));
     this.game.eventBus.gameRoundComplete.add(this.onRoundComplete.bind(this));

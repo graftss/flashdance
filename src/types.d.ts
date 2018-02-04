@@ -62,6 +62,10 @@ type LevelData =
 // `delay`, if present, denotes how long after the action before the
 //   next action starts.
 
+interface IActionSequencer {
+  randomRound: (difficulty: number) => GameActionData[]
+}
+
 type TweenWrapper = {
   start: Function,
   onStart: Phaser.Signal,
