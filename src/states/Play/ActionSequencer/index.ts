@@ -1,2 +1,9 @@
-export { default as ArcadeActionSequencer } from './Arcade';
-export { default as DebugActionSequencer } from './Debug';
+import ArcadeActionSequencer from './Arcade';
+import DebugActionSequencer from './Debug';
+import TutorialActionSequencer from './Tutorial';
+
+export default {
+  Arcade: ArcadeActionSequencer,
+  Debug: DebugActionSequencer,
+  Tutorial: TutorialActionSequencer,
+};

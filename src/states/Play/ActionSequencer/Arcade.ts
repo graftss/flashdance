@@ -12,8 +12,7 @@ const toCell = ([row, col]) => ({ row, col });
 const waitAction = duration => ({ type: 'wait', opts: { duration }});
 
 export default class ArcadeActionSequencer
-  extends BaseActionSequencer
-  implements IActionSequencer {
+  extends BaseActionSequencer implements IActionSequencer {
 
   public randomRound(difficulty: number): GameActionData[] {
     const flashes = Math.ceil(difficulty / 3) - 1;

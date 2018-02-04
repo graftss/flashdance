@@ -1,8 +1,7 @@
 import BaseActionSequencer from './Base';
 
 export default class DebugActionSequencer
-  extends BaseActionSequencer
-  implements IActionSequencer {
+  extends BaseActionSequencer implements IActionSequencer {
 
   public randomRound(difficulty: number) {
     return this.path();

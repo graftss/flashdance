@@ -2,6 +2,7 @@ import { random, sample } from 'lodash';
 
 export {
   findIndex,
+  flatMap,
   flatten,
   includes,
   isEqual,

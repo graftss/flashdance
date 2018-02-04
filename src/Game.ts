@@ -20,6 +20,6 @@ export default class Game extends Phaser.Game {
     this.state.add('MainMenu', MainMenu);
     this.state.add('Play', Play);
 
-    this.state.start('Play');
+    this.state.start('MainMenu');
   }
 }
