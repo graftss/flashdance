@@ -12,15 +12,12 @@ export default class Play extends Phaser.State {
   private cellGrid: CellGrid;
   private director: GameDirector;
 
-  public create(game: Game) {
+  public init(levelData: LevelData) {
     this.initCellGrid();
 
-    this.director = new GameDirector(game, this.cellGrid);
+    this.director = new GameDirector(this.game, this.cellGrid);
 
     this.director.start();
-
-    // this.background = new Fragment(game, game.width, game.height, [new FBMClouds(game)]);
-    // this.world.sendToBack(this.background);
   }
 
   private initCellGrid(): void {

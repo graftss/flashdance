@@ -42,6 +42,20 @@ type ParticleData = {
   position: Vec2,
 }
 
+// Game levels
+
+type TutorialLevel =
+  'flash' |
+  'path' |
+  'fake flash' |
+  'multiflash' |
+  'rotate' |
+  'reflect' |
+  'x-reflect'
+
+type LevelData =
+  { type: 'tutorial', level: TutorialLevel }
+
 // Game actions
 
 // `duration` denotes how long the action should visually appear to take.

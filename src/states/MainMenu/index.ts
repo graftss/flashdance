@@ -10,7 +10,7 @@ export default class MainMenu extends Phaser.State {
   private objects: Phaser.Group;
   private background: Background;
   private menuStack: Menu[] = [];
-  private courseMenu: Menu;
+  private tutorialMenu: Menu;
   private mainMenu: Menu;
   private optionMenu: Menu;
 
@@ -23,7 +23,7 @@ export default class MainMenu extends Phaser.State {
     this.objects = this.game.add.group();
 
     this.initMainMenu();
-    this.initCourseMenu();
+    this.initTutorialMenu();
     this.initOptionMenu();
     this.initBackground();
 
@@ -43,9 +43,9 @@ export default class MainMenu extends Phaser.State {
   private initMainMenu() {
     const mainMenuOptions = [[
       {
-        label: 'courses',
+        label: 'tutorials',
         onSelect: () => {
-          this.pushMenu(this.courseMenu).start();
+          this.pushMenu(this.tutorialMenu).start();
         },
       },
       {
@@ -72,35 +72,35 @@ export default class MainMenu extends Phaser.State {
     this.objects.add(this.mainMenu);
   }
 
-  private initCourseMenu() {
+  private initTutorialMenu() {
     const { game } = this;
 
-    const nameToOption = (label: string): MenuOptionData => ({
+    const nameToOption = (label: TutorialLevel): MenuOptionData => ({
       label,
-      onSelect: () => this.game.state.start('Play', true, true, label),
+      onSelect: () => this.startLevel({ type: 'tutorial', level: label }),
     });
 
-    const col0 = [
+    const col0Names: TutorialLevel[] = [
       'flash',
       'path',
-      'multiflash',
-      'rotate',
-    ].map(nameToOption);
-
-    const col1 = [
-      'reflect',
-      'reflect 2',
       'fake flash',
-    ].map(nameToOption);
-
-    const courseMenuOptions = [
-      col0,
-      [...col1, this.backOptionData],
+      'multiflash',
     ];
 
-    this.courseMenu = new Menu(game, 0, 80, 80, courseMenuOptions);
-    this.moveMenuOffscreenRight(this.courseMenu);
-    this.objects.add(this.courseMenu);
+    const col1Names: TutorialLevel[] = [
+      'reflect',
+      'x-reflect',
+      'fake flash',
+    ];
+
+    const tutorialMenuOptions = [
+      col0Names.map(nameToOption),
+      col1Names.map(nameToOption).concat(this.backOptionData),
+    ];
+
+    this.tutorialMenu = new Menu(game, 0, 80, 80, tutorialMenuOptions);
+    this.moveMenuOffscreenRight(this.tutorialMenu);
+    this.objects.add(this.tutorialMenu);
   }
 
   private initOptionMenu() {
@@ -172,5 +172,9 @@ export default class MainMenu extends Phaser.State {
     tween.onStart.add(() => this.menuStack.pop());
 
     return tween;
+  }
+
+  private startLevel(levelData: LevelData) {
+    this.game.state.start('Play', true, true, levelData);
   }
 }
