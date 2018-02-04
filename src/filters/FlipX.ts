@@ -2,11 +2,6 @@ import * as Phaser from 'phaser-ce';
 
 import Game from '../Game';
 
-/**
-* source:
-* https://raw.githubusercontent.com/photonstorm/phaser-ce/master/filters/BlurX.js
-*/
-
 export default class FlipX extends Phaser.Filter {
   constructor(
     game: Game,

@@ -22,7 +22,7 @@ export default class Fragment extends Phaser.Group {
     this.addChild(this.sprite);
   }
 
-  update() {
+  public update() {
     this.filters.forEach(f => f.update());
   }
 }

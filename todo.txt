@@ -1,6 +1,4 @@
 === up next ===
-- lint types.d.ts
-- replace type declarations with interfaces
 
 === on deck ===
 - there should still be some kind of trail behind paths
@@ -8,7 +6,6 @@
 - "long hold" flash
 
 - queue a pause during a round that pauses after the round's over
-
 
 - background animation
   - in main menu, it's a gigantic ass cell with flashing lights and paths
@@ -22,6 +19,8 @@
   - eg one course to introduce each new mechanic
 
 - stop all updating when window doesn't have focus
+
+- replace type declarations with interfaces
 
 === loooong term ===
 
