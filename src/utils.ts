@@ -1,4 +1,4 @@
-import { random } from 'lodash';
+import { random, sample } from 'lodash';
 
 export {
   findIndex,
@@ -124,9 +124,19 @@ export const randomGridPos = (cols: number, rows: number): GridPos => ({
   row: random(0, rows - 1),
 });
 
-export const adjacentGridPos = ({ col, row }: GridPos): GridPos[] => ([
-  { col, row: row + 1 },
-  { col, row: row - 1 },
-  { col: col + 1, row },
-  { col: col - 1, row },
-]);
+export const validGridPos = (
+  cols: number,
+  rows: number,
+  { col, row }: GridPos,
+): boolean => (
+  col >= 0 && col < cols && row >= 0 && row < rows
+);
+
+export const adjacentGridPos = (cols, rows, { col, row }: GridPos): GridPos[] => (
+  [
+    { col, row: row + 1 },
+    { col, row: row - 1 },
+    { col: col + 1, row },
+    { col: col - 1, row },
+  ].filter(p => validGridPos(cols, rows, p))
+);

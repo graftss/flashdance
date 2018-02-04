@@ -1,10 +1,13 @@
-import { cellTarget, intersperse, random, sample, shuffle } from '../../utils';
+import {
+  adjacentGridPos,
+  cellTarget,
+  intersperse,
+  random,
+  sample,
+  shuffle,
+} from '../../utils';
 
 const toCell = ([row, col]) => ({ row, col });
-
-const path0 = [[0, 0], [1, 0], [2, 0]].map(toCell);
-const path1 = [[1, 1], [1, 2], [2, 2], [2, 1], [2, 0], [1, 0], [0, 0]].map(toCell);
-
 const waitAction = duration => ({ type: 'wait', opts: { duration }});
 
 export default class ActionSequencer {
@@ -75,11 +78,32 @@ export default class ActionSequencer {
   }
 
   private randomPath(difficulty: number): GameActionData {
+    const origin = this.randomGridPos();
+    const path = [origin];
+    const pathLength = 4; // should scale with difficulty
+
+    for (let n = 0; n < pathLength; n++) {
+      let adjacents = adjacentGridPos(this.gridCols, this.gridRows, path[path.length - 1]);
+
+      // stop the path from doubling back on itself for now
+      // this could be difficulty related or otherwise possible
+      if (path.length >= 2) {
+        const { col, row } = path[path.length - 2];
+        adjacents = adjacents.filter(p => p.col !== col || p.row !== row);
+      }
+
+      path.push(sample(adjacents));
+    }
+
+    // remove the origin from the path
+    path.shift();
+    console.log('hey', origin, path);
+
     return {
       opts: {
-        duration: 500,
-        origin: path0[0],
-        path: path0.slice(1),
+        duration: path.length * 250,
+        origin,
+        path,
       },
       type: 'path',
     };
@@ -182,14 +206,7 @@ export default class ActionSequencer {
       this.wait(500),
       this.randomPath(5),
       // this.randomSingleReflect(),
-      {
-        opts: {
-          duration: 1000,
-          origin: path1[0],
-          path: path1.slice(1),
-        },
-        type: 'path',
-      },
+      this.randomPath(5),
     ];
   }
 

@@ -113,7 +113,7 @@ export default class Background extends Phaser.Group {
 
     // choose a random cell adjacent to the last cell added to the path
     for (let m = 0; m < maxPathLength; m++) {
-      const adjacents = shuffle(adjacentGridPos(path[path.length - 1]));
+      const adjacents = shuffle(adjacentGridPos(this.cols, this.rows, path[path.length - 1]));
       let giveUp = true;
 
       for (const adjPos of adjacents) {

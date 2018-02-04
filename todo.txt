@@ -1,6 +1,9 @@
 === up next ===
+- refactor path data to combine origin and path. thats so dumb how it is now lol
 
 === on deck ===
+- there should still be some kind of trail behind paths
+
 - "long hold" flash
 
 - queue a pause during a round that pauses after the round's over
