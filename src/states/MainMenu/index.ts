@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser-ce';
 
 import Background from './Background';
+import CourseMenu from './CourseMenu';
 import Game from '../../Game';
 import Menu from '../../ui/Menu';
 
@@ -75,33 +76,9 @@ export default class MainMenu extends Phaser.State {
   private initTutorialMenu() {
     const { game } = this;
 
-    const nameToOption = (label: TutorialCourse): MenuOptionData => ({
-      label,
-      onSelect: () => this.startCourse({
-        data: { level: label },
-        type: 'tutorial',
-      }),
-    });
+    const courseIds = [[0, 1, 2, 3], [4, 5, 6]];
 
-    const col0Names: TutorialCourse[] = [
-      'flash',
-      'path',
-      'fake flash',
-      'multiflash',
-    ];
-
-    const col1Names: TutorialCourse[] = [
-      'reflect',
-      'rotate',
-      'x-reflect',
-    ];
-
-    const tutorialMenuOptions = [
-      col0Names.map(nameToOption),
-      col1Names.map(nameToOption).concat(this.backOptionData),
-    ];
-
-    this.tutorialMenu = new Menu(game, 0, 80, 80, tutorialMenuOptions);
+    this.tutorialMenu = new CourseMenu(game, 0, 80, 80, courseIds);
     this.moveMenuOffscreenRight(this.tutorialMenu);
     this.objects.add(this.tutorialMenu);
   }
