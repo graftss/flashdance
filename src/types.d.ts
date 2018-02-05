@@ -11,15 +11,9 @@ type Vec2 = { x: number, y: number }
 // Save Data
 
 type SaveData = {
-  achievements: {
-
-  };
-  highScores: {
-
-  };
-  unlocks: {
-    tutorial: {[key in TutorialCourse]?: boolean };
-  };
+  achievements: object;
+  completedCourses: object;
+  highScores: object;
 };
 
 // UI
@@ -72,8 +66,13 @@ type TutorialData = {
   maxDifficulty?: number;
 };
 
+type DebugData = {
+  level: 'debug';
+  data: object;
+};
+
 type CourseData =
-  { type: 'debug' } |
+  { type: 'debug', data: DebugData } |
   { type: 'tutorial', data: TutorialData };
 
 // Game actions

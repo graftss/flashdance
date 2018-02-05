@@ -13,9 +13,7 @@ export default class SaveFile {
   }
 
   private static serialize(saveData: SaveData): string {
-    const { achievements, highScores, unlocks } = saveData;
-
-    return JSON.stringify({ achievements, highScores, unlocks });
+    return JSON.stringify(saveData);
   }
 
   private static deserialize(save: string): SaveData {
@@ -25,10 +23,8 @@ export default class SaveFile {
   private static getNewSaveData(): SaveData {
     return {
       achievements: {},
+      completedCourses: {},
       highScores: {},
-      unlocks: {
-        tutorial: {},
-      },
     };
   }
 }

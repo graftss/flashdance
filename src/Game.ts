@@ -8,17 +8,21 @@ import MainMenu from './states/MainMenu';
 import Play from './states/Play';
 import SaveFile from './SaveFile';
 import Tweener from './Tweener';
+import Unlocker from './Unlocker';
 
 export default class Game extends Phaser.Game {
-  public tweener: Tweener;
   public eventBus: EventBus;
   public saveData: SaveData;
+  public tweener: Tweener;
+  public unlocker: Unlocker;
 
   constructor(...args) {
     super(...args);
-    this.tweener = new Tweener(this);
+
     this.eventBus = new EventBus();
     this.saveData = SaveFile.loadSaveData();
+    this.tweener = new Tweener(this);
+    this.unlocker = new Unlocker(this);
 
     this.state.add('MainMenu', MainMenu);
     this.state.add('Play', Play);

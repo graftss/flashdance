@@ -90,9 +90,13 @@ export default class GameDirector {
     this.difficulty += 1;
 
     if (this.difficulty > this.maxDifficulty) {
-      console.log('course completed');
+      this.onCourseComplete();
     } else {
       this.startNextRound();
     }
+  }
+
+  private onCourseComplete(): void {
+    this.game.eventBus.gameCourseComplete.dispatch(this.courseData);
   }
 }
