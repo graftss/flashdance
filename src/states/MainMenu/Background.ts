@@ -89,7 +89,7 @@ export default class Background extends Phaser.Group {
 
   private newRandomPath(): Maybe<TweenWrapper> {
     const maxTries = 5;
-    const maxPathLength = 10;
+    const maxPathLength = random(6, 12);
     let gridPos;
 
     // choose the random initial cell
@@ -132,7 +132,8 @@ export default class Background extends Phaser.Group {
 
     const { x, y } = this.cellCoords(gridPos);
     const pathCoords = path.slice(1).map(pos => this.cellCoords(pos));
-    const { tween } = this.newFlashLayer(x, y).pathTween(pathCoords, path.length * 150);
+    const { tween } = this.newFlashLayer(x, y)
+      .pathTween(pathCoords, path.length * random(130, 170));
 
     path.forEach(pos => this.setCellUse(1, pos));
     tween.onComplete.add(() => path.forEach(pos => this.setCellUse(0, pos)));
