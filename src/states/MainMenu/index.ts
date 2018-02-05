@@ -75,19 +75,22 @@ export default class MainMenu extends Phaser.State {
   private initTutorialMenu() {
     const { game } = this;
 
-    const nameToOption = (label: TutorialLevel): MenuOptionData => ({
+    const nameToOption = (label: TutorialCourse): MenuOptionData => ({
       label,
-      onSelect: () => this.startLevel({ type: 'tutorial', level: label }),
+      onSelect: () => this.startCourse({
+        data: { level: label },
+        type: 'tutorial',
+      }),
     });
 
-    const col0Names: TutorialLevel[] = [
+    const col0Names: TutorialCourse[] = [
       'flash',
       'path',
       'fake flash',
       'multiflash',
     ];
 
-    const col1Names: TutorialLevel[] = [
+    const col1Names: TutorialCourse[] = [
       'reflect',
       'rotate',
       'x-reflect',
@@ -174,7 +177,7 @@ export default class MainMenu extends Phaser.State {
     return tween;
   }
 
-  private startLevel(levelData: LevelData) {
-    this.game.state.start('Play', true, true, levelData);
+  private startCourse(courseData: CourseData) {
+    this.game.state.start('Play', true, true, courseData);
   }
 }

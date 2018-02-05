@@ -18,7 +18,7 @@ type SaveData = {
 
   };
   unlocks: {
-    tutorial: { [key in TutorialLevel]?: boolean };
+    tutorial: {[key in TutorialCourse]?: boolean };
   };
 };
 
@@ -58,7 +58,7 @@ type ParticleData = {
 
 // Game levels
 
-type TutorialLevel =
+type TutorialCourse =
   'flash' |
   'path' |
   'fake flash' |
@@ -67,9 +67,14 @@ type TutorialLevel =
   'reflect' |
   'x-reflect'
 
-type LevelData =
+type TutorialData = {
+  level: TutorialCourse;
+  maxDifficulty?: number;
+};
+
+type CourseData =
   { type: 'debug' } |
-  { type: 'tutorial', level: TutorialLevel };
+  { type: 'tutorial', data: TutorialData };
 
 // Game actions
 
@@ -78,7 +83,8 @@ type LevelData =
 //   next action starts.
 
 interface IActionSequencer {
-  randomRound: (difficulty: number) => GameActionData[]
+  randomRound: (difficulty: number) => GameActionData[];
+  maxDifficulty: (CourseData) => number;
 }
 
 type TweenWrapper = {

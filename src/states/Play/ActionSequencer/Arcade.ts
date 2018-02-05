@@ -36,4 +36,8 @@ export default class ArcadeActionSequencer
 
     return intersperse(shuffled, waitAction(150));
   }
+
+  public maxDifficulty(): number {
+    return 2;
+  }
 }

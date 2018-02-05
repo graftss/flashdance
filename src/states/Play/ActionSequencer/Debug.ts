@@ -3,8 +3,12 @@ import BaseActionSequencer from './Base';
 export default class DebugActionSequencer
   extends BaseActionSequencer implements IActionSequencer {
 
-  public randomRound(difficulty: number) {
+  public randomRound(difficulty: number): GameActionData[] {
     return this.debugXReflect();
+  }
+
+  public maxDifficulty(): number {
+    return 100000;
   }
 
   private debugRotate(): GameActionData[] {

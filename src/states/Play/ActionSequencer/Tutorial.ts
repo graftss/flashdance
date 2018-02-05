@@ -8,7 +8,7 @@ export default class TutorialActionSequencer
   constructor(
     gridCols: number,
     gridRows: number,
-    private level: TutorialLevel,
+    private level: TutorialCourse,
   ) {
     super(gridCols, gridRows);
   }
@@ -24,10 +24,14 @@ export default class TutorialActionSequencer
     return [initialWait, ...roundActions];
   }
 
+  public maxDifficulty(courseData: TutorialData): number {
+    switch (courseData.level)  {
+      default: return 3;
+    }
+  }
+
   private flashRound(difficulty: number): GameActionData[] {
-    const flashes = [
-      1, 1, 2, 3, 4, 5, 5, 6, 6,
-    ][difficulty];
+    const flashes = Math.ceil(difficulty / 2);
 
     return flatMap(range(flashes), () => [
       this.flash(difficulty),

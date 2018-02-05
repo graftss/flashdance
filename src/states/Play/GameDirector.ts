@@ -14,32 +14,36 @@ const startAction = (action: GameAction): void => {
 };
 
 export default class GameDirector {
-  private roundActionData: GameActionData[];
   private inputVerifier: InputVerifier;
-  private round: number;
+  private maxDifficulty: number;
+
+  private roundActionData: GameActionData[];
+  private difficulty: number;
 
   constructor(
     private game: Game,
     private cellGrid: CellGrid,
+    private courseData: CourseData,
     private actionSequencer: IActionSequencer,
   ) {
     this.inputVerifier = new InputVerifier(game);
+    this.maxDifficulty = actionSequencer.maxDifficulty(courseData);
 
     this.game.eventBus.gameActionComplete.add(this.onActionCompleteEvent.bind(this));
     this.game.eventBus.gameRoundComplete.add(this.onRoundComplete.bind(this));
   }
 
   public start(): void {
-    this.round = 1;
+    this.difficulty = 1;
     this.startNextRound();
   }
 
   private startNextRound(): void {
-    this.startRound(this.round);
+    this.startRound(this.difficulty);
   }
 
-  private startRound(round: number): void {
-    this.roundActionData = this.actionSequencer.randomRound(round);
+  private startRound(difficulty: number): void {
+    this.roundActionData = this.actionSequencer.randomRound(difficulty);
     this.startActionEvent(0);
   }
 
@@ -83,7 +87,12 @@ export default class GameDirector {
   }
 
   private onRoundComplete(n: number): void {
-    this.round += 1;
-    this.startNextRound();
+    this.difficulty += 1;
+
+    if (this.difficulty > this.maxDifficulty) {
+      console.log('course completed');
+    } else {
+      this.startNextRound();
+    }
   }
 }
