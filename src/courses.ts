@@ -1,4 +1,4 @@
-export default [
+const courses: CourseData[] = [
   {
     id: 0,
     level: 'flash',
@@ -11,7 +11,7 @@ export default [
   },
   {
     id: 2,
-    level: 'fakeflash',
+    level: 'fake flash',
     type: 'tutorial',
   },
   {
@@ -35,3 +35,5 @@ export default [
     type: 'tutorial',
   },
 ];
+
+export default courses;

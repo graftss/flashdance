@@ -1,10 +1,5 @@
+import courses from './courses';
 import Game from './Game';
-
-const courseIds = {
-  tutorial: {
-    flash: '1',
-  },
-};
 
 export default class Unlocker {
   constructor(
@@ -18,11 +13,10 @@ export default class Unlocker {
   }
 
   private onCourseComplete = (courseData: CourseData): void => {
-    const { type, data: { level } } = courseData;
-    const courseId = courseIds[type][level];
+    const { id } = courseData;
 
     this.game.updateSaveData((saveData: SaveData) => {
-      saveData.completedCourses[courseId] = 1;
+      saveData.completedCourses[id] = 1;
       return saveData;
     });
   }

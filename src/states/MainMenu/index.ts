@@ -78,7 +78,7 @@ export default class MainMenu extends Phaser.State {
 
     const courseIds = [[0, 1, 2, 3], [4, 5, 6]];
 
-    this.tutorialMenu = new CourseMenu(game, 0, 80, 80, courseIds);
+    this.tutorialMenu = new CourseMenu(game, 0, 80, 80, courseIds, this.startCourse);
     this.moveMenuOffscreenRight(this.tutorialMenu);
     this.objects.add(this.tutorialMenu);
   }
@@ -154,7 +154,7 @@ export default class MainMenu extends Phaser.State {
     return tween;
   }
 
-  private startCourse(courseData: CourseData) {
+  private startCourse = (courseData: CourseData) => {
     this.game.state.start('Play', true, true, courseData);
   }
 }

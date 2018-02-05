@@ -61,19 +61,10 @@ type TutorialCourse =
   'reflect' |
   'x-reflect'
 
-type TutorialData = {
-  level: TutorialCourse;
-  maxDifficulty?: number;
-};
-
-type DebugData = {
-  level: 'debug';
-  data: object;
-};
-
-type CourseData =
-  { type: 'debug', data: DebugData } |
-  { type: 'tutorial', data: TutorialData };
+type CourseData = { id: number } & (
+  { type: 'debug', level: 'debug' } |
+  { type: 'tutorial', level: TutorialCourse }
+);
 
 // Game actions
 

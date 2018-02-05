@@ -24,7 +24,7 @@ export default class TutorialActionSequencer
     return [initialWait, ...roundActions];
   }
 
-  public maxDifficulty(courseData: TutorialData): number {
+  public maxDifficulty(courseData: CourseData): number {
     switch (courseData.level)  {
       default: return 3;
     }
