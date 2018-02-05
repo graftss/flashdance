@@ -155,6 +155,6 @@ export default class MainMenu extends Phaser.State {
   }
 
   private startCourse = (courseData: CourseData) => {
-    this.game.state.start('Play', true, true, courseData);
+    this.game.state.start('Play', true, false, courseData);
   }
 }

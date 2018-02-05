@@ -15,4 +15,17 @@ export default class EventBus {
   public gameActionComplete: TypedSignal<GameActionContext> = new TypedSignal();
   public gameRoundComplete: TypedSignal<number> = new TypedSignal();
   public gameCourseComplete: TypedSignal<CourseData> = new TypedSignal();
+
+  public clear() {
+    this.inputEnabled.removeAll();
+    this.inputDragTarget.removeAll();
+    this.inputDragStop.removeAll();
+    this.inputDown.removeAll();
+    this.correctInput.removeAll();
+    this.incorrectInput.removeAll();
+    this.gameActionStart.removeAll();
+    this.gameActionComplete.removeAll();
+    this.gameRoundComplete.removeAll();
+    this.gameCourseComplete.removeAll();
+  }
 }

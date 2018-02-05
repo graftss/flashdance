@@ -17,6 +17,7 @@ export default class Play extends Phaser.State {
   private director: GameDirector;
 
   public init(courseData: CourseData) {
+    this.game.eventBus.clear();
     this.initCellGrid();
 
     const actionSequencer = this.initActionSequencer(courseData);

@@ -29,8 +29,11 @@ export default class GameDirector {
     this.inputVerifier = new InputVerifier(game);
     this.maxDifficulty = actionSequencer.maxDifficulty(courseData);
 
-    this.game.eventBus.gameActionComplete.add(this.onActionCompleteEvent.bind(this));
-    this.game.eventBus.gameRoundComplete.add(this.onRoundComplete.bind(this));
+    this.game.eventBus.gameActionComplete.add(this.onActionCompleteEvent);
+    this.game.eventBus.gameRoundComplete.add(this.onRoundComplete);
+
+    (window as any).newGrid = this.cellGrid;
+    console.log('director constructor', this.cellGrid.game);
   }
 
   public start(): void {
@@ -57,7 +60,7 @@ export default class GameDirector {
     }
   }
 
-  private startAction(actionData: GameActionData): GameAction {
+  private startAction = (actionData: GameActionData): GameAction => {
     const action = this.buildAction(actionData);
 
     startAction(action);
@@ -65,7 +68,7 @@ export default class GameDirector {
     return action;
   }
 
-  private onActionCompleteEvent(context: GameActionContext): void {
+  private onActionCompleteEvent = (context: GameActionContext): void => {
     const nextIndex = context.index + 1;
 
     if (this.roundActionData[nextIndex] !== undefined) {
@@ -75,7 +78,7 @@ export default class GameDirector {
     }
   }
 
-  private startActionEvent(index: number): void {
+  private startActionEvent = (index: number): void => {
     const { gameActionStart, gameActionComplete } = this.game.eventBus;
 
     const actionData = this.roundActionData[index];
@@ -86,7 +89,7 @@ export default class GameDirector {
     onActionComplete(action, () => gameActionComplete.dispatch({ action, index }));
   }
 
-  private onRoundComplete(n: number): void {
+  private onRoundComplete = (n: number): void => {
     this.difficulty += 1;
 
     if (this.difficulty > this.maxDifficulty) {
@@ -96,7 +99,11 @@ export default class GameDirector {
     }
   }
 
-  private onCourseComplete(): void {
+  private onCourseComplete = (): void => {
     this.game.eventBus.gameCourseComplete.dispatch(this.courseData);
+
+    setTimeout(() => {
+      this.game.state.start('MainMenu');
+    }, 250);
   }
 }

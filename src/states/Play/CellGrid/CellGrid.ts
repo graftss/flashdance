@@ -18,6 +18,8 @@ export const cellGridActionTypes = [
   'rotate',
 ];
 
+(window as any).oldGrids = [];
+
 export default class CellGrid extends Phaser.Group {
   private background: Phaser.Graphics;
   private border: CellGridBorder;
