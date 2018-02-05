@@ -11,7 +11,7 @@ export default class BaseActionSequencer {
     protected gridRows: number,
   ) {}
 
-  protected input(difficulty: number = 0): GameActionData {
+  protected input = (difficulty: number = 0): GameActionData => {
     if (difficulty < 6) {
       return this.flash(difficulty);
     } else {
@@ -27,7 +27,7 @@ export default class BaseActionSequencer {
     }
   }
 
-  protected flash(difficulty: number = 0): GameActionData {
+  protected flash = (difficulty: number = 0): GameActionData => {
     const duration = Math.max(100, 300 - 10 * difficulty);
 
     return {
@@ -39,7 +39,7 @@ export default class BaseActionSequencer {
     };
   }
 
-  protected multiflash(difficulty: number = 0): GameActionData {
+  protected multiflash = (difficulty: number = 0): GameActionData => {
     const duration = Math.max(300, 600 - 10 * difficulty);
 
     return {
@@ -52,10 +52,10 @@ export default class BaseActionSequencer {
     };
   }
 
-  protected path(difficulty: number): GameActionData {
+  protected path = (length: number): GameActionData => {
     const origin = this.randomGridPos();
     const path = [origin];
-    const pathLength = 4; // should scale with difficulty
+    const pathLength = length; // should scale with difficulty
 
     for (let n = 0; n < pathLength; n++) {
       let adjacents = adjacentGridPos(this.gridCols, this.gridRows, path[path.length - 1]);
@@ -79,7 +79,7 @@ export default class BaseActionSequencer {
     };
   }
 
-  protected obstacle(difficulty: number = 0): GameActionData {
+  protected obstacle = (difficulty: number = 0): GameActionData => {
     const typeId = sample([0, 1, 2]);
 
     switch (typeId) {
@@ -89,7 +89,7 @@ export default class BaseActionSequencer {
     }
   }
 
-  protected rotate(difficulty: number = 0): GameActionData {
+  protected rotate = (difficulty: number = 0): GameActionData => {
     const durationPerTurn = Math.max(200, 400 - difficulty * 10);
 
     const turns = sample([-3, -2, -1, 1, 2, 3]);
@@ -105,7 +105,7 @@ export default class BaseActionSequencer {
     };
   }
 
-  protected reflect(difficulty: number = 0): GameActionData {
+  protected reflect = (difficulty: number = 0): GameActionData => {
     const duration = Math.max(250, 750 - difficulty * 15);
 
     const reflectX = sample([true, false]);
@@ -120,7 +120,7 @@ export default class BaseActionSequencer {
     };
   }
 
-  protected xReflect(difficulty: number = 0): GameActionData {
+  protected xReflect = (difficulty: number = 0): GameActionData => {
     const duration = Math.max(250, 750 - difficulty * 15);
 
     return {
@@ -133,7 +133,7 @@ export default class BaseActionSequencer {
     };
   }
 
-  protected fakeFlash(difficulty: number = 0): GameActionData {
+  protected fakeFlash = (difficulty: number = 0): GameActionData => {
     const duration = Math.max(200, 400 - difficulty * 20);
 
     return {
@@ -145,7 +145,7 @@ export default class BaseActionSequencer {
     };
   }
 
-  protected wait(duration: number): GameActionData {
+  protected wait = (duration: number): GameActionData => {
     return {
       opts: { duration },
       type: 'wait',

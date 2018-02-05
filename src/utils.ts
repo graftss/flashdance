@@ -82,14 +82,6 @@ export const vec2 = {
   scale: (v: Vec2, k: number): Vec2 => ({ x: v.x * k, y: v.y * k }),
 };
 
-export const intersperse = <T>(list: T[], item: T) => (
-  list.reduce((result, listItem) => {
-    result.push(listItem);
-    result.push(item);
-    return result;
-  }, [])
-);
-
 export const destroy = (obj?: { destroy: () => any }) => {
   if (obj !== undefined) {
     obj.destroy();
@@ -141,3 +133,14 @@ export const adjacentGridPos = (cols, rows, { col, row }: GridPos): GridPos[] =>
     { col: col - 1, row },
   ].filter(p => validGridPos(cols, rows, p))
 );
+
+export const intersperse = <T>(item: T, list: T[]) => {
+  const result = [list[0]];
+
+  for (let i = 1; i < list.length; i++) {
+    result.push(item);
+    result.push(list[i]);
+  }
+
+  return result;
+};
