@@ -8,6 +8,20 @@ type GridPos = { col: number, row: number }
 
 type Vec2 = { x: number, y: number }
 
+// Save Data
+
+type SaveData = {
+  achievements: {
+
+  };
+  highScores: {
+
+  };
+  unlocks: {
+    tutorial: { [key in TutorialLevel]?: boolean };
+  };
+};
+
 // UI
 
 type MenuOptionData = {
