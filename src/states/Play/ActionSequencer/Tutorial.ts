@@ -32,6 +32,7 @@ export default class TutorialActionSequencer
       case 'flash': return this.flashRound(difficulty);
       case 'fake flash': return this.fakeFlashRound(difficulty);
       case 'path': return this.pathRound(difficulty);
+      case 'multiflash': return this.multiflashRound(difficulty);
     }
   }
 
@@ -60,5 +61,15 @@ export default class TutorialActionSequencer
     ][difficulty];
 
     return pathLengths.map(this.path);
+  }
+
+  private multiflashRound(difficulty: number): GameActionData[] {
+    const flashes = [[],
+      [1], [0, 1], [1, 0], [1, 0, 1], [0, 1, 1],
+      [1, 1, 1], [1, 1, 0, 1], [1, 0, 1, 1],
+      [1, 1, 1, 1], [1, 1, 0, 1, 1],
+    ][difficulty];
+
+    return flashes.map(n => n ? this.multiflash(difficulty) : this.flash(difficulty));
   }
 }

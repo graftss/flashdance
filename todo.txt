@@ -2,6 +2,9 @@
 - finish tutorial courses
 
 === on deck ===
+- some visual indication of whether the input is being shown to you, or
+  whether you can start recording your own input
+
 - "long hold" flash mechanic
   - animation is a growing light that fills out the cell to let you know
     you can stop holding
