@@ -30,6 +30,7 @@ export default class TutorialActionSequencer
   private waitlessRound(difficulty: number): GameActionData[] {
     switch (this.level) {
       case 'flash': return this.flashRound(difficulty);
+      case 'fake flash': return this.fakeFlashRound(difficulty);
       case 'path': return this.pathRound(difficulty);
     }
   }
@@ -44,7 +45,13 @@ export default class TutorialActionSequencer
   }
 
   private fakeFlashRound(difficulty: number): GameActionData[] {
-    return [];
+    const flashes = [[],
+      [0, 1], [0, 1], [0, 0, 1], [0, 1, 0, 1], [0, 0, 1, 1],
+      [0, 1, 0, 1, 1], [0, 1, 1, 0, 1], [1, 0, 0, 0, 1],
+      [1, 0, 0, 1, 0, 0, 1], [1, 0, 1, 0, 1, 0, 1],
+    ][difficulty];
+
+    return flashes.map(n => n ? this.flash(difficulty) : this.fakeFlash(difficulty));
   }
 
   private pathRound(difficulty: number): GameActionData[] {
