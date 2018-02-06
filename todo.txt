@@ -1,5 +1,4 @@
 === up next ===
-- finish tutorial courses
 
 === on deck ===
 - some visual indication of whether the input is being shown to you, or

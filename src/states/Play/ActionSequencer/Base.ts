@@ -1,5 +1,6 @@
 import {
   adjacentGridPos,
+  clamp,
   random,
   randomGridPos,
   sample,
@@ -24,6 +25,22 @@ export default class BaseActionSequencer {
       } else {
         return this.multiflash(difficulty);
       }
+    }
+  }
+
+  protected roundByCode = (difficulty: number, codes: number[]): GameActionData[] => {
+    return codes.map(code => this.actionCodeMap(difficulty, code));
+  }
+
+  protected actionCodeMap = (difficulty: number, code: number): GameActionData  => {
+    switch (code) {
+      case 0: return this.flash(difficulty);
+      case 1: return this.fakeFlash(difficulty);
+      case 2: return this.multiflash(difficulty);
+      case 3: return this.path(difficulty);
+      case 4: return this.rotate(difficulty);
+      case 5: return this.reflect(difficulty);
+      case 6: return this.xReflect(difficulty);
     }
   }
 
@@ -52,10 +69,10 @@ export default class BaseActionSequencer {
     };
   }
 
-  protected path = (length: number): GameActionData => {
+  protected path = (difficulty: number): GameActionData => {
     const origin = this.randomGridPos();
     const path = [origin];
-    const pathLength = length; // should scale with difficulty
+    const pathLength = clamp(Math.floor(difficulty / 3), 3, 5); // should scale with difficulty
 
     for (let n = 0; n < pathLength; n++) {
       let adjacents = adjacentGridPos(this.gridCols, this.gridRows, path[path.length - 1]);

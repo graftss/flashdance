@@ -33,6 +33,9 @@ export default class TutorialActionSequencer
       case 'fake flash': return this.fakeFlashRound(difficulty);
       case 'path': return this.pathRound(difficulty);
       case 'multiflash': return this.multiflashRound(difficulty);
+      case 'rotate': return this.rotateRound(difficulty);
+      case 'reflect': return this.reflectRound(difficulty);
+      case 'x-reflect': return this.xReflectRound(difficulty);
     }
   }
 
@@ -46,30 +49,62 @@ export default class TutorialActionSequencer
   }
 
   private fakeFlashRound(difficulty: number): GameActionData[] {
-    const flashes = [[],
-      [0, 1], [0, 1], [0, 0, 1], [0, 1, 0, 1], [0, 0, 1, 1],
-      [0, 1, 0, 1, 1], [0, 1, 1, 0, 1], [1, 0, 0, 0, 1],
-      [1, 0, 0, 1, 0, 0, 1], [1, 0, 1, 0, 1, 0, 1],
+    const round = [[],
+      [1, 0], [1, 0], [1, 1, 0], [1, 0, 1, 0], [1, 1, 0, 0],
+      [1, 0, 1, 0, 0], [1, 0, 0, 1, 0], [0, 1, 1, 1, 0],
+      [0, 1, 1, 0, 1, 1, 0], [0, 1, 0, 1, 0, 1, 0],
     ][difficulty];
 
-    return flashes.map(n => n ? this.flash(difficulty) : this.fakeFlash(difficulty));
+    return this.roundByCode(difficulty, round);
   }
 
   private pathRound(difficulty: number): GameActionData[] {
-    const pathLengths = [[],
-      [3], [4], [5], [3, 3], [3, 4], [4, 4], [3, 5], [4, 5], [5, 5],
+    const round = [[],
+      [3], [3], [3], [3, 3], [3, 3],
+      [3, 3], [3, 0, 3], [0, 3, 3],
+      [3, 0, 3, 0], [3, 3, 3],
     ][difficulty];
 
-    return pathLengths.map(this.path);
+    return this.roundByCode(difficulty, round);
   }
 
   private multiflashRound(difficulty: number): GameActionData[] {
-    const flashes = [[],
-      [1], [0, 1], [1, 0], [1, 0, 1], [0, 1, 1],
-      [1, 1, 1], [1, 1, 0, 1], [1, 0, 1, 1],
-      [1, 1, 1, 1], [1, 1, 0, 1, 1],
+    const round = [[],
+      [2], [0, 2], [2, 0], [2, 0, 2], [0, 2, 2],
+      [2, 2, 2], [2, 2, 0, 2], [2, 0, 2, 2],
+      [2, 2, 2, 2], [2, 2, 0, 2, 2],
     ][difficulty];
 
-    return flashes.map(n => n ? this.multiflash(difficulty) : this.flash(difficulty));
+    return this.roundByCode(difficulty, round);
+  }
+
+  private rotateRound(difficulty: number): GameActionData[] {
+    const round = [[],
+      [0, 4], [0, 4], [0, 4], [0, 4, 0], [0, 4, 0],
+      [0, 0, 4], [0, 0, 4], [0, 0, 4, 4], [0, 0, 4, 4],
+      [0, 4, 0, 4],
+    ][difficulty];
+
+    return this.roundByCode(difficulty, round);
+  }
+
+  private reflectRound(difficulty: number): GameActionData[] {
+    const round = [[],
+      [0, 5], [0, 5], [0, 5], [0, 5, 0], [0, 5, 0],
+      [0, 0, 5], [0, 0, 5], [0, 0, 5, 5], [0, 0, 5, 5],
+      [0, 5, 0, 5],
+    ][difficulty];
+
+    return this.roundByCode(difficulty, round);
+  }
+
+  private xReflectRound(difficulty: number): GameActionData[] {
+    const round = [[],
+      [0, 6], [0, 6], [0, 6], [0, 6, 0], [0, 6, 0],
+      [0, 0, 6], [0, 0, 6], [0, 0, 6, 6], [0, 0, 6, 6],
+      [0, 6, 0, 6],
+    ][difficulty];
+
+    return this.roundByCode(difficulty, round);
   }
 }
