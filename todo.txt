@@ -1,5 +1,6 @@
 === up next ===
-- make the "clear save data" button in options work
+- create a new copy of a menu beofre it's scrolled into view
+  - (and destroy menus that are scrolled out of view)
 
 === on deck ===
 - there should still be some kind of trail behind paths

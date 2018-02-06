@@ -9,9 +9,13 @@ export default class SaveFile {
   }
 
   public update(updater: (SaveData) => SaveData): void {
-    const newSaveData = updater(this.saveData);
+    const updatedSaveData = updater(this.saveData);
 
-    IO.writeSave(this.serialize(newSaveData));
+    IO.writeSave(SaveFile.serialize(updatedSaveData));
+  }
+
+  public clearSave(): void {
+    this.update(SaveFile.getNewSaveData);
   }
 
   public isCourseCompleted(courseId: number): boolean {
@@ -20,14 +24,14 @@ export default class SaveFile {
 
   private initSaveData(): void {
     const save = IO.readSave();
-    this.saveData = save ? this.deserialize(save) : SaveFile.getNewSaveData();
+    this.saveData = save ? SaveFile.deserialize(save) : SaveFile.getNewSaveData();
   }
 
-  private serialize(saveData: SaveData): string {
-    return JSON.stringify(this.saveData);
+  private static serialize(saveData: SaveData): string {
+    return JSON.stringify(saveData);
   }
 
-  private deserialize(save: string): SaveData {
+  private static deserialize(save: string): SaveData {
     return JSON.parse(save);
   }
 

@@ -89,11 +89,14 @@ export default class MainMenu extends Phaser.State {
     const optionMenuOptions = [[
       {
         label: 'delete saved data',
-        onSelect: () => console.log('deleting saved data'),
+        onSelect: () => {
+          this.game.saveFile.clearSave();
+          this.game.state.start('MainMenu');
+        },
       },
       {
         label: 'colorblind mode',
-        onSelect: () => console.log('toggling colorblind mode'),
+        onSelect: () => console.log('toggling colourblind mode'),
       },
       this.backOptionData,
     ]];
