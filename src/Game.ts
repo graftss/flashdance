@@ -26,6 +26,11 @@ export default class Game extends Phaser.Game {
     this.state.start('MainMenu');
   }
 
+  public boot() {
+    super.boot();
+    this.stage.disableVisibilityChange = true;
+  }
+
   public eventBus(): EventBus {
     return (this.state.getCurrentState() as any).eventBus;
   }

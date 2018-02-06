@@ -17,8 +17,6 @@
     obstacles or length or flashes or whatever.
   - eg one course to introduce each new mechanic
 
-- stop all updating when window doesn't have focus
-
 - transition from main menu to start of course
   - when you transition to the play state, the lights all flicker out.
     maybe they all turn on first?
