@@ -6,6 +6,7 @@ import { vec2 } from '../utils';
 
 export default class Menu extends Phaser.Group {
   private optionColumns: MenuOption[][];
+  private colWidth: number;
 
   constructor(
     public game: Game,
@@ -17,24 +18,16 @@ export default class Menu extends Phaser.Group {
   ) {
     super(game);
 
-    const width = game.width / this.optionDataColumns.length;
+    this.colWidth = game.width / this.optionDataColumns.length;
 
     this.optionColumns = optionDataColumns.map((column, colIndex) => (
-      column.map((data, rowIndex) => {
-        const option = new MenuOption(
-          game,
-          width * colIndex, rowHeight * rowIndex,
-          width, rowHeight,
-          data,
-        );
-
-        this.addChild(option);
-        return option;
-      })
+      column.map((data, rowIndex) => (
+        this.createMenuOption(colIndex, rowIndex, data)
+      ))
     ));
   }
 
-  public setInputEnabled(value: boolean) {
+  public setInputEnabled(value: boolean): void {
     this.forEachOption(opt => opt.setInputEnabled(value));
   }
 
@@ -47,7 +40,29 @@ export default class Menu extends Phaser.Group {
     return tween;
   }
 
+  public addMenuOption(colIndex: number, data: MenuOptionData): void {
+    const column = this.optionColumns[colIndex];
+    const rowIndex = column.length;
+
+    column.push(this.createMenuOption(colIndex, rowIndex, data));
+  }
+
   private forEachOption(f: (MenuOption) => void): void {
     this.optionColumns.forEach(col => col.forEach(f));
+  }
+
+  private createMenuOption(colIndex, rowIndex, data): MenuOption {
+    const { game, rowHeight, colWidth } = this;
+
+    const option = new MenuOption(
+      game,
+      colWidth * colIndex, rowHeight * rowIndex,
+      colWidth, rowHeight,
+      data,
+    );
+
+    this.addChild(option);
+
+    return option;
   }
 }

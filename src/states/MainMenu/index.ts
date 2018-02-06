@@ -101,6 +101,8 @@ export default class MainMenu extends Phaser.State {
     this.moveMenuOffscreenRight(this.tutorialMenu);
     this.objects.add(this.tutorialMenu);
 
+    this.tutorialMenu.addMenuOption(1, this.backOptionData);
+
     return this.tutorialMenu;
   }
 
