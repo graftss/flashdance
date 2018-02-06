@@ -12,7 +12,7 @@ import Unlocker from './Unlocker';
 
 export default class Game extends Phaser.Game {
   public eventBus: EventBus;
-  public saveData: SaveData;
+  public saveFile: SaveFile;
   public tweener: Tweener;
   public unlocker: Unlocker;
 
@@ -20,7 +20,7 @@ export default class Game extends Phaser.Game {
     super(...args);
 
     this.eventBus = new EventBus();
-    this.saveData = SaveFile.loadSaveData();
+    this.saveFile = new SaveFile();
     this.tweener = new Tweener(this);
     this.unlocker = new Unlocker(this);
 
@@ -29,10 +29,5 @@ export default class Game extends Phaser.Game {
 
     // this.state.start('Play', true, false, { type: 'debug' });
     this.state.start('MainMenu');
-  }
-
-  // `update` is a unary function which recieves the current save data
-  public updateSaveData(update: (SaveData) => SaveData): void {
-    SaveFile.updateSaveData(() => update(this.saveData));
   }
 }

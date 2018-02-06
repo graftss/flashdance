@@ -15,7 +15,7 @@ export default class Unlocker {
   private onCourseComplete = (courseData: CourseData): void => {
     const { id } = courseData;
 
-    this.game.updateSaveData((saveData: SaveData) => {
+    this.game.saveFile.update((saveData: SaveData) => {
       saveData.completedCourses[id] = 1;
       return saveData;
     });

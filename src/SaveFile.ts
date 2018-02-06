@@ -1,22 +1,33 @@
+import Game from './Game';
 import IO from './IO';
 
 export default class SaveFile {
-  public static updateSaveData(update: () => SaveData): void {
-    const newSaveData = update();
+  private saveData: SaveData;
+
+  constructor() {
+    this.initSaveData();
+  }
+
+  public update(updater: (SaveData) => SaveData): void {
+    const newSaveData = updater(this.saveData);
 
     IO.writeSave(this.serialize(newSaveData));
   }
 
-  public static loadSaveData(): SaveData {
+  public isCourseCompleted(courseId: number): boolean {
+    return Boolean(this.saveData.completedCourses[courseId]);
+  }
+
+  private initSaveData(): void {
     const save = IO.readSave();
-    return save ? this.deserialize(save) : this.getNewSaveData();
+    this.saveData = save ? this.deserialize(save) : SaveFile.getNewSaveData();
   }
 
-  private static serialize(saveData: SaveData): string {
-    return JSON.stringify(saveData);
+  private serialize(saveData: SaveData): string {
+    return JSON.stringify(this.saveData);
   }
 
-  private static deserialize(save: string): SaveData {
+  private deserialize(save: string): SaveData {
     return JSON.parse(save);
   }
 

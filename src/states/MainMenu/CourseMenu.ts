@@ -22,12 +22,16 @@ export default class CourseMenu extends Menu {
     this.startCourse = startCourse;
   }
 
-  private static courseIdToOptionData = (game: Game, startCourse) =>
+  private static courseIdToOptionData = (game: Game, startCourse) => (
     (courseId: number): MenuOptionData => {
       const courseData = courses[courseId];
+      const completed = game.saveFile.isCourseCompleted(courseId);
+
       const label = courseData.level;
       const onSelect = () => startCourse(courseData);
+      const textStyle = completed ? { fill: 'green' } : {};
 
-      return { label, onSelect };
-  }
+      return { label, onSelect, textStyle };
+    }
+  )
 }

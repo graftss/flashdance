@@ -1,5 +1,6 @@
 === up next ===
 - move the `EventBus` that's on `Game` to the `Play` state
+- make the "clear save data" button in options work
 
 === on deck ===
 - there should still be some kind of trail behind paths
