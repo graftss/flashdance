@@ -9,7 +9,7 @@ export default class Unlocker {
   }
 
   private initEventHandlers(): void {
-    this.game.eventBus.gameCourseComplete.add(this.onCourseComplete);
+    this.game.eventBus().gameCourseComplete.add(this.onCourseComplete);
   }
 
   private onCourseComplete = (courseData: CourseData): void => {

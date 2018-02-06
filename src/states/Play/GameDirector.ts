@@ -29,8 +29,8 @@ export default class GameDirector {
     this.inputVerifier = new InputVerifier(game);
     this.maxDifficulty = actionSequencer.maxDifficulty(courseData);
 
-    this.game.eventBus.gameActionComplete.add(this.onActionCompleteEvent);
-    this.game.eventBus.gameRoundComplete.add(this.onRoundComplete);
+    this.game.eventBus().gameActionComplete.add(this.onActionCompleteEvent);
+    this.game.eventBus().gameRoundComplete.add(this.onRoundComplete);
 
     (window as any).newGrid = this.cellGrid;
     console.log('director constructor', this.cellGrid.game);
@@ -79,7 +79,7 @@ export default class GameDirector {
   }
 
   private startActionEvent = (index: number): void => {
-    const { gameActionStart, gameActionComplete } = this.game.eventBus;
+    const { gameActionStart, gameActionComplete } = this.game.eventBus();
 
     const actionData = this.roundActionData[index];
     const action = this.startAction(actionData);
@@ -100,7 +100,7 @@ export default class GameDirector {
   }
 
   private onCourseComplete = (): void => {
-    this.game.eventBus.gameCourseComplete.dispatch(this.courseData);
+    this.game.eventBus().gameCourseComplete.dispatch(this.courseData);
 
     setTimeout(() => {
       this.game.state.start('MainMenu');

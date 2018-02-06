@@ -36,7 +36,7 @@ export default class CellInputLayer {
     this.sprite.events.onDragUpdate.add(this.onDragUpdate);
     this.sprite.events.onDragStop.add(this.onDragStop);
 
-    game.eventBus.inputEnabled.add(this.setInputEnabled);
+    game.eventBus().inputEnabled.add(this.setInputEnabled);
   }
 
   public containsPoint(x: number, y: number): boolean {
@@ -49,7 +49,7 @@ export default class CellInputLayer {
 
   private onInputDown = (): void => {
     this.lastDragTarget = this.inputTarget;
-    this.game.eventBus.inputDown.dispatch({
+    this.game.eventBus().inputDown.dispatch({
       target: this.inputTarget,
       type: 'down',
     });
@@ -70,7 +70,7 @@ export default class CellInputLayer {
 
     if (!isEqual(inputTarget, this.lastDragTarget)) {
       this.lastDragTarget = inputTarget;
-      this.game.eventBus.inputDragTarget.dispatch({
+      this.game.eventBus().inputDragTarget.dispatch({
         target: inputTarget,
         type: 'drag',
       });
@@ -79,7 +79,7 @@ export default class CellInputLayer {
 
   private onDragStop = (): void => {
     this.sprite.position.copyFrom(this.hitbox.getPosition());
-    this.game.eventBus.inputDragStop.dispatch({
+    this.game.eventBus().inputDragStop.dispatch({
       target: this.lastDragTarget,
       type: 'up',
     });

@@ -35,7 +35,7 @@ export default class InputVerifier {
   }
 
   private attachHandlers(): void {
-    const { eventBus } = this.game;
+    const eventBus = this.game.eventBus();
 
     eventBus.inputDown.add(this.onInput);
     eventBus.inputDragTarget.add(this.onInput);
@@ -43,23 +43,23 @@ export default class InputVerifier {
   }
 
   private dispatchEnableInput(): void {
-    this.game.eventBus.inputEnabled.dispatch(true);
+    this.game.eventBus().inputEnabled.dispatch(true);
   }
 
   private dispatchDisableInput(): void {
-    this.game.eventBus.inputEnabled.dispatch(false);
+    this.game.eventBus().inputEnabled.dispatch(false);
   }
 
   private dispatchCorrectInput(expected: GameInput, observed: RawInput): void {
-    this.game.eventBus.correctInput.dispatch({ expected, observed });
+    this.game.eventBus().correctInput.dispatch({ expected, observed });
   }
 
   private dispatchIncorrectInput(expected: GameInput, observed: RawInput): void {
-    this.game.eventBus.incorrectInput.dispatch({ expected, observed });
+    this.game.eventBus().incorrectInput.dispatch({ expected, observed });
   }
 
   private dispatchRoundComplete(): void {
-    this.game.eventBus.gameRoundComplete.dispatch(0);
+    this.game.eventBus().gameRoundComplete.dispatch(0);
   }
 
   private nextInput(): GameInput {

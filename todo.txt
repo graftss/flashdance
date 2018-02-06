@@ -1,5 +1,4 @@
 === up next ===
-- move the `EventBus` that's on `Game` to the `Play` state
 - make the "clear save data" button in options work
 
 === on deck ===

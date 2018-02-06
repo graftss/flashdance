@@ -6,6 +6,7 @@ import EventBus from '../../EventBus';
 import Fragment from '../../Fragment';
 import GameDirector from './GameDirector';
 import Game from '../../Game';
+import Unlocker from '../../Unlocker';
 
 export default class Play extends Phaser.State {
   public game: Game;
@@ -17,10 +18,12 @@ export default class Play extends Phaser.State {
   private background: Fragment;
   private cellGrid: CellGrid;
   private director: GameDirector;
+  private unlocker: Unlocker;
 
   public init(courseData: CourseData) {
     this.eventBus = new EventBus();
 
+    this.unlocker = new Unlocker(this.game);
     this.initCellGrid();
 
     const actionSequencer = this.initActionSequencer(courseData);

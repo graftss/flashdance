@@ -185,8 +185,8 @@ export default class CellGrid extends Phaser.Group {
   }
 
   private initEventHandlers(): void {
-    this.game.eventBus.correctInput.add(this.onCorrectInput);
-    this.game.eventBus.incorrectInput.add(this.onIncorrectInput);
+    this.game.eventBus().correctInput.add(this.onCorrectInput);
+    this.game.eventBus().incorrectInput.add(this.onIncorrectInput);
   }
 
   private onCorrectInput = ({ expected, observed }: InputPair) => {
