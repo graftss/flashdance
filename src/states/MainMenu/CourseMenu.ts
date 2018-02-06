@@ -28,8 +28,6 @@ export default class CourseMenu extends Menu {
       const courseData = courses[courseId];
       const completed = game.saveFile.isCourseCompleted(courseId);
 
-      console.log('hello', localStorage.getItem('save'), completed);
-
       const label = courseData.level;
       const onSelect = () => startCourse(courseData);
       const textStyle = completed ? { fill: 'green' } : {};

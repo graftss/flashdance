@@ -94,8 +94,6 @@ export default class MainMenu extends Phaser.State {
     const { game } = this;
     const menuId = menuIds.tutorial;
 
-    console.log('creating new tutorial menu');
-
     const courseIds = [[0, 1, 2, 3], [4, 5, 6]];
 
     destroy(this.tutorialMenu);

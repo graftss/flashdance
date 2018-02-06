@@ -1,20 +1,16 @@
 === up next ===
-- create a new copy of a menu beofre it's scrolled into view
-  - (and destroy menus that are scrolled out of view)
+- finish tutorial courses
 
 === on deck ===
+- "long hold" flash mechanic
+  - animation is a growing light that fills out the cell to let you know
+    you can stop holding
+  - not sure if this is a good idea
+
 - there should still be some kind of trail behind paths
   - probably solid though, not the dots like before
 
-- "long hold" flash
-
 - queue a pause during a round that pauses after the round's over
-
-- background animation
-  - in main menu, it's a gigantic ass cell with flashing lights and paths
-    going on. then when the course is selected, you zoom into it and
-    the grid border appears in the distance before filling the game area.
-  - when you transition to the play state, the lights all flicker out
 
 - course mode:
   - x lives to make it through y rounds which are themed around certain
@@ -23,7 +19,11 @@
 
 - stop all updating when window doesn't have focus
 
-- replace type declarations with interfaces
+- transition from main menu to start of course
+  - when you transition to the play state, the lights all flicker out.
+    maybe they all turn on first?
+- transition from end of course back to main menu
+  - the lights come back on?
 
 === loooong term ===
 

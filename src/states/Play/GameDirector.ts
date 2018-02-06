@@ -33,7 +33,6 @@ export default class GameDirector {
     this.game.eventBus().gameRoundComplete.add(this.onRoundComplete);
 
     (window as any).newGrid = this.cellGrid;
-    console.log('director constructor', this.cellGrid.game);
   }
 
   public start(): void {
