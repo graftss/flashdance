@@ -2,12 +2,14 @@ import * as Phaser from 'phaser-ce';
 
 import ActionSequencer from './ActionSequencer';
 import CellGrid from './CellGrid';
+import EventBus from '../../EventBus';
 import Fragment from '../../Fragment';
 import GameDirector from './GameDirector';
 import Game from '../../Game';
 
 export default class Play extends Phaser.State {
   public game: Game;
+  public eventBus: EventBus;
 
   private gridCols: number = 3;
   private gridRows: number = 3;
@@ -17,18 +19,20 @@ export default class Play extends Phaser.State {
   private director: GameDirector;
 
   public init(courseData: CourseData) {
-    this.game.eventBus.clear();
+    this.eventBus = new EventBus();
+
     this.initCellGrid();
 
     const actionSequencer = this.initActionSequencer(courseData);
-
     this.director = new GameDirector(
       this.game,
       this.cellGrid,
       courseData,
       actionSequencer,
     );
+  }
 
+  public create() {
     this.director.start();
   }
 

@@ -11,7 +11,6 @@ import Tweener from './Tweener';
 import Unlocker from './Unlocker';
 
 export default class Game extends Phaser.Game {
-  public eventBus: EventBus;
   public saveFile: SaveFile;
   public tweener: Tweener;
   public unlocker: Unlocker;
@@ -19,7 +18,6 @@ export default class Game extends Phaser.Game {
   constructor(...args) {
     super(...args);
 
-    this.eventBus = new EventBus();
     this.saveFile = new SaveFile();
     this.tweener = new Tweener(this);
     this.unlocker = new Unlocker(this);
