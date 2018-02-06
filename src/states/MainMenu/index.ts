@@ -4,6 +4,13 @@ import Background from './Background';
 import CourseMenu from './CourseMenu';
 import Game from '../../Game';
 import Menu from '../../ui/Menu';
+import { destroy } from '../../utils';
+
+const menuIds = {
+  main: 'main',
+  option: 'option',
+  tutorial: 'tutorial',
+};
 
 export default class MainMenu extends Phaser.State {
   public game: Game;
@@ -23,12 +30,9 @@ export default class MainMenu extends Phaser.State {
   public create() {
     this.objects = this.game.add.group();
 
-    this.initMainMenu();
-    this.initTutorialMenu();
-    this.initOptionMenu();
-    this.initBackground();
+    this.menuStack = [this.initMainMenu()];
 
-    this.menuStack = [this.mainMenu];
+    this.initBackground();
     this.background.run(80);
   }
 
@@ -41,12 +45,22 @@ export default class MainMenu extends Phaser.State {
     this.objects.add(this.background);
   }
 
-  private initMainMenu() {
+  private initMenuById(menuId: string): Menu {
+    switch (menuId) {
+      case menuIds.main: return this.initMainMenu();
+      case menuIds.tutorial: return this.initTutorialMenu();
+      case menuIds.option: return this.initOptionMenu();
+    }
+  }
+
+  private initMainMenu(): Menu {
+    const menuId = menuIds.main;
+
     const mainMenuOptions = [[
       {
         label: 'tutorials',
         onSelect: () => {
-          this.pushMenu(this.tutorialMenu).start();
+          this.pushMenu(menuIds.tutorial).start();
         },
       },
       {
@@ -64,27 +78,37 @@ export default class MainMenu extends Phaser.State {
       {
         label: 'options',
         onSelect: () => {
-          this.pushMenu(this.optionMenu).start();
+          this.pushMenu(menuIds.option).start();
         },
       },
     ]];
 
-    this.mainMenu = new Menu(this.game, 0, 150, 80, mainMenuOptions);
+    destroy(this.mainMenu);
+    this.mainMenu = new Menu(this.game, 0, 150, 80, mainMenuOptions, menuId);
     this.objects.add(this.mainMenu);
+
+    return this.mainMenu;
   }
 
-  private initTutorialMenu() {
+  private initTutorialMenu(): Menu {
     const { game } = this;
+    const menuId = menuIds.tutorial;
+
+    console.log('creating new tutorial menu');
 
     const courseIds = [[0, 1, 2, 3], [4, 5, 6]];
 
+    destroy(this.tutorialMenu);
     this.tutorialMenu = new CourseMenu(game, 0, 80, 80, courseIds, this.startCourse);
     this.moveMenuOffscreenRight(this.tutorialMenu);
     this.objects.add(this.tutorialMenu);
+
+    return this.tutorialMenu;
   }
 
-  private initOptionMenu() {
+  private initOptionMenu(): Menu {
     const { game } = this;
+    const menuId = menuIds.option;
 
     const optionMenuOptions = [[
       {
@@ -101,9 +125,12 @@ export default class MainMenu extends Phaser.State {
       this.backOptionData,
     ]];
 
-    this.optionMenu = new Menu(game, 0, 80, 80, optionMenuOptions);
+    destroy(this.optionMenu);
+    this.optionMenu = new Menu(game, 0, 80, 80, optionMenuOptions, 'option');
     this.moveMenuOffscreenRight(this.optionMenu);
     this.objects.add(this.optionMenu);
+
+    return this.optionMenu;
   }
 
   private getActiveMenu(): Menu {
@@ -118,7 +145,8 @@ export default class MainMenu extends Phaser.State {
     menu.position.x = this.game.width;
   }
 
-  private pushMenu(menu: Menu): TweenWrapper {
+  private pushMenu(menuId: string): TweenWrapper {
+    const menu = this.initMenuById(menuId);
     const slideDelta = { x: -this.game.width, y: 0 };
     const slideDuration = 500;
     const activeMenu = this.getActiveMenu();

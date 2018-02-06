@@ -13,11 +13,12 @@ export default class CourseMenu extends Menu {
     rowHeight: number,
     courseIdColumns: number[][],
     startCourse: (CourseData) => void,
+    id?: string,
   ) {
     const idToOption = CourseMenu.courseIdToOptionData(game, startCourse);
     const optionDataColumns = courseIdColumns.map(col => col.map(idToOption));
 
-    super(game, x, y, rowHeight, optionDataColumns);
+    super(game, x, y, rowHeight, optionDataColumns, id);
 
     this.startCourse = startCourse;
   }
@@ -26,6 +27,8 @@ export default class CourseMenu extends Menu {
     (courseId: number): MenuOptionData => {
       const courseData = courses[courseId];
       const completed = game.saveFile.isCourseCompleted(courseId);
+
+      console.log('hello', localStorage.getItem('save'), completed);
 
       const label = courseData.level;
       const onSelect = () => startCourse(courseData);

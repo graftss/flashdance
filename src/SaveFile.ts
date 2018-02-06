@@ -9,9 +9,12 @@ export default class SaveFile {
   }
 
   public update(updater: (SaveData) => SaveData): void {
-    const updatedSaveData = updater(this.saveData);
+    this.set(updater(this.saveData));
+  }
 
-    IO.writeSave(SaveFile.serialize(updatedSaveData));
+  public set(data: SaveData): void {
+    this.saveData = data;
+    IO.writeSave(SaveFile.serialize(data));
   }
 
   public clearSave(): void {
