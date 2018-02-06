@@ -1,7 +1,9 @@
 === up next ===
+- move the `EventBus` that's on `Game` to the `Play` state
 
 === on deck ===
 - there should still be some kind of trail behind paths
+  - probably solid though, not the dots like before
 
 - "long hold" flash
 

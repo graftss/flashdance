@@ -21,6 +21,7 @@ type SaveData = {
 type MenuOptionData = {
   label: string,
   onSelect: () => void,
+  textStyle?: Phaser.PhaserTextStyle,
 }
 
 // Tweening
