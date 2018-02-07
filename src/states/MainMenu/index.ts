@@ -41,7 +41,9 @@ export default class MainMenu extends Phaser.State {
   }
 
   private initBackground() {
-    this.background = new Background(this.game);
+    if (!this.background) {
+      this.background = new Background(this.game);
+    }
   }
 
   private initMenuById(menuId: string): Menu {
@@ -54,12 +56,16 @@ export default class MainMenu extends Phaser.State {
 
   private initMainMenu(): Menu {
     const menuId = menuIds.main;
+    const tutorialCompleted = this.game.saveFile.isTutorialCompleted();
 
     const mainMenuOptions = [[
       {
         label: 'tutorials',
         onSelect: () => {
           this.pushMenu(menuIds.tutorial).start();
+        },
+        textStyle: {
+          fill: tutorialCompleted ? 'green' : undefined,
         },
       },
       {

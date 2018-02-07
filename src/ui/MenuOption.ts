@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser-ce';
 
 import Game from '../Game';
+import { defaults } from '../utils';
 
 export default class MenuOption extends Phaser.Group {
   public game: Game;
@@ -26,7 +27,7 @@ export default class MenuOption extends Phaser.Group {
   ) {
     super(game);
 
-    Object.assign(this.textStyle, menuOptionData.textStyle);
+    this.textStyle = defaults(menuOptionData.textStyle, this.textStyle);
 
     this.initText();
   }

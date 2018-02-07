@@ -1,4 +1,6 @@
 === up next ===
+- move background to `Game`
+- delete menus in pop. probably just store menu ids in the stack
 
 === on deck ===
 - transitions:

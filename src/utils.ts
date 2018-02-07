@@ -1,6 +1,7 @@
 import { random, sample } from 'lodash';
 
 export {
+  defaults,
   findIndex,
   flatMap,
   flatten,
