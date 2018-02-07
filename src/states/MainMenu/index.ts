@@ -177,13 +177,15 @@ export default class MainMenu extends Phaser.State {
     const slideDelta = { x: this.game.width, y: 0 };
     const slideDuration = 250;
     const activeMenu = this.getActiveMenu();
-    const previousMenu = this.getPreviousMenu();
 
-    this.moveMenuOffscreenLeft(previousMenu);
+    const previousMenuId = this.getPreviousMenu().id;
+    const newMenu = this.initMenuById(previousMenuId);
+    this.menuStack.splice(this.menuStack.length - 2, 1, newMenu);
+    this.moveMenuOffscreenLeft(newMenu);
 
     const tween = this.game.tweener.merge([
       activeMenu.transition(slideDelta, slideDuration),
-      previousMenu.transition(slideDelta, slideDuration),
+      newMenu.transition(slideDelta, slideDuration),
     ]);
 
     tween.onStart.add(() => this.menuStack.pop());

@@ -3,6 +3,9 @@ import * as Phaser from 'phaser-ce';
 import Game from '../Game';
 import { defaults } from '../utils';
 
+const inactiveTint = 0xbbbbbb;
+const activeTint = 0xffffff;
+
 export default class MenuOption extends Phaser.Group {
   public game: Game;
 
@@ -43,6 +46,7 @@ export default class MenuOption extends Phaser.Group {
     this.text = game.add.text(0, 0, label, this.textStyle, this);
     this.text.setTextBounds(0, 0, w, h);
     this.text.inputEnabled = true;
+    this.text.tint = inactiveTint;
 
     this.text.events.onInputDown.add(this.onInputDown);
     this.text.events.onInputOver.add(this.onInputOver);
@@ -50,7 +54,7 @@ export default class MenuOption extends Phaser.Group {
   }
 
   private onInputDown = () => {
-    this.text.tint = 0xbbbbbb;
+    this.text.tint = activeTint;
     this.menuOptionData.onSelect();
   }
 
@@ -60,7 +64,7 @@ export default class MenuOption extends Phaser.Group {
     }
 
     this.mouseOver = true;
-    this.text.tint = 0xbbbbbb;
+    this.text.tint = activeTint;
   }
 
   private onInputOut = () => {
@@ -69,6 +73,6 @@ export default class MenuOption extends Phaser.Group {
     }
 
     this.mouseOver = false;
-    this.text.tint = 0xffffff;
+    this.text.tint = inactiveTint;
   }
 }
