@@ -141,6 +141,8 @@ export default class InputVerifier {
   private onIncorrectInput(expected: GameInput, observed: RawInput) {
     this.ignoreInputUntilUp = true;
     this.nextInputIndex = this.checkpointInputIndex;
+
+    this.dispatchDisableInput();
     this.dispatchIncorrectInput(expected, observed);
     logInputPair(observed, expected, 'incorrect');
   }

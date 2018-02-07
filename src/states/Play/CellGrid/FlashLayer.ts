@@ -163,7 +163,7 @@ export default class FlashLayer extends Phaser.Group {
   }
 
   private path(path: Vec2[], duration: number): TweenWrapper {
-    const { scale, chain, nothing } = this.game.tweener;
+    const { scale, chain, merge, nothing } = this.game.tweener;
     const { plus, minus } = vec2;
     const pathStepDuration = (duration - 400) / (path.length);
 
