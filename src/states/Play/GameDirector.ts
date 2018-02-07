@@ -31,8 +31,6 @@ export default class GameDirector {
 
     this.game.eventBus().gameActionComplete.add(this.onActionCompleteEvent);
     this.game.eventBus().gameRoundComplete.add(this.onRoundComplete);
-
-    (window as any).newGrid = this.cellGrid;
   }
 
   public start(): void {
@@ -102,7 +100,7 @@ export default class GameDirector {
     this.game.eventBus().gameCourseComplete.dispatch(this.courseData);
 
     setTimeout(() => {
-      this.game.state.start('MainMenu');
+      this.game.state.start('MainMenu', false);
     }, 250);
   }
 }

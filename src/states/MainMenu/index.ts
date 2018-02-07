@@ -37,12 +37,11 @@ export default class MainMenu extends Phaser.State {
   }
 
   public shutdown() {
-    this.background.stop();
+    this.objects.destroy();
   }
 
   private initBackground() {
     this.background = new Background(this.game);
-    this.objects.add(this.background);
   }
 
   private initMenuById(menuId: string): Menu {
@@ -115,7 +114,6 @@ export default class MainMenu extends Phaser.State {
         label: 'delete saved data',
         onSelect: () => {
           this.game.saveFile.clearSave();
-          this.game.state.start('MainMenu');
         },
       },
       {
@@ -190,7 +188,7 @@ export default class MainMenu extends Phaser.State {
 
     fadeout.onComplete.add(() => {
       setTimeout(() => {
-        this.game.state.start('Play', true, false, courseData);
+        this.game.state.start('Play', false, false, courseData);
       }, 500);
     });
 

@@ -21,12 +21,11 @@ export default class Play extends Phaser.State {
   private unlocker: Unlocker;
 
   public init(courseData: CourseData) {
-    this.eventBus = new EventBus();
+    const actionSequencer = this.initActionSequencer(courseData);
 
+    this.eventBus = new EventBus();
     this.unlocker = new Unlocker(this.game);
     this.initCellGrid();
-
-    const actionSequencer = this.initActionSequencer(courseData);
     this.director = new GameDirector(
       this.game,
       this.cellGrid,
@@ -36,7 +35,14 @@ export default class Play extends Phaser.State {
   }
 
   public create() {
-    this.director.start();
+    const fadeIn = this.cellGrid.fadeIn();
+
+    fadeIn.onComplete.add(() => this.director.start());
+    fadeIn.start();
+  }
+
+  public shutdown() {
+    this.cellGrid.destroy();
   }
 
   private initCellGrid(): void {

@@ -18,8 +18,6 @@ export const cellGridActionTypes = [
   'rotate',
 ];
 
-(window as any).oldGrids = [];
-
 export default class CellGrid extends Phaser.Group {
   private background: Phaser.Graphics;
   private border: CellGridBorder;
@@ -39,16 +37,13 @@ export default class CellGrid extends Phaser.Group {
     public cols: number,
   ) {
     super(game);
+    this.init();
+  }
 
-    shiftAnchor(this, w / 2, h / 2);
-    this.initCells();
-    this.initBorder();
-    this.initInputLightManager();
-    this.initEventHandlers();
-    this.initBackground();
+  public fadeIn(): TweenWrapper {
+    const fadeIn = this.game.tweener.alpha(this, 1, 1000);
 
-    this.bringToTop(this.inputLightManager);
-    this.sendToBack(this.background);
+    return fadeIn;
   }
 
   public cellContainingPoint(x: number, y: number): Maybe<Cell> {
@@ -149,6 +144,19 @@ export default class CellGrid extends Phaser.Group {
       duration,
       tween: scaleTween,
     };
+  }
+
+  private init() {
+    this.initCells();
+    this.initBorder();
+    this.initInputLightManager();
+    this.initEventHandlers();
+    this.initBackground();
+
+    this.alpha = 0;
+    shiftAnchor(this, this.w / 2, this.h / 2);
+    this.bringToTop(this.inputLightManager);
+    this.sendToBack(this.background);
   }
 
   private initCells() {

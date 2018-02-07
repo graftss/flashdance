@@ -23,7 +23,7 @@ export default class TutorialActionSequencer
 
   public maxDifficulty(courseData: CourseData): number {
     switch (courseData.level)  {
-      default: return 1;
+      default: return 10;
     }
   }
 

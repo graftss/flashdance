@@ -1,3 +1,4 @@
+import courses from './courses';
 import Game from './Game';
 import IO from './IO';
 
@@ -23,6 +24,12 @@ export default class SaveFile {
 
   public isCourseCompleted(courseId: number): boolean {
     return Boolean(this.saveData.completedCourses[courseId]);
+  }
+
+  public isTutorialCompleted(): boolean {
+    return courses
+      .filter(c => c.type === 'tutorial')
+      .every(c => this.isCourseCompleted(c.id));
   }
 
   private initSaveData(): void {
