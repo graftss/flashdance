@@ -4,7 +4,7 @@ import Background from './Background';
 import CourseMenu from './CourseMenu';
 import Game from '../../Game';
 import Menu from '../../ui/Menu';
-import { destroy } from '../../utils';
+import { clone, destroy } from '../../utils';
 
 const menuIds = {
   main: 'main',
@@ -33,7 +33,6 @@ export default class MainMenu extends Phaser.State {
     this.menuStack = [this.initMainMenu()];
 
     this.initBackground();
-    this.background.run(80);
   }
 
   public shutdown() {
@@ -44,6 +43,10 @@ export default class MainMenu extends Phaser.State {
     if (!this.background) {
       this.background = new Background(this.game);
     }
+
+    console.log(clone(this.game.tweens.getAll()));
+    this.background.stop();
+    this.background.run(80);
   }
 
   private initMenuById(menuId: string): Menu {
