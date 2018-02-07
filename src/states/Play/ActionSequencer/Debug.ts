@@ -4,7 +4,7 @@ export default class DebugActionSequencer
   extends BaseActionSequencer implements IActionSequencer {
 
   public randomRound(difficulty: number): GameActionData[] {
-    return this.debugXReflect();
+    return this.debugInputLights();
   }
 
   public maxDifficulty(): number {

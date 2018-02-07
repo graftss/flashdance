@@ -70,7 +70,6 @@ export default class InputVerifier {
     const expected = this.nextInput();
 
     if (this.ignoreInputUntilUp) {
-      console.log('sup');
       if (observed.type === 'up') {
         this.ignoreInputUntilUp = false;
       }

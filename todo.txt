@@ -1,8 +1,11 @@
 === up next ===
-- use the orientor thing to show how many lives you ahve too.
-  - recenter it when it changes obv, with a tween natch obv imho fyi
+- on incorrect input, decrease difficulty and start new round
+
+- put the expanding effect on paths, it looks weird without it
 
 === on deck ===
+- polish incorrect input visuals, maybe have it shrink to a point
+
 - simultaneous fake flashes alongside a real one
 
 - transitions:

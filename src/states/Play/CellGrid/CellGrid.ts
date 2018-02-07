@@ -7,6 +7,7 @@ import FlashLayer from './FlashLayer';
 import Fragment from '../../../Fragment';
 import Game from '../../../Game';
 import InputLightManager from './InputLightManager';
+import LifeBar from './LifeBar';
 import { copyArray, shiftAnchor, vec2 } from '../../../utils';
 
 export const cellGridActionTypes = [
@@ -26,6 +27,7 @@ export default class CellGrid extends Phaser.Group {
   private cellWidth: number;
   private cells: Cell[][] = [];
   private inputLightManager: InputLightManager;
+  private lifeBar: LifeBar;
 
   constructor(
     public game: Game,
@@ -37,6 +39,7 @@ export default class CellGrid extends Phaser.Group {
     public cols: number,
   ) {
     super(game);
+
     this.init();
   }
 
@@ -135,7 +138,7 @@ export default class CellGrid extends Phaser.Group {
     scaleTween.onUpdateCallback((_, t) => {
       if (t >= 0.5 && !pastHalf) {
         pastHalf = true;
-        this.border.flip();
+        // this.border.flip();
         this.background.alpha = 0.8 - this.background.alpha;
       }
     });
@@ -148,6 +151,7 @@ export default class CellGrid extends Phaser.Group {
 
   private init() {
     this.initCells();
+    this.initLifeBar();
     this.initBorder();
     this.initInputLightManager();
     this.initEventHandlers();
@@ -181,6 +185,10 @@ export default class CellGrid extends Phaser.Group {
     const { borderThickness, game, h, w } = this;
 
     this.border = new CellGridBorder(game, this, 0, 0, w, h, borderThickness);
+  }
+
+  private initLifeBar(): void {
+    this.lifeBar = new LifeBar(this.game, this, this.w / 2, -this.h / 10, 3);
   }
 
   private initInputLightManager(): void {
@@ -225,6 +233,8 @@ export default class CellGrid extends Phaser.Group {
 
     this.inputLightManager.addLight(inputPos, 'incorrect');
     this.inputLightManager.onIncorrectInput();
+
+    this.lifeBar.loseLife();
   }
 
   private initBackground(): void {
