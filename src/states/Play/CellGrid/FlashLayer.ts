@@ -167,13 +167,15 @@ export default class FlashLayer extends Phaser.Group {
     const { plus, minus } = vec2;
     const pathStepDuration = (duration - 400) / (path.length);
 
-    const result = chain([
+    const pathTween = chain([
       this.brighten(150),
       nothing(50),
       ...path.map(pos => this.moveTo(pos, pathStepDuration)),
       nothing(50),
       this.dim(150),
     ]);
+
+    const result = merge([pathTween, this.ripple(duration)]);
 
     result.onComplete.add(() => this.destroy());
 

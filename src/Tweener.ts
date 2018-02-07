@@ -80,7 +80,7 @@ export default class Tweener {
     return base;
   }
 
-  public chain = (tweens: Phaser.Tween[]): TweenWrapper => {
+  public chain = <T extends TweenWrapper>(tweens: T[]): TweenWrapper => {
     if (tweens.length === 0) {
       throw new Error('cannot chain zero tweens');
     }
@@ -88,7 +88,9 @@ export default class Tweener {
     const first = tweens[0];
     const last = tweens[tweens.length - 1];
 
-    first.chain(...tweens.slice(1));
+    for (let i = 0; i < tweens.length - 1; i++) {
+      tweens[i].onComplete.add(() => tweens[i + 1].start());
+    }
 
     return {
       onComplete: last.onComplete,
