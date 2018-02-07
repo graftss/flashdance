@@ -1,4 +1,5 @@
 === up next ===
+- simultaneous fake flashes alongside a real one
 
 === on deck ===
 - transitions:
@@ -12,8 +13,6 @@
   - animation is a growing light that fills out the cell to let you know
     you can stop holding
   - not sure if this is a good idea
-
-- simultaneous fake flashes alongside a real one
 
 - there should still be some kind of trail behind paths
   - probably solid though, not the dots like before
