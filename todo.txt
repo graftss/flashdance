@@ -1,10 +1,15 @@
 === up next ===
-- simultaneous fake flashes alongside a real one
+- use the orientor thing to show how many lives you ahve too.
+  - recenter it when it changes obv, with a tween natch obv imho fyi
 
 === on deck ===
+- simultaneous fake flashes alongside a real one
+
 - transitions:
   - complete a course, back to menu
-  - fail a course, back to menu
+    - maybe the lights can all shine all happy like
+  - fail a course, back to menu (grid spins super fast while contracting to a point,)
+    - basicly getting flushed donw a toilet.,.,.
 
 - some visual indication of whether the input is being shown to you, or
   whether you can start recording your own input

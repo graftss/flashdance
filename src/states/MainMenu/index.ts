@@ -27,12 +27,22 @@ export default class MainMenu extends Phaser.State {
     onSelect: () => this.popMenu().start(),
   };
 
-  public create() {
+  public init(opts: any = {}) {
     this.objects = this.game.add.group();
 
     this.menuStack = [this.initMainMenu()];
 
     this.initBackground();
+
+    if (opts.fadeIn) {
+      const menu = this.mainMenu;
+
+      menu.alpha = 0;
+      const tween = this.game.tweener.alpha(menu, 1, 500);
+      tween.onStart.add(() => menu.setInputEnabled(false));
+      tween.onComplete.add(() => menu.setInputEnabled(true));
+      tween.start();
+    }
   }
 
   public shutdown() {
@@ -77,6 +87,12 @@ export default class MainMenu extends Phaser.State {
         },
       },
       {
+        label: 'arcade',
+        onSelect: () => {
+          console.log('open arcade menu');
+        },
+      },
+      {
         label: 'practice',
         onSelect: () => {
           console.log('open practice menu');
@@ -91,7 +107,7 @@ export default class MainMenu extends Phaser.State {
     ]];
 
     destroy(this.mainMenu);
-    this.mainMenu = new Menu(this.game, 0, 150, 80, mainMenuOptions, menuId);
+    this.mainMenu = new Menu(this.game, 0, 100, 80, mainMenuOptions, menuId);
     this.objects.add(this.mainMenu);
 
     return this.mainMenu;
@@ -194,12 +210,10 @@ export default class MainMenu extends Phaser.State {
   }
 
   private startCourse = (courseData: CourseData) => {
-    const fadeout = this.game.tweener.alpha(this.objects, 0, 2000);
+    const fadeout = this.game.tweener.alpha(this.objects, 0, 500);
 
     fadeout.onComplete.add(() => {
-      setTimeout(() => {
-        this.game.state.start('Play', false, false, courseData);
-      }, 500);
+      this.game.state.start('Play', false, false, courseData);
     });
 
     fadeout.start();

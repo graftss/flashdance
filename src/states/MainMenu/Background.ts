@@ -24,12 +24,10 @@ export default class Background extends Phaser.Group {
   }
 
   public run(speed: number): void {
-    console.log('running');
     this.runInterval = setInterval(() => this.runRandomLights(2), 1000 / speed);
   }
 
   public stop(): void {
-    console.log('stopping');
     clearInterval(this.runInterval);
   }
 

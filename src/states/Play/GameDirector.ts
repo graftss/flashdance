@@ -97,10 +97,13 @@ export default class GameDirector {
   }
 
   private onCourseComplete = (): void => {
-    this.game.eventBus().gameCourseComplete.dispatch(this.courseData);
+    const fadeOut = this.game.tweener.alpha(this.cellGrid, 0, 500);
 
-    setTimeout(() => {
-      this.game.state.start('MainMenu', false);
-    }, 250);
+    fadeOut.onComplete.add(() => {
+      this.game.eventBus().gameCourseComplete.dispatch(this.courseData);
+      this.game.state.start('MainMenu', false, false, { fadeIn: true });
+    });
+
+    fadeOut.start();
   }
 }
