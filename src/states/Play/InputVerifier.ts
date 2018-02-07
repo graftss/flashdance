@@ -16,9 +16,9 @@ export default class InputVerifier {
   private targetInput: GameInput[];
   private checkpointInputIndex: number;
 
-  // on incorrect input, we stop verifying input until the player disengages
-  // from the screen (i.e. we receive an `up` input)
-  private ignoreInputUntilUp: boolean = false;
+  // on incorrect input, we stop verifying input until the player re-engages
+  // with the screen via a `down`
+  private ignoreInputUntilDown: boolean = false;
 
   constructor(
     private game: Game,
@@ -58,6 +58,10 @@ export default class InputVerifier {
     this.game.eventBus().incorrectInput.dispatch({ expected, observed });
   }
 
+  private dispatchRoundFail(): void {
+    this.game.eventBus().gameRoundFail.dispatch(0);
+  }
+
   private dispatchRoundComplete(): void {
     this.game.eventBus().gameRoundComplete.dispatch(0);
   }
@@ -69,12 +73,12 @@ export default class InputVerifier {
   private onInput = (observed: RawInput): void => {
     const expected = this.nextInput();
 
-    if (this.ignoreInputUntilUp) {
-      if (observed.type === 'up') {
-        this.ignoreInputUntilUp = false;
+    if (this.ignoreInputUntilDown) {
+      if (observed.type === 'down') {
+        this.ignoreInputUntilDown = false;
+      } else {
+        return;
       }
-
-      return;
     }
 
     if (this.verifyRawInput(expected, observed)) {
@@ -139,10 +143,9 @@ export default class InputVerifier {
   }
 
   private onIncorrectInput(expected: GameInput, observed: RawInput) {
-    this.ignoreInputUntilUp = true;
+    this.ignoreInputUntilDown = true;
     this.nextInputIndex = this.checkpointInputIndex;
 
-    this.dispatchDisableInput();
     this.dispatchIncorrectInput(expected, observed);
     logInputPair(observed, expected, 'incorrect');
   }

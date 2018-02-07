@@ -13,6 +13,7 @@ export default class EventBus {
 
   public gameActionStart: TypedSignal<GameActionContext> = new TypedSignal();
   public gameActionComplete: TypedSignal<GameActionContext> = new TypedSignal();
+  public gameRoundFail: TypedSignal<number> = new TypedSignal();
   public gameRoundComplete: TypedSignal<number> = new TypedSignal();
   public gameCourseComplete: TypedSignal<CourseData> = new TypedSignal();
 }

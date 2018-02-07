@@ -4,7 +4,7 @@ export default class DebugActionSequencer
   extends BaseActionSequencer implements IActionSequencer {
 
   public randomRound(difficulty: number): GameActionData[] {
-    return this.debugInputLights();
+    return this.debugInputDisable();
   }
 
   public maxDifficulty(): number {
@@ -43,6 +43,14 @@ export default class DebugActionSequencer
       this.wait(300),
       this.flash(),
       this.path(5),
+    ];
+  }
+
+  private debugInputDisable(): GameActionData[] {
+    return [
+      this.wait(250),
+      { type: 'flash', opts: { origin: { col: 1, row: 1 }, duration: 300 } },
+      { type: 'flash', opts: { origin: { col: 1, row: 1 }, duration: 300 } },
     ];
   }
 
