@@ -1,7 +1,4 @@
 === up next ===
-- i have to put everything into a single state because phaser's state system
-  is completely useless garbage. that's pretty important atm
-- move background to `Game`
 - delete menus in pop. probably just store menu ids in the stack
 
 === on deck ===

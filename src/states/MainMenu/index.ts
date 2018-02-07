@@ -44,7 +44,6 @@ export default class MainMenu extends Phaser.State {
       this.background = new Background(this.game);
     }
 
-    console.log(clone(this.game.tweens.getAll()));
     this.background.stop();
     this.background.run(80);
   }
