@@ -1,6 +1,4 @@
 === up next ===
-- on incorrect input, decrease difficulty and start new round
-
 - put the expanding effect on paths, it looks weird without it
 
 === on deck ===

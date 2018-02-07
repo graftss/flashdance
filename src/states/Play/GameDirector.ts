@@ -3,22 +3,15 @@ import * as Phaser from 'phaser-ce';
 import InputVerifier from './InputVerifier';
 import Game from '../../Game';
 import CellGrid, { cellGridActionTypes } from './CellGrid';
-import { includes, mapJust } from '../../utils';
-
-const onActionComplete = (action: GameAction, callback: () => any): void => {
-  action.tween.onComplete.add(callback);
-};
-
-const startAction = (action: GameAction): void => {
-  action.tween.start();
-};
+import { clamp, includes, mapJust } from '../../utils';
 
 export default class GameDirector {
   private inputVerifier: InputVerifier;
+  private minDifficulty: number = 1;
   private maxDifficulty: number;
 
   private roundActionData: GameActionData[];
-  private difficulty: number;
+  private difficulty: number = 1;
 
   constructor(
     private game: Game,
@@ -29,22 +22,11 @@ export default class GameDirector {
     this.inputVerifier = new InputVerifier(game);
     this.maxDifficulty = actionSequencer.maxDifficulty(courseData);
 
-    this.game.eventBus().gameActionComplete.add(this.onActionCompleteEvent);
-    this.game.eventBus().gameRoundComplete.add(this.onRoundComplete);
+    this.initEventHandlers();
   }
 
   public start(): void {
-    this.difficulty = 1;
     this.startNextRound();
-  }
-
-  private startNextRound(): void {
-    this.startRound(this.difficulty);
-  }
-
-  private startRound(difficulty: number): void {
-    this.roundActionData = this.actionSequencer.randomRound(difficulty);
-    this.startActionEvent(0);
   }
 
   private buildAction = (actionData: GameActionData): GameAction => {
@@ -59,8 +41,7 @@ export default class GameDirector {
 
   private startAction = (actionData: GameActionData): GameAction => {
     const action = this.buildAction(actionData);
-
-    startAction(action);
+    action.tween.start();
 
     return action;
   }
@@ -83,17 +64,27 @@ export default class GameDirector {
 
     gameActionStart.dispatch({ action, index });
 
-    onActionComplete(action, () => gameActionComplete.dispatch({ action, index }));
+    action.tween.onComplete.add(() => gameActionComplete.dispatch({ action, index }));
+  }
+
+  private startNextRound = (difficultyDelta: number = 0): void => {
+    const newDifficulty = this.difficulty + difficultyDelta;
+
+    if (newDifficulty > this.maxDifficulty) {
+      this.onCourseComplete();
+    } else {
+      this.difficulty = clamp(newDifficulty, this.minDifficulty, this.maxDifficulty);
+      this.roundActionData = this.actionSequencer.randomRound(this.difficulty);
+      this.startActionEvent(0);
+    }
+  }
+
+  private onRoundFail = (pair: InputPair): void => {
+    this.startNextRound(-1);
   }
 
   private onRoundComplete = (n: number): void => {
-    this.difficulty += 1;
-
-    if (this.difficulty > this.maxDifficulty) {
-      this.onCourseComplete();
-    } else {
-      this.startNextRound();
-    }
+    this.startNextRound(1);
   }
 
   private onCourseComplete = (): void => {
@@ -105,5 +96,13 @@ export default class GameDirector {
     });
 
     fadeOut.start();
+  }
+
+  private initEventHandlers(): void {
+    const eventBus = this.game.eventBus();
+
+    eventBus.gameActionComplete.add(this.onActionCompleteEvent);
+    eventBus.gameRoundComplete.add(this.onRoundComplete);
+    eventBus.incorrectInput.add(this.onRoundFail);
   }
 }
