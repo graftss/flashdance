@@ -1,6 +1,5 @@
 === up next ===
-- if a path moves in the same direction twice, only use one tween
-  to avoid that little one frame with no movement
+
 === on deck ===
 - polish incorrect input visuals, maybe have it shrink to a point
 

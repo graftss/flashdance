@@ -23,6 +23,36 @@ const getMultiflashDotPositions = (count: number, w: number, h: number): Vec2[] 
   return sampleSize(coords, count).map(([x, y]) => ({ x, y }));
 };
 
+const mergeParallelPathMoves = (path: Vec2[]): Vec2[] => {
+  const { clone, about, minus } = vec2;
+  const result = [];
+
+  for (let i = 0; i < path.length; i++) {
+    const next = clone(path[i]);
+
+    if (i < 2) {
+      result.push(next);
+      continue;
+    }
+
+    const shouldMerge = about(
+      minus(path[i], path[i - 1]),
+      minus(path[i - 1], path[i - 2]),
+    );
+
+    if (shouldMerge) {
+      // this is a hacky as hellway to tell the tweener to take twice
+      // as long on the doubled tweens, but whatever
+      (next as any).double = true;
+      result.splice(result.length - 1, 1, next);
+    } else {
+      result.push(next);
+    }
+  }
+
+  return result;
+};
+
 export default class FlashLayer extends Phaser.Group {
   public layer: Phaser.Group;
   public flashGraphic: Phaser.Graphics;
@@ -61,7 +91,8 @@ export default class FlashLayer extends Phaser.Group {
   }
 
   public pathTween(path: Vec2[], duration: number): GameAction {
-    const tween = this.path(path, duration);
+    const reducedPath = mergeParallelPathMoves([this.position, ...path]);
+    const tween = this.path(reducedPath, duration);
 
     return { duration, tween };
   }
@@ -167,16 +198,20 @@ export default class FlashLayer extends Phaser.Group {
     const { plus, minus } = vec2;
     const pathStepDuration = (duration - 400) / (path.length);
 
+    const pathToTween = (pos: Vec2) => this.moveTo(
+      pos,
+      ((pos as any).double ? 2 : 1) * pathStepDuration,
+    );
+
     const pathTween = chain([
       this.brighten(150),
       nothing(50),
-      ...path.map(pos => this.moveTo(pos, pathStepDuration)),
+      ...path.map(pathToTween),
       nothing(50),
       this.dim(150),
     ]);
 
     const result = merge([pathTween, this.ripple(duration)]);
-
     result.onComplete.add(() => this.destroy());
 
     return result;

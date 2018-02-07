@@ -82,6 +82,12 @@ export const vec2 = {
   plus: (v: Vec2, w: Vec2): Vec2 => ({ x: v.x + w.x, y: v.y + w.y }),
 
   scale: (v: Vec2, k: number): Vec2 => ({ x: v.x * k, y: v.y * k }),
+
+  equals: (v: Vec2, w: Vec2): boolean => v.x === w.x && v.y === w.y,
+
+  about: (v: Vec2, w: Vec2, eps: number = 0.01): boolean => (
+    Math.abs(v.x - w.x) < eps && Math.abs(v.y - w.y) < eps
+  ),
 };
 
 export const destroy = (obj?: { destroy: () => any }) => {
