@@ -186,6 +186,14 @@ export default class MainMenu extends Phaser.State {
   }
 
   private startCourse = (courseData: CourseData) => {
-    this.game.state.start('Play', true, false, courseData);
+    const fadeout = this.game.tweener.alpha(this.objects, 0, 2000);
+
+    fadeout.onComplete.add(() => {
+      setTimeout(() => {
+        this.game.state.start('Play', true, false, courseData);
+      }, 500);
+    });
+
+    fadeout.start();
   }
 }
