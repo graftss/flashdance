@@ -5,10 +5,6 @@
 
 - simultaneous fake flashes alongside a real one
 
-- transitions:
-  - complete a course, back to menu
-    - maybe the lights can all shine all happy like
-
 - some visual indication of whether the input is being shown to you, or
   whether you can start recording your own input
 

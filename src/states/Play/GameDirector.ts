@@ -70,41 +70,28 @@ export default class GameDirector {
   }
 
   private onCourseComplete = (): void => {
-    const fadeOut = this.game.tweener.alpha(this.cellGrid, 0, 500);
+    const tween = this.cellGrid.completeCourseEffect();
 
-    fadeOut.onComplete.add(() => {
+    tween.onComplete.add(() => {
       this.game.eventBus().gameCourseComplete.dispatch(this.courseData);
-      this.game.state.start('MainMenu', false, false, { fadeIn: true });
+
+      setTimeout(() => {
+        this.game.state.start('MainMenu', false, false, { fadeIn: true });
+      }, 1000);
     });
 
-    fadeOut.start();
+    tween.start();
   }
 
   private onCourseFail = (): void => {
-    const { alpha, chain, merge, nothing, rotation, scale } = this.game.tweener;
-    const duration = 2000;
-
-    const delayedFadeOut = chain([
-      nothing(2 * duration / 3),
-      alpha(this.cellGrid, 0, duration / 3),
-    ]);
-
-    const effectTween = merge([
-      rotation(this.cellGrid, Math.PI * 2, duration)
-        .easing(Phaser.Easing.Cubic.In),
-      scale(this.cellGrid, 0, duration)
-        .easing(Phaser.Easing.Cubic.In),
-      delayedFadeOut,
-    ]);
-
-    const tween = chain([
-      effectTween,
-      nothing(1000),
-    ]);
+    const tween = this.cellGrid.failCourseEffect();
 
     tween.onComplete.add(() => {
       this.game.eventBus().gameCourseFail.dispatch(this.courseData);
-      this.game.state.start('MainMenu', false, false, { fadeIn: true });
+
+      setTimeout(() => {
+        this.game.state.start('MainMenu', false, false, { fadeIn: true });
+      }, 1000);
     });
 
     tween.start();

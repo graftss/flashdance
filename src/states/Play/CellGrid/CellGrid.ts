@@ -84,6 +84,64 @@ export default class CellGrid extends Phaser.Group {
     return this.lifeBar.getLifeCount();
   }
 
+  public completeCourseEffect(): TweenWrapper {
+    const { alpha, chain, merge, nothing, rotation, scale } = this.game.tweener;
+    const waterfallFlashDuration = 180;
+    const ease = Phaser.Easing.Quartic.In;
+    const effectDuration = 2000;
+
+    const waterfallAllCells = (times: number) => {
+      const tweens = [];
+
+      for (let n = 0; n < times; n++) {
+        for (let col = 0; col < this.cols; col++) {
+          for (let row = 0; row < this.rows; row++) {
+            const index = n * (this.cols * this.rows) + col * this.rows + row + 1;
+            const opts = {
+              duration: waterfallFlashDuration,
+              origin: { col, row },
+            };
+
+            tweens.push(chain([
+              nothing(index * waterfallFlashDuration / 4),
+              this.flashCell(opts).tween,
+            ]));
+          }
+        }
+      }
+
+      // reverse `tweens` here so that the first tween in the array
+      // finishes last, so that the merger can be correctly chained
+      return merge(tweens.reverse());
+    };
+
+    const fadeOut = alpha(this, 0.3, effectDuration).easing(ease);
+    const grow = scale(this, 2, effectDuration).easing(ease);
+    const spin = rotation(this, Math.PI * 5, effectDuration).easing(ease);
+
+    const effect = merge([waterfallAllCells(4), fadeOut, grow, spin]);
+
+    return chain([nothing(250), effect]);
+  }
+
+  public failCourseEffect(): TweenWrapper {
+    const { alpha, chain, merge, nothing, rotation, scale } = this.game.tweener;
+    const duration = 2000;
+
+    const delayedFadeOut = chain([
+      nothing(2 * duration / 3),
+      alpha(this, 0, duration / 3),
+    ]);
+
+    return merge([
+      rotation(this, Math.PI * 2, duration)
+        .easing(Phaser.Easing.Cubic.In),
+      scale(this, 0, duration)
+        .easing(Phaser.Easing.Cubic.In),
+      delayedFadeOut,
+    ]);
+  }
+
   private flashCell(opts: FlashOpts): GameAction {
     const { duration, origin } = opts;
     const originCell = this.getCellByGridPos(origin);
