@@ -11,9 +11,12 @@ export default class EventBus {
   public correctInput: TypedSignal<InputPair> = new TypedSignal();
   public incorrectInput: TypedSignal<InputPair> = new TypedSignal();
 
+  public livesChanged: TypedSignal<number> = new TypedSignal();
+
   public gameActionStart: TypedSignal<GameActionContext> = new TypedSignal();
   public gameActionComplete: TypedSignal<GameActionContext> = new TypedSignal();
   public gameRoundFail: TypedSignal<number> = new TypedSignal();
   public gameRoundComplete: TypedSignal<number> = new TypedSignal();
+  public gameCourseFail: TypedSignal<CourseData> = new TypedSignal();
   public gameCourseComplete: TypedSignal<CourseData> = new TypedSignal();
 }

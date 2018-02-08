@@ -234,7 +234,7 @@ export default class CellGrid extends Phaser.Group {
     this.inputLightManager.addLight(inputPos, 'incorrect');
     this.inputLightManager.onIncorrectInput();
 
-    this.lifeBar.loseLife();
+    this.lifeBar.changeLifeCount(-1);
   }
 
   private initBackground(): void {

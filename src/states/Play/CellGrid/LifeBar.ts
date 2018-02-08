@@ -18,7 +18,7 @@ export default class LifeBar extends Phaser.Group {
     super(game, parent);
 
     for (let n = 0; n < lifeCount; n++) {
-      this.createLife();
+      this.gainLife();
     }
 
     this.positionLives();
@@ -28,28 +28,33 @@ export default class LifeBar extends Phaser.Group {
     return this.lives.length;
   }
 
-  public loseLife(): void {
+  public changeLifeCount(delta: number): void {
+    const method = delta > 0 ? this.gainLife : this.loseLife;
+
+    for (let i = 0; i < Math.abs(delta); i++) {
+      method();
+    }
+
+    this.positionLives();
+    this.dispatchLivesChanged();
+  }
+
+  private loseLife = (): void => {
     const lostLife = this.lives.pop();
 
     if (lostLife) {
       lostLife.destroy();
-      this.positionLives();
     }
   }
 
-  public gainLife(): void {
-    this.createLife();
-    this.positionLives();
-  }
-
-  private createLife() {
+  private gainLife = (): void => {
     const { game, lifeRadius, lives } = this;
 
     const newLife = new Life(game, this, 0, 0, lifeRadius);
     lives.push(newLife);
   }
 
-  private positionLives() {
+  private positionLives(): void {
     const lifeCount = this.getLifeCount();
     const space = this.spaceBetweenLives;
 
@@ -59,5 +64,9 @@ export default class LifeBar extends Phaser.Group {
       life.x = x;
       x += space;
     }
+  }
+
+  private dispatchLivesChanged = (): void => {
+    this.game.eventBus().livesChanged.dispatch(this.getLifeCount());
   }
 }
