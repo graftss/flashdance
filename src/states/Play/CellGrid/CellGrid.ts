@@ -86,12 +86,12 @@ export default class CellGrid extends Phaser.Group {
 
   public completeCourseEffect(): TweenWrapper {
     const { alpha, chain, merge, nothing, rotation, scale } = this.game.tweener;
-    const waterfallFlashDuration = 180;
     const ease = Phaser.Easing.Quartic.In;
     const effectDuration = 2000;
 
-    const waterfallAllCells = (times: number) => {
+    const waterfallAllCells = (times: number, duration: number) => {
       const tweens = [];
+      const waterfallFlashDuration = 4 * duration / (times * this.cols * this.rows);
 
       for (let n = 0; n < times; n++) {
         for (let col = 0; col < this.cols; col++) {
@@ -116,12 +116,15 @@ export default class CellGrid extends Phaser.Group {
     };
 
     const fadeOut = alpha(this, 0.3, effectDuration).easing(ease);
-    const grow = scale(this, 2, effectDuration).easing(ease);
-    const spin = rotation(this, Math.PI * 5, effectDuration).easing(ease);
 
-    const effect = merge([waterfallAllCells(4), fadeOut, grow, spin]);
+    const targetScale = { x: this.scale.x * 2, y: this.scale.y * 2 };
+    const grow = scale(this, targetScale, effectDuration).easing(ease);
 
-    return chain([nothing(250), effect]);
+    const spin = rotation(this, Math.PI * 4, effectDuration).easing(ease);
+
+    const effect = merge([waterfallAllCells(4, 1700), fadeOut, grow, spin]);
+
+    return chain([nothing(100), effect]);
   }
 
   public failCourseEffect(): TweenWrapper {

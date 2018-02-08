@@ -40,12 +40,14 @@ export default class TutorialActionSequencer
   }
 
   private flashRound(difficulty: number): GameActionData[] {
-    const flashes = Math.ceil(difficulty / 2);
+    const round = [[],
+      [0], [0, 0], [0, 0, 0], [0, 0, 0],
+      [0, 0, 0, 0], [0, 0, 0, 0],
+      [0, 0, 0, 0, 0], [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0],
+    ][difficulty];
 
-    return flatMap(range(flashes), () => [
-      this.flash(difficulty),
-      this.wait(170),
-    ]);
+    return this.roundByCode(difficulty, round);
   }
 
   private fakeFlashRound(difficulty: number): GameActionData[] {
