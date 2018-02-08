@@ -8,9 +8,9 @@ const activeTint = 0xffffff;
 
 export default class MenuOption extends Phaser.Group {
   public game: Game;
+  public text: Phaser.Text;
 
   private mouseOver: boolean = false;
-  private text: Phaser.Text;
   private textStyle: Phaser.PhaserTextStyle = {
     boundsAlignH: 'center',
     boundsAlignV: 'middle',

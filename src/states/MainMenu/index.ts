@@ -133,11 +133,31 @@ export default class MainMenu extends Phaser.State {
     const { game } = this;
     const menuId = menuIds.option;
 
+    let confirmDeleteSavedData = false;
+
     const optionMenuOptions = [[
       {
         label: 'delete saved data',
         onSelect: () => {
-          this.game.saveFile.clearSave();
+          if (!confirmDeleteSavedData) {
+            confirmDeleteSavedData = true;
+            this.optionMenu.updateMenuOption(0, 0, option => {
+              // an insane hack because phaser sucks at text
+              option.text.setText('you sure?');
+              option.alpha = 0.01;
+
+              setTimeout(() => option.alpha = 1, 250);
+            });
+          } else {
+            confirmDeleteSavedData = false;
+            this.game.saveFile.clearSave();
+            this.optionMenu.updateMenuOption(0, 0, option => {
+              option.text.setText('delete saved data');
+              option.alpha = 0.01;
+
+              setTimeout(() => option.alpha = 1, 250);
+            });
+          }
         },
       },
       {

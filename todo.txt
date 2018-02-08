@@ -1,5 +1,4 @@
 === up next ===
-- "are you sure?" prompt after clicking "delete saved data" in options
 
 === on deck ===
 - polish incorrect input visuals, maybe have it shrink to a point
