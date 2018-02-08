@@ -80,6 +80,10 @@ export default class CellGrid extends Phaser.Group {
     return vec2.clone(this.getCellByGridPos(gridPos).position);
   }
 
+  public getLives(): number {
+    return this.lifeBar.getLifeCount();
+  }
+
   private flashCell(opts: FlashOpts): GameAction {
     const { duration, origin } = opts;
     const originCell = this.getCellByGridPos(origin);
@@ -188,7 +192,7 @@ export default class CellGrid extends Phaser.Group {
   }
 
   private initLifeBar(): void {
-    this.lifeBar = new LifeBar(this.game, this, this.w / 2, -this.h / 10, 3);
+    this.lifeBar = new LifeBar(this.game, this, this.w / 2, -this.h / 10, 1);
   }
 
   private initInputLightManager(): void {

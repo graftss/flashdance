@@ -36,7 +36,6 @@ export default class LifeBar extends Phaser.Group {
     }
 
     this.positionLives();
-    this.dispatchLivesChanged();
   }
 
   private loseLife = (): void => {
@@ -64,9 +63,5 @@ export default class LifeBar extends Phaser.Group {
       life.x = x;
       x += space;
     }
-  }
-
-  private dispatchLivesChanged = (): void => {
-    this.game.eventBus().livesChanged.dispatch(this.getLifeCount());
   }
 }

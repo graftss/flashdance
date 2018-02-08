@@ -46,16 +46,6 @@ export default class GameDirector {
     return action;
   }
 
-  private onActionCompleteEvent = (context: GameActionContext): void => {
-    const nextIndex = context.index + 1;
-
-    if (this.roundActionData[nextIndex] !== undefined) {
-      this.startActionEvent(nextIndex);
-    } else {
-      this.inputVerifier.startRound(this.roundActionData);
-    }
-  }
-
   private startActionEvent = (index: number): void => {
     const { gameActionStart, gameActionComplete } = this.game.eventBus();
 
@@ -79,14 +69,6 @@ export default class GameDirector {
     }
   }
 
-  private onRoundFail = (pair: InputPair): void => {
-    this.startNextRound(-1);
-  }
-
-  private onRoundComplete = (n: number): void => {
-    this.startNextRound(1);
-  }
-
   private onCourseComplete = (): void => {
     const fadeOut = this.game.tweener.alpha(this.cellGrid, 0, 500);
 
@@ -98,11 +80,63 @@ export default class GameDirector {
     fadeOut.start();
   }
 
+  private onCourseFail = (): void => {
+    const { alpha, chain, merge, nothing, rotation, scale } = this.game.tweener;
+    const duration = 2000;
+
+    const delayedFadeOut = chain([
+      nothing(2 * duration / 3),
+      alpha(this.cellGrid, 0, duration / 3),
+    ]);
+
+    const effectTween = merge([
+      rotation(this.cellGrid, Math.PI * 2, duration)
+        .easing(Phaser.Easing.Cubic.In),
+      scale(this.cellGrid, 0, duration)
+        .easing(Phaser.Easing.Cubic.In),
+      delayedFadeOut,
+    ]);
+
+    const tween = chain([
+      effectTween,
+      nothing(1000),
+    ]);
+
+    tween.onComplete.add(() => {
+      this.game.eventBus().gameCourseFail.dispatch(this.courseData);
+      this.game.state.start('MainMenu', false, false, { fadeIn: true });
+    });
+
+    tween.start();
+  }
+
   private initEventHandlers(): void {
     const eventBus = this.game.eventBus();
 
     eventBus.gameActionComplete.add(this.onActionCompleteEvent);
     eventBus.gameRoundComplete.add(this.onRoundComplete);
     eventBus.incorrectInput.add(this.onRoundFail);
+  }
+
+  private onActionCompleteEvent = (context: GameActionContext): void => {
+    const nextIndex = context.index + 1;
+
+    if (this.roundActionData[nextIndex] !== undefined) {
+      this.startActionEvent(nextIndex);
+    } else {
+      this.inputVerifier.startRound(this.roundActionData);
+    }
+  }
+
+  private onRoundFail = (pair: InputPair): void => {
+    if (this.cellGrid.getLives() <= 0) {
+      this.onCourseFail();
+    } else {
+      this.startNextRound(-1);
+    }
+  }
+
+  private onRoundComplete = (): void => {
+    this.startNextRound(1);
   }
 }
