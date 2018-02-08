@@ -147,6 +147,7 @@ export default class InputVerifier {
     this.nextInputIndex = this.checkpointInputIndex;
 
     this.dispatchIncorrectInput(expected, observed);
+    this.dispatchDisableInput();
     logInputPair(observed, expected, 'incorrect');
   }
 
