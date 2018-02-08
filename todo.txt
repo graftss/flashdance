@@ -1,4 +1,5 @@
 === up next ===
+- unlock tutorial levels in succession
 
 === on deck ===
 - polish incorrect input visuals, maybe have it shrink to a point
