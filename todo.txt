@@ -1,5 +1,5 @@
 === up next ===
-- unlock tutorial levels in succession
+- pulse grid lines between cells
 
 === on deck ===
 - polish incorrect input visuals, maybe have it shrink to a point

@@ -26,6 +26,14 @@ export default class SaveFile {
     return Boolean(this.saveData.completedCourses[courseId]);
   }
 
+  public isCourseUnlocked(courseId: number): boolean {
+    if (courseId === 0) {
+      return true;
+    }
+
+    return Boolean(this.saveData.completedCourses[courseId - 1]);
+  }
+
   public isTutorialCompleted(): boolean {
     return courses
       .filter(c => c.type === 'tutorial')
