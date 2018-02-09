@@ -14,11 +14,18 @@ export default class Menu extends Phaser.Group {
     public y: number,
     private rowHeight: number,
     private optionDataColumns: MenuOptionData[][],
-    public id?: string,
+    public id: MenuID,
   ) {
     super(game);
 
-    this.colWidth = game.width / this.optionDataColumns.length;
+    if (optionDataColumns.length) {
+      this.setOptionColumns(optionDataColumns);
+    }
+  }
+
+  public setOptionColumns = (optionDataColumns: MenuOptionData[][]) => {
+    this.optionDataColumns = optionDataColumns;
+    this.colWidth = this.game.width / optionDataColumns.length;
 
     this.optionColumns = optionDataColumns.map((column, colIndex) => (
       column.map((data, rowIndex) => (
@@ -55,12 +62,21 @@ export default class Menu extends Phaser.Group {
     updater(this.optionColumns[colIndex][rowIndex]);
   }
 
+  protected getBackOptionData(): MenuOptionData {
+    return {
+      label: 'back',
+      onSelect: () => this.game.eventBus().menu.popMenu.dispatch(null),
+    };
+  }
+
   private forEachOption(f: (MenuOption) => void): void {
     this.optionColumns.forEach(col => col.forEach(f));
   }
 
   private createMenuOption(colIndex, rowIndex, data): MenuOption {
     const { game, rowHeight, colWidth } = this;
+
+    console.log({ rowHeight, colWidth, colIndex, rowIndex, data });
 
     const option = new MenuOption(
       game,

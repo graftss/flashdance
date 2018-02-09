@@ -2,51 +2,46 @@ import * as Phaser from 'phaser-ce';
 
 import Background from './Background';
 import CourseMenu from './CourseMenu';
+import EventBus from '../../EventBus';
 import Game from '../../Game';
 import Menu from '../../ui/Menu';
+import OptionMenu from './OptionMenu';
+import TitleMenu from './TitleMenu';
+import TutorialMenu from './TutorialMenu';
 import { clone, destroy } from '../../utils';
-
-const menuIds = {
-  main: 'main',
-  option: 'option',
-  tutorial: 'tutorial',
-};
 
 export default class MainMenu extends Phaser.State {
   public game: Game;
+  public eventBus: EventBus;
 
-  private objects: Phaser.Group;
   private background: Background;
-  private menuStack: Menu[] = [];
-  private tutorialMenu: Menu;
-  private mainMenu: Menu;
-  private optionMenu: Menu;
 
-  private backOptionData: MenuOptionData = {
-    label: 'back',
-    onSelect: () => this.popMenu().start(),
-  };
+  private menuStack: Menu[] = [];
+  private optionMenu: Menu;
+  private titleMenu: Menu;
+  private tutorialMenu: Menu;
 
   public init(opts: any = {}) {
-    this.objects = this.game.add.group();
+    this.eventBus = new EventBus();
 
-    this.menuStack = [this.initMainMenu()];
-
+    this.initEventHandlers();
     this.initBackground();
 
-    if (opts.fadeIn) {
-      const menu = this.mainMenu;
+    const titleMenu = this.initMenuById('title');
+    this.menuStack = [titleMenu];
 
-      menu.alpha = 0;
-      const tween = this.game.tweener.alpha(menu, 1, 500);
-      tween.onStart.add(() => menu.setInputEnabled(false));
-      tween.onComplete.add(() => menu.setInputEnabled(true));
+    if (opts.fadeIn) {
+      titleMenu.alpha = 0;
+
+      const tween = this.game.tweener.alpha(titleMenu, 1, 500);
+      tween.onStart.add(() => titleMenu.setInputEnabled(false));
+      tween.onComplete.add(() => titleMenu.setInputEnabled(true));
       tween.start();
     }
   }
 
   public shutdown() {
-    this.objects.destroy();
+    this.getActiveMenu().destroy();
   }
 
   private initBackground() {
@@ -58,121 +53,18 @@ export default class MainMenu extends Phaser.State {
     this.background.run(80);
   }
 
-  private initMenuById(menuId: string): Menu {
+  private initEventHandlers = (): void => {
+    this.eventBus.menu.popMenu.add(this.popMenu);
+    this.eventBus.menu.pushMenu.add(this.pushMenu);
+    this.eventBus.menu.startCourse.add(this.startCourse);
+  }
+
+  private initMenuById(menuId: MenuID): Menu {
     switch (menuId) {
-      case menuIds.main: return this.initMainMenu();
-      case menuIds.tutorial: return this.initTutorialMenu();
-      case menuIds.option: return this.initOptionMenu();
+      case 'title': return new TitleMenu(this.game, 0, 100, 80);
+      case 'tutorial': return new TutorialMenu(this.game, 0, 80, 80);
+      case 'option': return new OptionMenu(this.game, 0, 80, 80);
     }
-  }
-
-  private initMainMenu(): Menu {
-    const menuId = menuIds.main;
-    const tutorialCompleted = this.game.saveFile.isTutorialCompleted();
-
-    const mainMenuOptions = [[
-      {
-        label: 'tutorials',
-        onSelect: () => {
-          this.pushMenu(menuIds.tutorial).start();
-        },
-        textStyle: {
-          fill: tutorialCompleted ? 'green' : undefined,
-        },
-      },
-      {
-        label: 'challenges',
-        onSelect: () => {
-          console.log('open challenge menu');
-        },
-      },
-      {
-        label: 'arcade',
-        onSelect: () => {
-          console.log('open arcade menu');
-        },
-      },
-      {
-        label: 'practice',
-        onSelect: () => {
-          console.log('open practice menu');
-        },
-      },
-      {
-        label: 'options',
-        onSelect: () => {
-          this.pushMenu(menuIds.option).start();
-        },
-      },
-    ]];
-
-    destroy(this.mainMenu);
-    this.mainMenu = new Menu(this.game, 0, 100, 80, mainMenuOptions, menuId);
-    this.objects.add(this.mainMenu);
-
-    return this.mainMenu;
-  }
-
-  private initTutorialMenu(): Menu {
-    const { game } = this;
-    const menuId = menuIds.tutorial;
-
-    const courseIds = [[0, 1, 2, 3], [4, 5, 6]];
-
-    destroy(this.tutorialMenu);
-    this.tutorialMenu = new CourseMenu(game, 0, 80, 80, courseIds, this.startCourse);
-    this.moveMenuOffscreenRight(this.tutorialMenu);
-    this.objects.add(this.tutorialMenu);
-
-    this.tutorialMenu.addMenuOption(1, this.backOptionData);
-
-    return this.tutorialMenu;
-  }
-
-  private initOptionMenu(): Menu {
-    const { game } = this;
-    const menuId = menuIds.option;
-
-    let confirmDeleteSavedData = false;
-
-    const optionMenuOptions = [[
-      {
-        label: 'delete saved data',
-        onSelect: () => {
-          if (!confirmDeleteSavedData) {
-            confirmDeleteSavedData = true;
-            this.optionMenu.updateMenuOption(0, 0, option => {
-              // an insane hack because phaser sucks at text
-              option.text.setText('you sure?');
-              option.alpha = 0.01;
-
-              setTimeout(() => option.alpha = 1, 250);
-            });
-          } else {
-            confirmDeleteSavedData = false;
-            this.game.saveFile.clearSave();
-            this.optionMenu.updateMenuOption(0, 0, option => {
-              option.text.setText('delete saved data');
-              option.alpha = 0.01;
-
-              setTimeout(() => option.alpha = 1, 250);
-            });
-          }
-        },
-      },
-      {
-        label: 'colorblind mode',
-        onSelect: () => console.log('toggling colourblind mode'),
-      },
-      this.backOptionData,
-    ]];
-
-    destroy(this.optionMenu);
-    this.optionMenu = new Menu(game, 0, 80, 80, optionMenuOptions, 'option');
-    this.moveMenuOffscreenRight(this.optionMenu);
-    this.objects.add(this.optionMenu);
-
-    return this.optionMenu;
   }
 
   private getActiveMenu(): Menu {
@@ -183,17 +75,13 @@ export default class MainMenu extends Phaser.State {
     return this.menuStack[this.menuStack.length - 2];
   }
 
-  private moveMenuOffscreenRight(menu: Menu) {
-    menu.position.x = this.game.width;
-  }
-
-  private pushMenu(menuId: string): TweenWrapper {
+  private pushMenu = (menuId: MenuID): void => {
     const menu = this.initMenuById(menuId);
     const slideDelta = { x: -this.game.width, y: 0 };
     const slideDuration = 500;
     const activeMenu = this.getActiveMenu();
 
-    this.moveMenuOffscreenRight(menu);
+    menu.position.x = this.game.width;
 
     const tween = this.game.tweener.merge([
       activeMenu.transition(slideDelta, slideDuration),
@@ -201,23 +89,18 @@ export default class MainMenu extends Phaser.State {
     ]);
 
     tween.onStart.add(() => this.menuStack.push(menu));
-
-    return tween;
+    tween.start();
   }
 
-  private moveMenuOffscreenLeft(menu: Menu) {
-    menu.position.x = -this.game.width;
-  }
-
-  private popMenu(): TweenWrapper {
+  private popMenu = (): void => {
     const slideDelta = { x: this.game.width, y: 0 };
     const slideDuration = 250;
     const activeMenu = this.getActiveMenu();
 
     const previousMenuId = this.getPreviousMenu().id;
     const newMenu = this.initMenuById(previousMenuId);
+    newMenu.position.x = -this.game.width;
     this.menuStack.splice(this.menuStack.length - 2, 1, newMenu);
-    this.moveMenuOffscreenLeft(newMenu);
 
     const tween = this.game.tweener.merge([
       activeMenu.transition(slideDelta, slideDuration),
@@ -225,12 +108,11 @@ export default class MainMenu extends Phaser.State {
     ]);
 
     tween.onStart.add(() => this.menuStack.pop());
-
-    return tween;
+    tween.start();
   }
 
   private startCourse = (courseData: CourseData) => {
-    const fadeout = this.game.tweener.alpha(this.objects, 0, 500);
+    const fadeout = this.game.tweener.alpha(this.getActiveMenu(), 0, 500);
 
     fadeout.onComplete.add(() => {
       this.game.state.start('Play', false, false, courseData);

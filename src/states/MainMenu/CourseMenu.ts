@@ -12,8 +12,8 @@ export default class CourseMenu extends Menu {
     y: number,
     rowHeight: number,
     courseIdColumns: number[][],
-    startCourse: (CourseData) => void,
-    id?: string,
+    startCourse: (courseData: CourseData) => void,
+    id: MenuID,
   ) {
     const idToOption = CourseMenu.courseIdToOptionData(game, startCourse);
     const optionDataColumns = courseIdColumns.map(col => col.map(idToOption));

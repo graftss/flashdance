@@ -24,6 +24,11 @@ type MenuOptionData = {
   textStyle?: Phaser.PhaserTextStyle,
 }
 
+type MenuID =
+  'title' |
+  'option' |
+  'tutorial';
+
 // Tweening
 
 interface ITweenableAlpha { alpha: number }

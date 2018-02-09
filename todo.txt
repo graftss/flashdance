@@ -1,4 +1,6 @@
 === up next ===
+- `menuIdStack: MenuID[]` to replace `menuStack`
+- explicit `activeMenu: Menu`
 
 === on deck ===
 - polish incorrect input visuals, maybe have it shrink to a point
