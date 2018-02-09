@@ -6,6 +6,7 @@ import { FBMClouds } from '../../../filters';
 import FlashLayer from './FlashLayer';
 import Fragment from '../../../Fragment';
 import Game from '../../../Game';
+import GridLines from './GridLines';
 import InputLightManager from './InputLightManager';
 import LifeBar from './LifeBar';
 import { copyArray, shiftAnchor, vec2 } from '../../../utils';
@@ -26,6 +27,7 @@ export default class CellGrid extends Phaser.Group {
   private cellHeight: number;
   private cellWidth: number;
   private cells: Cell[][] = [];
+  private gridLines: GridLines;
   private inputLightManager: InputLightManager;
   private lifeBar: LifeBar;
 
@@ -40,7 +42,16 @@ export default class CellGrid extends Phaser.Group {
   ) {
     super(game);
 
-    this.init();
+    this.initCells();
+    this.initGridLines();
+    this.initLifeBar();
+    this.initBorder();
+    this.initInputLightManager();
+    this.initBackground();
+    this.initEventHandlers();
+
+    this.alpha = 0;
+    shiftAnchor(this, this.w / 2, this.h / 2);
   }
 
   public fadeIn(): TweenWrapper {
@@ -214,20 +225,6 @@ export default class CellGrid extends Phaser.Group {
     };
   }
 
-  private init() {
-    this.initCells();
-    this.initLifeBar();
-    this.initBorder();
-    this.initInputLightManager();
-    this.initEventHandlers();
-    this.initBackground();
-
-    this.alpha = 0;
-    shiftAnchor(this, this.w / 2, this.h / 2);
-    this.bringToTop(this.inputLightManager);
-    this.sendToBack(this.background);
-  }
-
   private initCells() {
     const { cols, rows, w, h, game } = this;
     const cellW = this.cellWidth = w / cols;
@@ -244,6 +241,15 @@ export default class CellGrid extends Phaser.Group {
 
       x += cellW;
     }
+  }
+
+  private initGridLines() {
+    this.gridLines = new GridLines(
+      this.game,
+      this,
+      this.w, this.h,
+      this.rows, this.cols,
+    );
   }
 
   private initBorder(): void {
@@ -263,6 +269,8 @@ export default class CellGrid extends Phaser.Group {
       this.cellWidth,
       this.cellHeight,
     );
+
+    this.bringToTop(this.inputLightManager);
   }
 
   private initEventHandlers(): void {
@@ -313,6 +321,7 @@ export default class CellGrid extends Phaser.Group {
     graphics.endFill();
 
     this.background = graphics;
+    this.sendToBack(this.background);
   }
 
   private newFlashLayer(position: Phaser.Point, isFake: boolean): FlashLayer {
