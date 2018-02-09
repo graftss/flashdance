@@ -5,7 +5,6 @@ import { destroy, shiftAnchor } from '../../../utils';
 
 export default class CellGridBorder extends Phaser.Group {
   private border: Phaser.Graphics;
-  private pulseTimeout: any;
   private borderTween: Phaser.Tween;
 
   constructor(
@@ -20,9 +19,9 @@ export default class CellGridBorder extends Phaser.Group {
     super(game, parent);
 
     shiftAnchor(this, this.w / 2, this.h / 2);
-    this.initBorder();
 
-    this.game.eventBus().inputEnabled.add(this.onInputEnabled);
+    this.initBorder();
+    this.initEventHandlers();
   }
 
   private initBorder(): void {
@@ -35,30 +34,13 @@ export default class CellGridBorder extends Phaser.Group {
       .drawRect(0, 0, w + 2 * thickness, h + 2 * thickness);
   }
 
-  private startPulse(): void {
-    this.pulseTimeout = setInterval(this.pulse, 1300);
-  }
-
-  private stopPulse(): void {
-    clearInterval(this.pulseTimeout);
-  }
-
   private pulse = (): void => {
-    const { chain, scale } = this.game.tweener;
+    const { chain, nothing, scale } = this.game.tweener;
 
-    chain([scale(this, 1.01, 100), scale(this, 1, 100)]).start();
-  }
-
-  private onInputEnabled = (enabled: boolean): void => {
-    const { tint } = this.game.tweener;
-
-    if (enabled) {
-      this.startBorderTween(tint(this.border, 0x00ff00, 200));
-      this.startPulse();
-    } else {
-      this.startBorderTween(tint(this.border, 0xffffff, 200));
-      this.stopPulse();
-    }
+    chain([
+      scale(this, 1.01, 300),
+      scale(this, 1, 300),
+    ]).start();
   }
 
   private startBorderTween(tween: Phaser.Tween): void {
@@ -68,5 +50,26 @@ export default class CellGridBorder extends Phaser.Group {
 
     this.borderTween = tween;
     this.borderTween.start();
+  }
+
+  private initEventHandlers(): void {
+    const eventBus = this.game.eventBus();
+
+    eventBus.inputEnabled.add(this.onInputEnabled);
+    eventBus.gameRoundComplete.add(this.onRoundComplete);
+  }
+
+  private onInputEnabled = (enabled: boolean): void => {
+    const { tint } = this.game.tweener;
+
+    if (enabled) {
+      this.startBorderTween(tint(this.border, 0x00ff00, 400));
+    } else {
+      this.startBorderTween(tint(this.border, 0xffffff, 400));
+    }
+  }
+
+  private onRoundComplete = (): void => {
+    this.pulse();
   }
 }
