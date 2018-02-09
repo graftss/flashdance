@@ -17,10 +17,13 @@ export default class Play extends Phaser.State {
 
   private background: Fragment;
   private cellGrid: CellGrid;
+  private courseData: CourseData;
   private director: GameDirector;
   private unlocker: Unlocker;
 
   public init(courseData: CourseData) {
+    this.courseData = courseData;
+
     const actionSequencer = this.initActionSequencer(courseData);
 
     this.eventBus = new EventBus();
@@ -58,6 +61,7 @@ export default class Play extends Phaser.State {
       gridX, gridY,
       gridSize, gridSize,
       gridCols, gridRows,
+      this.courseData.lives,
     );
   }
 

@@ -22,13 +22,16 @@ export default class LifeBar extends Phaser.Group {
     }
 
     this.positionLives();
+
+    this.game.eventBus().livesChanged.add(this.onLivesChanged);
   }
 
   public getLifeCount(): number {
     return this.lives.length;
   }
 
-  public changeLifeCount(delta: number): void {
+  public onLivesChanged = (newLifeCount: number): void => {
+    const delta = newLifeCount - this.getLifeCount();
     const method = delta > 0 ? this.gainLife : this.loseLife;
 
     for (let i = 0; i < Math.abs(delta); i++) {

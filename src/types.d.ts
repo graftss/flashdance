@@ -62,7 +62,12 @@ type TutorialCourse =
   'reflect' |
   'x-reflect'
 
-type CourseData = { id: number } & (
+interface IGenericCourseData {
+  id: number;
+  lives: number;
+}
+
+type CourseData = IGenericCourseData & (
   { type: 'debug', level: 'debug' } |
   { type: 'tutorial', level: TutorialCourse }
 );

@@ -9,6 +9,7 @@ export default class GameDirector {
   private inputVerifier: InputVerifier;
   private minDifficulty: number = 1;
   private maxDifficulty: number;
+  private lives: number;
 
   private roundActionData: GameActionData[];
   private difficulty: number = 1;
@@ -22,11 +23,20 @@ export default class GameDirector {
     this.inputVerifier = new InputVerifier(game);
     this.maxDifficulty = actionSequencer.maxDifficulty(courseData);
 
+    this.lives = courseData.lives;
+
     this.initEventHandlers();
+
+    this.game.eventBus().livesChanged.add(a => console.log('lives', a));
   }
 
   public start(): void {
     this.startNextRound();
+  }
+
+  private setLives(lives: number) {
+    this.lives = lives;
+    this.game.eventBus().livesChanged.dispatch(this.lives);
   }
 
   private buildAction = (actionData: GameActionData): GameAction => {
@@ -116,6 +126,8 @@ export default class GameDirector {
   }
 
   private onRoundFail = (pair: InputPair): void => {
+    this.setLives(this.lives - 1);
+
     if (this.cellGrid.getLives() <= 0) {
       this.onCourseFail();
     } else {

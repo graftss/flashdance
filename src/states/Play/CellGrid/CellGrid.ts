@@ -39,12 +39,13 @@ export default class CellGrid extends Phaser.Group {
     public h: number,
     public rows: number,
     public cols: number,
+    public lives: number,
   ) {
     super(game);
 
     this.initCells();
     this.initGridLines();
-    this.initLifeBar();
+    this.initLifeBar(lives);
     this.initBorder();
     this.initInputLightManager();
     this.initBackground();
@@ -258,8 +259,13 @@ export default class CellGrid extends Phaser.Group {
     this.border = new CellGridBorder(game, this, 0, 0, w, h, borderThickness);
   }
 
-  private initLifeBar(): void {
-    this.lifeBar = new LifeBar(this.game, this, this.w / 2, -this.h / 10, 1);
+  private initLifeBar(lives: number): void {
+    this.lifeBar = new LifeBar(
+      this.game,
+      this,
+      this.w / 2, -this.h / 10,
+      lives,
+    );
   }
 
   private initInputLightManager(): void {
@@ -306,8 +312,6 @@ export default class CellGrid extends Phaser.Group {
 
     this.inputLightManager.addLight(inputPos, 'incorrect');
     this.inputLightManager.onIncorrectInput();
-
-    this.lifeBar.changeLifeCount(-1);
   }
 
   private initBackground(): void {
