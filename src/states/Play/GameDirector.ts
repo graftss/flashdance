@@ -20,14 +20,11 @@ export default class GameDirector {
     private courseData: CourseData,
     private actionSequencer: IActionSequencer,
   ) {
+    this.lives = courseData.lives;
     this.inputVerifier = new InputVerifier(game);
     this.maxDifficulty = actionSequencer.maxDifficulty(courseData);
 
-    this.lives = courseData.lives;
-
     this.initEventHandlers();
-
-    this.game.eventBus().livesChanged.add(a => console.log('lives', a));
   }
 
   public start(): void {

@@ -34,11 +34,11 @@ export default class CellGridBorder extends Phaser.Group {
       .drawRect(0, 0, w + 2 * thickness, h + 2 * thickness);
   }
 
-  private pulse = (): void => {
+  private pulse = (targetScale: number): void => {
     const { chain, nothing, scale } = this.game.tweener;
 
     chain([
-      scale(this, 1.01, 300),
+      scale(this, targetScale, 300),
       scale(this, 1, 300),
     ]).start();
   }
@@ -52,24 +52,31 @@ export default class CellGridBorder extends Phaser.Group {
     this.borderTween.start();
   }
 
+  private tweenBorderTint(color: number, duration: number = 400): void {
+    const tween = this.game.tweener.tint(this.border, color, duration);
+    this.startBorderTween(tween);
+  }
+
   private initEventHandlers(): void {
     const eventBus = this.game.eventBus();
 
     eventBus.inputEnabled.add(this.onInputEnabled);
     eventBus.gameRoundComplete.add(this.onRoundComplete);
+    eventBus.gameRoundFail.add(this.onRoundFail);
   }
 
   private onInputEnabled = (enabled: boolean): void => {
-    const { tint } = this.game.tweener;
-
     if (enabled) {
-      this.startBorderTween(tint(this.border, 0x00ff00, 400));
-    } else {
-      this.startBorderTween(tint(this.border, 0xffffff, 400));
+      this.tweenBorderTint(0x00ff00);
     }
   }
 
   private onRoundComplete = (): void => {
-    this.pulse();
+    this.pulse(1.01);
+  }
+
+  private onRoundFail = (): void => {
+    this.pulse(0.99);
+    this.tweenBorderTint(0xff0000);
   }
 }

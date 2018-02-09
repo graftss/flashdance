@@ -110,10 +110,6 @@ export default class InputVerifier {
     return false;
   }
 
-  private advanceNextInput(): void {
-    this.nextInputIndex = this.nextInputIndex + 1;
-  }
-
   private isInputComplete(): boolean {
     return this.nextInputIndex === this.targetInput.length;
   }
@@ -123,7 +119,7 @@ export default class InputVerifier {
   }
 
   private onCorrectInput(expected: GameInput, observed: RawInput): void {
-    this.advanceNextInput();
+    this.nextInputIndex = this.nextInputIndex + 1;
 
     switch (expected.type) {
       case 'up':
@@ -147,6 +143,7 @@ export default class InputVerifier {
     this.nextInputIndex = this.checkpointInputIndex;
 
     this.dispatchIncorrectInput(expected, observed);
+    this.dispatchRoundFail();
     this.dispatchDisableInput();
     logInputPair(observed, expected, 'incorrect');
   }
