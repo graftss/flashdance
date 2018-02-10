@@ -125,7 +125,7 @@ export default class GameDirector {
   private onRoundFail = (pair: InputPair): void => {
     this.setLives(this.lives - 1);
 
-    if (this.cellGrid.getLives() <= 0) {
+    if (this.lives <= 0) {
       this.onCourseFail();
     } else {
       this.startNextRound(-1);

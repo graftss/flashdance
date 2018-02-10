@@ -92,10 +92,6 @@ export default class CellGrid extends Phaser.Group {
     return vec2.clone(this.getCellByGridPos(gridPos).position);
   }
 
-  public getLives(): number {
-    return this.lifeBar.getLifeCount();
-  }
-
   public completeCourseEffect(): TweenWrapper {
     const { alpha, chain, merge, nothing, rotation, scale } = this.game.tweener;
     const ease = Phaser.Easing.Quartic.In;
@@ -215,7 +211,7 @@ export default class CellGrid extends Phaser.Group {
     scaleTween.onUpdateCallback((_, t) => {
       if (t >= 0.5 && !pastHalf) {
         pastHalf = true;
-        // this.border.flip();
+        this.lifeBar.flip();
         this.background.alpha = 0.8 - this.background.alpha;
       }
     });
