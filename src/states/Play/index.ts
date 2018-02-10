@@ -15,6 +15,7 @@ export default class Play extends Phaser.State {
   private gridCols: number = 3;
   private gridRows: number = 3;
 
+  private actionSequencer: IActionSequencer;
   private background: Fragment;
   private cellGrid: CellGrid;
   private courseData: CourseData;
@@ -23,17 +24,16 @@ export default class Play extends Phaser.State {
 
   public init(courseData: CourseData) {
     this.courseData = courseData;
-
-    const actionSequencer = this.initActionSequencer(courseData);
-
     this.eventBus = new EventBus();
     this.unlocker = new Unlocker(this.game);
     this.initCellGrid();
+    this.initActionSequencer();
+
     this.director = new GameDirector(
       this.game,
       this.cellGrid,
-      courseData,
-      actionSequencer,
+      this.courseData,
+      this.actionSequencer,
     );
   }
 
@@ -65,14 +65,18 @@ export default class Play extends Phaser.State {
     );
   }
 
-  private initActionSequencer(courseData: CourseData): IActionSequencer {
-    const { gridCols: c, gridRows: r } = this;
+  private initActionSequencer(): void {
+    const { courseData, gridCols: c, gridRows: r } = this;
 
     switch (courseData.type) {
-      case 'tutorial': return new ActionSequencer.Tutorial(c, r, courseData.level);
-      case 'debug': return new ActionSequencer.Debug(c, r);
+      case 'tutorial': {
+        this.actionSequencer = new ActionSequencer.Tutorial(c, r, courseData.level);
+        break;
+      }
 
-      default: return new ActionSequencer.Arcade(c, r);
+      case 'debug': {
+        this.actionSequencer = new ActionSequencer.Debug(c, r);
+      }
     }
   }
 }
