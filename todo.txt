@@ -1,9 +1,14 @@
 === up next ===
+- escape to go play -> mainmenu state
 
+- practice mode
+  - first menu takes you to a "builder" thing where you drag and drop
+    attacks into a sequence.
+  - can save configs by name
+  - add button in game to go back to builder
 === on deck ===
 - polish incorrect input visuals, maybe have it shrink to a point
 
-- simultaneous fake flashes alongside a real one
 
 - some visual indication of whether the input is being shown to you, or
   whether you can start recording your own input

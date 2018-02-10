@@ -154,11 +154,18 @@ export default class CellGrid extends Phaser.Group {
   }
 
   private flashCell(opts: FlashOpts): GameAction {
-    const { duration, origin } = opts;
-    const originCell = this.getCellByGridPos(origin);
-    const flashLayer = this.newFlashLayer(originCell.position.clone(), false);
+    const { duration, fakes = [], origin } = opts;
 
-    return flashLayer.flashTween(duration);
+    const flashTweens = [origin, ...fakes]
+      .map(this.getCellByGridPos)
+      // only the origin at index 0 isn't fake, the rest are
+      .map((cell, index) => this.newFlashLayer(cell.position.clone(), index !== 0))
+      .map(flashLayer => flashLayer.flashTween(duration).tween);
+
+    return {
+      duration,
+      tween: this.game.tweener.merge(flashTweens),
+    };
   }
 
   private multiflashCell(opts: MultiflashOpts): GameAction {
@@ -174,7 +181,7 @@ export default class CellGrid extends Phaser.Group {
     const originCell = this.getCellByGridPos(origin);
     const flashLayer = this.newFlashLayer(originCell.position.clone(), true);
 
-    return flashLayer.fakeFlashTween(duration);
+    return flashLayer.flashTween(duration);
   }
 
   private path(opts: PathOpts): GameAction {

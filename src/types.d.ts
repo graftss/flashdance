@@ -106,6 +106,7 @@ type WaitOpts = {
 type FlashOpts = {
   duration: number,
   origin: GridPos,
+  fakes?: GridPos[],
 }
 
 type MultiflashOpts = {

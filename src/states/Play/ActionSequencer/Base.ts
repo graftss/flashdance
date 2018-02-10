@@ -2,15 +2,23 @@ import {
   adjacentGridPos,
   clamp,
   random,
-  randomGridPos,
+  range,
   sample,
+  sampleSize,
+  xprod,
 } from '../../../utils';
 
 export default class BaseActionSequencer {
+  private allGridPositions: GridPos[];
+
   constructor(
     protected gridCols: number,
     protected gridRows: number,
-  ) {}
+  ) {
+    this.allGridPositions =
+      xprod(range(0, gridCols) as number[], range(0, gridRows) as number[])
+      .map(([col, row]) => ({ col, row }));
+  }
 
   protected input = (difficulty: number = 0): GameActionData => {
     if (difficulty < 6) {
@@ -41,6 +49,7 @@ export default class BaseActionSequencer {
       case 4: return this.rotate(difficulty);
       case 5: return this.reflect(difficulty);
       case 6: return this.xReflect(difficulty);
+      case 7: return this.flashAndFake(difficulty);
     }
   }
 
@@ -50,7 +59,27 @@ export default class BaseActionSequencer {
     return {
       opts: {
         duration,
-        origin: this.randomGridPos(),
+        origin: this.randomGridPosition(),
+      },
+      type: 'flash',
+    };
+  }
+
+  protected flashAndFake = (difficulty: number = 0): GameActionData => {
+    const duration = Math.max(100, 300 - 10 * difficulty);
+    const numFakes = clamp(
+      Math.floor(difficulty / 3),
+      1,
+      this.gridCols * this.gridRows - 1,
+    );
+    const gridPositions = this.randomGridPositions(numFakes + 1);
+    const origin = gridPositions.shift();
+
+    return {
+      opts: {
+        duration,
+        fakes: gridPositions,
+        origin,
       },
       type: 'flash',
     };
@@ -63,14 +92,14 @@ export default class BaseActionSequencer {
       opts: {
         count: random(2, 4),
         duration,
-        origin: this.randomGridPos(),
+        origin: this.randomGridPosition(),
       },
       type: 'multiflash',
     };
   }
 
   protected path = (difficulty: number): GameActionData => {
-    const origin = this.randomGridPos();
+    const origin = this.randomGridPosition();
     const path = [origin];
     const pathLength = clamp(Math.floor(difficulty / 3), 3, 5); // should scale with difficulty
 
@@ -156,7 +185,7 @@ export default class BaseActionSequencer {
     return {
       opts: {
         duration,
-        origin: this.randomGridPos(),
+        origin: this.randomGridPosition(),
       },
       type: 'fakeflash',
     };
@@ -169,7 +198,11 @@ export default class BaseActionSequencer {
     };
   }
 
-  protected randomGridPos(): GridPos {
-    return randomGridPos(this.gridCols, this.gridRows);
+  protected randomGridPosition(): GridPos {
+    return this.randomGridPositions(1)[0];
+  }
+
+  protected randomGridPositions(count: number = 1): GridPos[] {
+    return sampleSize(this.allGridPositions, count);
   }
 }

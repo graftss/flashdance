@@ -73,13 +73,7 @@ export default class FlashLayer extends Phaser.Group {
   }
 
   public flashTween(duration: number): GameAction {
-    const tween = this.flash(duration, flashColor);
-
-    return { duration, tween };
-  }
-
-  public fakeFlashTween(duration: number): GameAction {
-    const tween = this.flash(duration, fakeFlashColor);
+    const tween = this.flash(duration);
 
     return { duration, tween };
   }
@@ -173,7 +167,7 @@ export default class FlashLayer extends Phaser.Group {
     return this.game.tweener.position(this, position, duration);
   }
 
-  private flash(duration: number, color: number): TweenWrapper {
+  private flash(duration: number): TweenWrapper {
     const result = this.game.tweener.merge([
       this.ripple(duration),
       this.fadeInOut(duration, duration / 5),
@@ -190,7 +184,7 @@ export default class FlashLayer extends Phaser.Group {
       getMultiflashDotPositions(count, this.w, this.h),
     );
 
-    return this.flash(duration, color);
+    return this.flash(duration);
   }
 
   private path(path: Vec2[], duration: number): TweenWrapper {
