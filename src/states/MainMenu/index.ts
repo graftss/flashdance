@@ -15,11 +15,8 @@ export default class MainMenu extends Phaser.State {
   public eventBus: EventBus;
 
   private background: Background;
-
-  private menuStack: Menu[] = [];
-  private optionMenu: Menu;
-  private titleMenu: Menu;
-  private tutorialMenu: Menu;
+  private menuIdStack: MenuID[] = [];
+  private activeMenu: Menu;
 
   public init(opts: any = {}) {
     this.eventBus = new EventBus();
@@ -27,21 +24,22 @@ export default class MainMenu extends Phaser.State {
     this.initEventHandlers();
     this.initBackground();
 
-    const titleMenu = this.initMenuById('title');
-    this.menuStack = [titleMenu];
+    this.activeMenu = this.initMenuById('title');
+    this.menuIdStack = ['title'];
 
     if (opts.fadeIn) {
-      titleMenu.alpha = 0;
+      const menu = this.activeMenu;
+      menu.alpha = 0;
 
-      const tween = this.game.tweener.alpha(titleMenu, 1, 500);
-      tween.onStart.add(() => titleMenu.setInputEnabled(false));
-      tween.onComplete.add(() => titleMenu.setInputEnabled(true));
+      const tween = this.game.tweener.alpha(menu, 1, 500);
+      tween.onStart.add(() => menu.setInputEnabled(false));
+      tween.onComplete.add(() => menu.setInputEnabled(true));
       tween.start();
     }
   }
 
   public shutdown() {
-    this.getActiveMenu().destroy();
+    this.activeMenu.destroy();
   }
 
   private initBackground() {
@@ -67,52 +65,49 @@ export default class MainMenu extends Phaser.State {
     }
   }
 
-  private getActiveMenu(): Menu {
-    return this.menuStack[this.menuStack.length - 1];
-  }
-
-  private getPreviousMenu(): Menu {
-    return this.menuStack[this.menuStack.length - 2];
-  }
-
   private pushMenu = (menuId: MenuID): void => {
-    const menu = this.initMenuById(menuId);
+    const { activeMenu, game } = this;
+    const newMenu = this.initMenuById(menuId);
     const slideDelta = { x: -this.game.width, y: 0 };
     const slideDuration = 500;
-    const activeMenu = this.getActiveMenu();
 
-    menu.position.x = this.game.width;
+    newMenu.position.x = this.game.width;
 
-    const tween = this.game.tweener.merge([
+    const tween = game.tweener.merge([
       activeMenu.transition(slideDelta, slideDuration),
-      menu.transition(slideDelta, slideDuration),
+      newMenu.transition(slideDelta, slideDuration),
     ]);
 
-    tween.onStart.add(() => this.menuStack.push(menu));
+    tween.onStart.add(() => {
+      this.activeMenu = newMenu;
+      this.menuIdStack.push(menuId);
+    });
     tween.start();
   }
 
   private popMenu = (): void => {
+    const { activeMenu, game, menuIdStack } = this;
     const slideDelta = { x: this.game.width, y: 0 };
     const slideDuration = 250;
-    const activeMenu = this.getActiveMenu();
 
-    const previousMenuId = this.getPreviousMenu().id;
+    const previousMenuId = menuIdStack[menuIdStack.length - 2];
     const newMenu = this.initMenuById(previousMenuId);
     newMenu.position.x = -this.game.width;
-    this.menuStack.splice(this.menuStack.length - 2, 1, newMenu);
 
     const tween = this.game.tweener.merge([
       activeMenu.transition(slideDelta, slideDuration),
       newMenu.transition(slideDelta, slideDuration),
     ]);
 
-    tween.onStart.add(() => this.menuStack.pop());
+    tween.onStart.add(() => {
+      this.activeMenu = newMenu;
+      this.menuIdStack.pop();
+    });
     tween.start();
   }
 
   private startCourse = (courseData: CourseData) => {
-    const fadeout = this.game.tweener.alpha(this.getActiveMenu(), 0, 500);
+    const fadeout = this.game.tweener.alpha(this.activeMenu, 0, 500);
 
     fadeout.onComplete.add(() => {
       this.game.state.start('Play', false, false, courseData);

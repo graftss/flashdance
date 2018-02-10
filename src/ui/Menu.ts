@@ -57,7 +57,7 @@ export default class Menu extends Phaser.Group {
   public updateMenuOption(
     colIndex: number,
     rowIndex: number,
-    updater: (MenuOption) => void,
+    updater: (o: MenuOption) => void,
   ): void {
     updater(this.optionColumns[colIndex][rowIndex]);
   }
@@ -69,14 +69,12 @@ export default class Menu extends Phaser.Group {
     };
   }
 
-  private forEachOption(f: (MenuOption) => void): void {
+  private forEachOption(f: (o: MenuOption) => void): void {
     this.optionColumns.forEach(col => col.forEach(f));
   }
 
   private createMenuOption(colIndex, rowIndex, data): MenuOption {
     const { game, rowHeight, colWidth } = this;
-
-    console.log({ rowHeight, colWidth, colIndex, rowIndex, data });
 
     const option = new MenuOption(
       game,
