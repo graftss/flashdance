@@ -21,9 +21,9 @@ export default class LifeBar extends Phaser.Group {
       this.gainLife();
     }
 
-    this.positionLives();
+    this.game.eventBus().play.livesChanged.add(this.onLivesChanged);
 
-    this.game.eventBus().livesChanged.add(this.onLivesChanged);
+    this.positionLives();
   }
 
   public flip(): void {

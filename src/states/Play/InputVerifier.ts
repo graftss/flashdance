@@ -38,40 +38,40 @@ export default class InputVerifier {
   private attachHandlers(): void {
     const eventBus = this.game.eventBus();
 
-    eventBus.inputDown.add(this.onInput);
-    eventBus.inputDragTarget.add(this.onInput);
-    eventBus.inputDragStop.add(this.onInput);
+    eventBus.play.inputDown.add(this.onInput);
+    eventBus.play.inputDragTarget.add(this.onInput);
+    eventBus.play.inputDragStop.add(this.onInput);
   }
 
   private enableInput(): void {
-    // if we're freshly enabling input, force the first input to be `down`
+    // if we're turning input on, force the first new input to be a `down`
     if (!this.inputEnabled) {
       this.ignoreInputUntilDown = true;
     }
 
     this.inputEnabled = true;
-    this.game.eventBus().inputEnabled.dispatch(true);
+    this.game.eventBus().play.inputEnabled.dispatch(true);
   }
 
   private disableInput(): void {
     this.inputEnabled = false;
-    this.game.eventBus().inputEnabled.dispatch(false);
+    this.game.eventBus().play.inputEnabled.dispatch(false);
   }
 
   private dispatchCorrectInput(expected: GameInput, observed: RawInput): void {
-    this.game.eventBus().correctInput.dispatch({ expected, observed });
+    this.game.eventBus().play.inputCorrect.dispatch({ expected, observed });
   }
 
   private dispatchIncorrectInput(expected: GameInput, observed: RawInput): void {
-    this.game.eventBus().incorrectInput.dispatch({ expected, observed });
+    this.game.eventBus().play.inputIncorrect.dispatch({ expected, observed });
   }
 
   private dispatchRoundFail(): void {
-    this.game.eventBus().gameRoundFail.dispatch(0);
+    this.game.eventBus().play.roundFail.dispatch(0);
   }
 
   private dispatchRoundComplete(): void {
-    this.game.eventBus().gameRoundComplete.dispatch(0);
+    this.game.eventBus().play.roundComplete.dispatch(0);
   }
 
   private nextInput(): GameInput {

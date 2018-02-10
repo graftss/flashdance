@@ -1,6 +1,4 @@
 === up next ===
-- group play events into one event bus object (hoo boy)
-
 - practice mode
   - first menu takes you to a "builder" thing where you drag and drop
     attacks into a sequence.
@@ -9,9 +7,8 @@
 === on deck ===
 - polish incorrect input visuals, maybe have it shrink to a point
 
-
-- some visual indication of whether the input is being shown to you, or
-  whether you can start recording your own input
+- better distinguish multiple taps on the same cell in quick succession,
+  so you can tell how many inputs you've done while you're still tapping
 
 - "long hold" flash mechanic
   - animation is a growing light that fills out the cell to let you know

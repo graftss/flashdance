@@ -84,6 +84,6 @@ export default class Play extends Phaser.State {
   private initKeyboardListeners(): void {
     // escape: quit to main menu
     this.input.keyboard.addKey(27)
-      .onDown.add(() => this.eventBus.gameCourseQuit.dispatch(null));
+      .onDown.add(() => this.eventBus.play.courseQuit.dispatch(null));
   }
 }

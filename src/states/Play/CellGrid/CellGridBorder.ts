@@ -58,11 +58,11 @@ export default class CellGridBorder extends Phaser.Group {
   }
 
   private initEventHandlers(): void {
-    const eventBus = this.game.eventBus();
+    const eventBus = this.game.eventBus().play;
 
     eventBus.inputEnabled.add(this.onInputEnabled);
-    eventBus.gameRoundComplete.add(this.onRoundComplete);
-    eventBus.gameRoundFail.add(this.onRoundFail);
+    eventBus.roundComplete.add(this.onRoundComplete);
+    eventBus.roundFail.add(this.onRoundFail);
   }
 
   private onInputEnabled = (enabled: boolean): void => {

@@ -42,7 +42,7 @@ export default class CellInputLayer {
 
   private onInputDown = (): void => {
     this.lastDragTarget = this.inputTarget;
-    this.game.eventBus().inputDown.dispatch({
+    this.game.eventBus().play.inputDown.dispatch({
       target: this.inputTarget,
       type: 'down',
     });
@@ -63,7 +63,7 @@ export default class CellInputLayer {
 
     if (!isEqual(inputTarget, this.lastDragTarget)) {
       this.lastDragTarget = inputTarget;
-      this.game.eventBus().inputDragTarget.dispatch({
+      this.game.eventBus().play.inputDragTarget.dispatch({
         target: inputTarget,
         type: 'drag',
       });
@@ -72,7 +72,7 @@ export default class CellInputLayer {
 
   private onDragStop = (): void => {
     this.sprite.position.copyFrom(this.hitbox.getPosition());
-    this.game.eventBus().inputDragStop.dispatch({
+    this.game.eventBus().play.inputDragStop.dispatch({
       target: this.lastDragTarget,
       type: 'up',
     });

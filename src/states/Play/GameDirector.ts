@@ -33,7 +33,7 @@ export default class GameDirector {
 
   private setLives(lives: number) {
     this.lives = lives;
-    this.game.eventBus().livesChanged.dispatch(this.lives);
+    this.game.eventBus().play.livesChanged.dispatch(this.lives);
   }
 
   private buildAction = (actionData: GameActionData): GameAction => {
@@ -54,14 +54,16 @@ export default class GameDirector {
   }
 
   private startActionEvent = (index: number): void => {
-    const { gameActionStart, gameActionComplete } = this.game.eventBus();
+    const eventBus = this.game.eventBus().play;
 
     const actionData = this.roundActionData[index];
     const action = this.startAction(actionData);
 
-    gameActionStart.dispatch({ action, index });
+    eventBus.actionStart.dispatch({ action, index });
 
-    action.tween.onComplete.add(() => gameActionComplete.dispatch({ action, index }));
+    action.tween.onComplete.add(() => (
+      eventBus.actionComplete.dispatch({ action, index })
+    ));
   }
 
   private startNextRound = (difficultyDelta: number = 0): void => {
@@ -80,7 +82,7 @@ export default class GameDirector {
     const tween = this.cellGrid.completeCourseEffect();
 
     tween.onComplete.add(() => {
-      this.game.eventBus().gameCourseComplete.dispatch(this.courseData);
+      this.game.eventBus().play.courseComplete.dispatch(this.courseData);
 
       setTimeout(() => {
         this.game.state.start('MainMenu', false, false, { fadeIn: true });
@@ -94,7 +96,7 @@ export default class GameDirector {
     const tween = this.cellGrid.failCourseEffect();
 
     tween.onComplete.add(() => {
-      this.game.eventBus().gameCourseFail.dispatch(this.courseData);
+      this.game.eventBus().play.courseFail.dispatch(this.courseData);
 
       setTimeout(() => {
         this.game.state.start('MainMenu', false, false, { fadeIn: true });
@@ -107,9 +109,9 @@ export default class GameDirector {
   private initEventHandlers(): void {
     const eventBus = this.game.eventBus();
 
-    eventBus.gameActionComplete.add(this.onActionCompleteEvent);
-    eventBus.gameRoundComplete.add(this.onRoundComplete);
-    eventBus.incorrectInput.add(this.onRoundFail);
+    eventBus.play.actionComplete.add(this.onActionCompleteEvent);
+    eventBus.play.roundComplete.add(this.onRoundComplete);
+    eventBus.play.inputIncorrect.add(this.onRoundFail);
   }
 
   private onActionCompleteEvent = (context: GameActionContext): void => {
