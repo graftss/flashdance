@@ -1,5 +1,5 @@
 === up next ===
-- escape to go play -> mainmenu state
+- group play events into one event bus object (hoo boy)
 
 - practice mode
   - first menu takes you to a "builder" thing where you drag and drop

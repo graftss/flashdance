@@ -28,6 +28,7 @@ export default class Play extends Phaser.State {
     this.unlocker = new Unlocker(this.game);
     this.initCellGrid();
     this.initActionSequencer();
+    this.initKeyboardListeners();
 
     this.director = new GameDirector(
       this.game,
@@ -78,5 +79,11 @@ export default class Play extends Phaser.State {
         this.actionSequencer = new ActionSequencer.Debug(c, r);
       }
     }
+  }
+
+  private initKeyboardListeners(): void {
+    // escape: quit to main menu
+    this.input.keyboard.addKey(27)
+      .onDown.add(() => this.eventBus.gameCourseQuit.dispatch(null));
   }
 }

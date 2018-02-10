@@ -19,6 +19,7 @@ export default class EventBus {
   public gameRoundComplete: TypedSignal<number> = new TypedSignal();
   public gameCourseFail: TypedSignal<CourseData> = new TypedSignal();
   public gameCourseComplete: TypedSignal<CourseData> = new TypedSignal();
+  public gameCourseQuit: TypedSignal<null> = new TypedSignal();
 
   public menu = {
     popMenu: new TypedSignal() as TypedSignal<null>,

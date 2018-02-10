@@ -153,6 +153,16 @@ export default class CellGrid extends Phaser.Group {
     ]);
   }
 
+  public quitCourseEffect(): TweenWrapper {
+    const { alpha, chain, nothing } = this.game.tweener;
+    const duration = 2000;
+
+    return chain([
+      nothing(duration / 3),
+      alpha(this, 0, 2 * duration / 3),
+    ]);
+  }
+
   private flashCell(opts: FlashOpts): GameAction {
     const { duration, fakes = [], origin } = opts;
 
@@ -283,8 +293,11 @@ export default class CellGrid extends Phaser.Group {
   }
 
   private initEventHandlers(): void {
-    this.game.eventBus().correctInput.add(this.onCorrectInput);
-    this.game.eventBus().incorrectInput.add(this.onIncorrectInput);
+    const eventBus = this.game.eventBus();
+
+    eventBus.correctInput.add(this.onCorrectInput);
+    eventBus.incorrectInput.add(this.onIncorrectInput);
+    eventBus.gameCourseQuit.add(this.onCourseQuit);
   }
 
   private onCorrectInput = ({ expected, observed }: InputPair) => {
@@ -315,6 +328,17 @@ export default class CellGrid extends Phaser.Group {
 
     this.inputLightManager.addLight(inputPos, 'incorrect');
     this.inputLightManager.onIncorrectInput();
+  }
+
+  private onCourseQuit = (): void => {
+    const tween = this.quitCourseEffect();
+
+    tween.onComplete.add(() => {
+      this.game.state.start('MainMenu', false, false, { fadeIn: true });
+      this.destroy();
+    });
+
+    tween.start();
   }
 
   private initBackground(): void {
