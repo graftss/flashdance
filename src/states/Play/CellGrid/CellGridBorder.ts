@@ -68,6 +68,8 @@ export default class CellGridBorder extends Phaser.Group {
   private onInputEnabled = (enabled: boolean): void => {
     if (enabled) {
       this.tweenBorderTint(0x00ff00);
+    } else {
+      this.tweenBorderTint(0xffffff);
     }
   }
 

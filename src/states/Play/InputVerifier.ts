@@ -15,6 +15,7 @@ export default class InputVerifier {
 
   private targetInput: GameInput[];
   private checkpointInputIndex: number;
+  private inputEnabled: boolean = false;
 
   // on incorrect input, we stop verifying input until the player re-engages
   // with the screen via a `down`
@@ -31,7 +32,7 @@ export default class InputVerifier {
     this.nextInputIndex = 0;
     this.checkpointInputIndex = 0;
 
-    this.dispatchEnableInput();
+    this.enableInput();
   }
 
   private attachHandlers(): void {
@@ -42,11 +43,18 @@ export default class InputVerifier {
     eventBus.inputDragStop.add(this.onInput);
   }
 
-  private dispatchEnableInput(): void {
+  private enableInput(): void {
+    // if we're freshly enabling input, force the first input to be `down`
+    if (!this.inputEnabled) {
+      this.ignoreInputUntilDown = true;
+    }
+
+    this.inputEnabled = true;
     this.game.eventBus().inputEnabled.dispatch(true);
   }
 
-  private dispatchDisableInput(): void {
+  private disableInput(): void {
+    this.inputEnabled = false;
     this.game.eventBus().inputEnabled.dispatch(false);
   }
 
@@ -71,6 +79,10 @@ export default class InputVerifier {
   }
 
   private onInput = (observed: RawInput): void => {
+    if (!this.inputEnabled) {
+      return;
+    }
+
     const expected = this.nextInput();
 
     if (this.ignoreInputUntilDown) {
@@ -139,17 +151,16 @@ export default class InputVerifier {
   }
 
   private onIncorrectInput(expected: GameInput, observed: RawInput) {
-    this.ignoreInputUntilDown = true;
     this.nextInputIndex = this.checkpointInputIndex;
 
     this.dispatchIncorrectInput(expected, observed);
+    this.disableInput();
     this.dispatchRoundFail();
-    this.dispatchDisableInput();
     logInputPair(observed, expected, 'incorrect');
   }
 
   private onCompleteInput() {
-    this.dispatchDisableInput();
+    this.disableInput();
     this.dispatchRoundComplete();
   }
 

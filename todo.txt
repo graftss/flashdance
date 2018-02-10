@@ -1,5 +1,4 @@
 === up next ===
-- fix same input bug in path tutorial
 
 === on deck ===
 - polish incorrect input visuals, maybe have it shrink to a point

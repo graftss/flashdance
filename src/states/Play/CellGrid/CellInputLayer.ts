@@ -28,23 +28,16 @@ export default class CellInputLayer {
     // (i assume) shining galaxy brain optimization reasons. so we need to
     // enable input before enabling drag, and then we disable input because we
     // never actually wanted input enabled in the first place
-    this.setInputEnabled(true);
+    this.sprite.inputEnabled = true;
     this.sprite.input.enableDrag();
-    this.setInputEnabled(false);
 
     this.sprite.events.onInputDown.add(this.onInputDown);
     this.sprite.events.onDragUpdate.add(this.onDragUpdate);
     this.sprite.events.onDragStop.add(this.onDragStop);
-
-    game.eventBus().inputEnabled.add(this.setInputEnabled);
   }
 
   public containsPoint(x: number, y: number): boolean {
     return this.hitbox.containsPoint(x, y);
-  }
-
-  private setInputEnabled = (enabled: boolean): void => {
-    this.sprite.inputEnabled = enabled;
   }
 
   private onInputDown = (): void => {
