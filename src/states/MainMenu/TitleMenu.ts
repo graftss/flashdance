@@ -12,12 +12,13 @@ export default class TitleMenu extends Menu {
     y: number,
     rowHeight: number,
   ) {
-    const optionDataColumns = TitleMenu.getOptionDataColumns(game);
+    super(game, x, y, rowHeight, [], titleMenuID);
 
-    super(game, x, y, rowHeight, optionDataColumns, titleMenuID);
+    this.setOptionColumns(this.getOptionDataColumns());
   }
 
-  private static getOptionDataColumns(game: Game): MenuOptionData[][] {
+  private getOptionDataColumns(): MenuOptionData[][] {
+    const { game } = this;
     const { pushMenu, popMenu } = game.eventBus().menu;
     const tutorialCompleted = game.saveFile.isTutorialCompleted();
 
@@ -32,23 +33,12 @@ export default class TitleMenu extends Menu {
         },
       },
       {
-        label: 'challenges',
-        onSelect: () => {
-          console.log('open challenge menu');
-        },
-      },
-      {
-        label: 'arcade',
-        onSelect: () => {
-          console.log('open arcade menu');
-        },
-      },
-      {
         label: 'practice',
         onSelect: () => {
           console.log('open practice menu');
         },
       },
+      ...this.getExtraModeOptions(),
       {
         label: 'options',
         onSelect: () => {
@@ -56,5 +46,26 @@ export default class TitleMenu extends Menu {
         },
       },
     ]];
+  }
+
+  private getExtraModeOptions(): MenuOptionData[] {
+    if (this.game.saveFile.isTutorialCompleted()) {
+      return [
+        {
+          label: 'challenges',
+          onSelect: () => {
+            console.log('open challenge menu');
+          },
+        },
+        {
+          label: 'arcade',
+          onSelect: () => {
+            console.log('open arcade menu');
+          },
+        },
+      ];
+    } else {
+      return [];
+    }
   }
 }

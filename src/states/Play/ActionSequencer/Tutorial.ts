@@ -22,9 +22,7 @@ export default class TutorialActionSequencer
   }
 
   public maxDifficulty(courseData: CourseData): number {
-    switch (courseData.level)  {
-      default: return 5;
-    }
+    return 10;
   }
 
   private waitlessRound(difficulty: number): GameActionData[] {
