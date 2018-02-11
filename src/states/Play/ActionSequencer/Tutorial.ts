@@ -21,10 +21,6 @@ export default class TutorialActionSequencer
     return [initialWait, ...intersperse(waitBetweenActions, actions)];
   }
 
-  public maxDifficulty(courseData: CourseData): number {
-    return 10;
-  }
-
   private waitlessRound(difficulty: number): GameActionData[] {
     switch (this.level) {
       case 'flash': return this.flashRound(difficulty);

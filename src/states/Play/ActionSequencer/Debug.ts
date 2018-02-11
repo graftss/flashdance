@@ -7,10 +7,6 @@ export default class DebugActionSequencer
     return this.debugInputDisable();
   }
 
-  public maxDifficulty(): number {
-    return 100000;
-  }
-
   private debugRotate(): GameActionData[] {
     return [
       this.wait(300),

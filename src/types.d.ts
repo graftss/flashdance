@@ -85,11 +85,6 @@ type CourseData = IGenericCourseData & (
 // `delay`, if present, denotes how long after the action before the
 //   next action starts.
 
-interface IActionSequencer {
-  randomRound: (difficulty: number) => GameActionData[];
-  maxDifficulty: (CourseData) => number;
-}
-
 type TweenWrapper = {
   start: Function,
   onStart: Phaser.Signal,
@@ -145,6 +140,10 @@ type GameActionData =
 type GameActionContext = {
   action: GameAction,
   index: number,
+}
+
+interface IActionSequencer {
+  randomRound: (difficulty: number) => GameActionData[];
 }
 
 // Game input

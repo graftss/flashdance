@@ -3,6 +3,7 @@ import 'pixi';
 import 'phaser';
 import * as Phaser from 'phaser-ce';
 
+import courses from './courses';
 import EventBus from './EventBus';
 import MainMenu from './states/MainMenu';
 import Play from './states/Play';
@@ -23,8 +24,8 @@ export default class Game extends Phaser.Game {
     this.state.add('Play', Play);
 
     // this.state.start('Play', true, false, { type: 'debug' });
-    // this.state.start('Play', true, false, { type: 'tutorial', level: 'flash', lives: 3 });
-    this.state.start('MainMenu');
+    this.state.start('Play', true, false, courses[0]);
+    // this.state.start('MainMenu');
   }
 
   public boot() {

@@ -1,8 +1,6 @@
 === up next ===
 - black border when showing round, white border when accepting input (?)
 
-- take out `maxDifficulty` function frmo `IActionSequencer`, since it's
-  on `CourseData` now
 === on deck ===
 - progress bar that visually shows min/max difficulty
   - pulse the bar when we're at max difficulty, otherwise it looks weird

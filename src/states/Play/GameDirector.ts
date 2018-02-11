@@ -7,7 +7,7 @@ import { clamp, includes, mapJust } from '../../utils';
 
 export default class GameDirector {
   private inputVerifier: InputVerifier;
-  private minDifficulty: number = 1;
+  private minDifficulty: number;
   private maxDifficulty: number;
   private lives: number;
 
@@ -22,7 +22,8 @@ export default class GameDirector {
   ) {
     this.lives = courseData.lives;
     this.inputVerifier = new InputVerifier(game);
-    this.maxDifficulty = actionSequencer.maxDifficulty(courseData);
+    this.minDifficulty = courseData.minDifficulty;
+    this.maxDifficulty = courseData.maxDifficulty;
 
     this.initEventHandlers();
   }
