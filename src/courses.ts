@@ -3,7 +3,7 @@ const courses: CourseData[] = [
     id: 0,
     level: 'flash',
     lives: 3,
-    maxDifficulty: 10,
+    maxDifficulty: 5,
     minDifficulty: 1,
     type: 'tutorial',
   },

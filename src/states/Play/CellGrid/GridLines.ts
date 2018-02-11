@@ -9,6 +9,8 @@ export default class GridLines extends Phaser.Group {
   private margin: number = 3;
   private thickness: number = 1;
   private pulseDuration: number = 5000;
+  private lowAlpha: number = 0.25;
+  private highAlpha: number = 0.35;
 
   constructor(
     public game: Game,
@@ -32,7 +34,7 @@ export default class GridLines extends Phaser.Group {
 
     this.graphic = game.add.graphics(0, 0, this)
       .beginFill(0xffffff);
-    this.graphic.alpha = 0;
+    this.graphic.alpha = this.lowAlpha;
 
     for (let x = dx; x < w - 1; x += dx) {
       for (let row = 0; row < rows; row++) {
@@ -58,13 +60,13 @@ export default class GridLines extends Phaser.Group {
   }
 
   private pulse = (): TweenWrapper => {
-    const { pulseDuration } = this;
+    const { highAlpha, lowAlpha, pulseDuration } = this;
     const { alpha, chain, nothing } = this.game.tweener;
 
     return chain([
-      alpha(this.graphic, 0.3, pulseDuration / 2.5),
+      alpha(this.graphic, highAlpha, pulseDuration / 2.5),
       nothing(pulseDuration / 5),
-      alpha(this.graphic, 0, pulseDuration / 2.5),
+      alpha(this.graphic, lowAlpha, pulseDuration / 2.5),
     ]);
   }
 

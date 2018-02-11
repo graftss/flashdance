@@ -133,7 +133,7 @@ export default class CellGrid extends Phaser.Group {
 
     const spin = rotation(this, Math.PI * 4, effectDuration).easing(ease);
 
-    const effect = merge([waterfallAllCells(4, 1700), fadeOut, grow, spin]);
+    const effect = merge([waterfallAllCells(5, effectDuration), fadeOut, grow, spin]);
 
     return chain([nothing(100), effect]);
   }
@@ -158,11 +158,13 @@ export default class CellGrid extends Phaser.Group {
 
   public quitCourseEffect(): TweenWrapper {
     const { alpha, chain, nothing } = this.game.tweener;
-    const duration = 2000;
+    const duration = 1000;
+
+    const delay = duration / 5;
 
     return chain([
-      nothing(duration / 3),
-      alpha(this, 0, 2 * duration / 3),
+      nothing(delay),
+      alpha(this, 0, duration - delay),
     ]);
   }
 

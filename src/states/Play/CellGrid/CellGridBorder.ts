@@ -52,7 +52,7 @@ export default class CellGridBorder extends Phaser.Group {
     this.borderTween.start();
   }
 
-  private tweenBorderTint(color: number, duration: number = 400): void {
+  private tweenBorderTint(color: number, duration: number = 300): void {
     const tween = this.game.tweener.tint(this.border, color, duration);
     this.startBorderTween(tween);
   }
@@ -67,14 +67,13 @@ export default class CellGridBorder extends Phaser.Group {
 
   private onInputEnabled = (enabled: boolean): void => {
     if (enabled) {
-      this.tweenBorderTint(0x00ff00);
-    } else {
       this.tweenBorderTint(0xffffff);
     }
   }
 
   private onRoundComplete = (): void => {
     this.pulse(1.01);
+    this.tweenBorderTint(0x00ff00);
   }
 
   private onRoundFail = (): void => {

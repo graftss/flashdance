@@ -1,5 +1,4 @@
 === up next ===
-- black border when showing round, white border when accepting input (?)
 
 === on deck ===
 - progress bar that visually shows min/max difficulty
