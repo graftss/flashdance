@@ -70,6 +70,8 @@ type TutorialCourse =
 interface IGenericCourseData {
   id: number;
   lives: number;
+  minDifficulty: number;
+  maxDifficulty: number;
 }
 
 type CourseData = IGenericCourseData & (

@@ -31,7 +31,7 @@ export default class GameDirector {
     this.startNextRound();
   }
 
-  private setLives(lives: number) {
+  private setLives(lives: number): void {
     this.lives = lives;
     this.game.eventBus().play.livesChanged.dispatch(this.lives);
   }
@@ -66,13 +66,20 @@ export default class GameDirector {
     ));
   }
 
+  private setDifficulty(difficulty: number): void {
+    const newDifficulty = clamp(difficulty, this.minDifficulty, this.maxDifficulty);
+
+    this.game.eventBus().play.difficultyChanged.dispatch(newDifficulty);
+    this.difficulty = newDifficulty;
+  }
+
   private startNextRound = (difficultyDelta: number = 0): void => {
     const newDifficulty = this.difficulty + difficultyDelta;
 
     if (newDifficulty > this.maxDifficulty) {
       this.onCourseComplete();
     } else {
-      this.difficulty = clamp(newDifficulty, this.minDifficulty, this.maxDifficulty);
+      this.setDifficulty(newDifficulty);
       this.roundActionData = this.actionSequencer.randomRound(this.difficulty);
       this.startActionEvent(0);
     }

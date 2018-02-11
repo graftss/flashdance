@@ -1,11 +1,24 @@
 === up next ===
-- practice mode
+- black border when showing round, white border when accepting input (?)
+
+- take out `maxDifficulty` function frmo `IActionSequencer`, since it's
+  on `CourseData` now
+=== on deck ===
+- progress bar that visually shows min/max difficulty
+  - pulse the bar when we're at max difficulty, otherwise it looks weird
+    that it doesn't finish when the bar's full.
+  - the other option is just to make the bar fill up at `maxDifficulty + 1`
+    and change how the difficulty's clamped in `gameDirector`... ??
+
+- practice mode (needs to be its own state i think)
   - first menu takes you to a "builder" thing where you drag and drop
     attacks into a sequence.
   - can save configs by name
   - add button in game to go back to builder
-=== on deck ===
+
 - polish incorrect input visuals, maybe have it shrink to a point
+- also pause after an incorrect input because the next action starts
+  way too fast
 
 - better distinguish multiple taps on the same cell in quick succession,
   so you can tell how many inputs you've done while you're still tapping

@@ -9,6 +9,7 @@ import Game from '../../../Game';
 import GridLines from './GridLines';
 import InputLightManager from './InputLightManager';
 import LifeBar from './LifeBar';
+import ProgressBar from './ProgressBar';
 import { copyArray, shiftAnchor, vec2 } from '../../../utils';
 
 export const cellGridActionTypes = [
@@ -30,6 +31,7 @@ export default class CellGrid extends Phaser.Group {
   private gridLines: GridLines;
   private inputLightManager: InputLightManager;
   private lifeBar: LifeBar;
+  private progressBar: ProgressBar;
 
   constructor(
     public game: Game,
@@ -39,13 +41,14 @@ export default class CellGrid extends Phaser.Group {
     public h: number,
     public rows: number,
     public cols: number,
-    public lives: number,
+    public courseData: CourseData,
   ) {
     super(game);
 
     this.initCells();
     this.initGridLines();
-    this.initLifeBar(lives);
+    this.initLifeBar();
+    this.initProgressBar();
     this.initBorder();
     this.initInputLightManager();
     this.initBackground();
@@ -272,12 +275,22 @@ export default class CellGrid extends Phaser.Group {
     this.border = new CellGridBorder(game, this, 0, 0, w, h, borderThickness);
   }
 
-  private initLifeBar(lives: number): void {
-    this.lifeBar = new LifeBar(
-      this.game,
+  private initLifeBar(): void {
+    const { courseData: { lives }, game, h, w } = this;
+
+    this.lifeBar = new LifeBar(game, this, w / 2, -h / 10, lives);
+  }
+
+  private initProgressBar(): void {
+    const { courseData, game, h, w } = this;
+
+    this.progressBar = new ProgressBar(
+      game,
       this,
-      this.w / 2, -this.h / 10,
-      lives,
+      0, h + h / 20,
+      w + 2, h / 20,
+      courseData.minDifficulty,
+      courseData.maxDifficulty,
     );
   }
 

@@ -9,6 +9,7 @@ export default class EventBus {
     courseComplete: new TypedSignal() as TypedSignal<CourseData>,
     courseFail: new TypedSignal() as TypedSignal<CourseData>,
     courseQuit: new TypedSignal() as TypedSignal<null>,
+    difficultyChanged: new TypedSignal() as TypedSignal<number>,
     inputCorrect: new TypedSignal() as TypedSignal<InputPair>,
     inputDown: new TypedSignal() as TypedSignal<RawInput>,
     inputDragStop: new TypedSignal() as TypedSignal<RawInput>,

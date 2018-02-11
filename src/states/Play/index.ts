@@ -62,7 +62,7 @@ export default class Play extends Phaser.State {
       gridX, gridY,
       gridSize, gridSize,
       gridCols, gridRows,
-      this.courseData.lives,
+      this.courseData,
     );
   }
 
