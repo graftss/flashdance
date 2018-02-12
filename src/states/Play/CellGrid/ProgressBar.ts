@@ -1,10 +1,12 @@
 import * as Phaser from 'phaser-ce';
 
 import Game from '../../../Game';
+import { shiftAnchor } from '../../../utils';
 
 export default class ProgressBar extends Phaser.Group {
   private border: Phaser.Graphics;
   private progressFill: Phaser.Graphics;
+  private pulseInterval: any;
 
   constructor(
     public game: Game,
@@ -18,6 +20,8 @@ export default class ProgressBar extends Phaser.Group {
   ) {
     super(game, parent);
 
+    shiftAnchor(this, w / 2, h / 2);
+
     this.initBorder();
     this.initProgressFill();
     this.game.eventBus().play.difficultyChanged.add(this.onDifficultyChange);
@@ -29,7 +33,7 @@ export default class ProgressBar extends Phaser.Group {
     this.border = game.add.graphics(0, 0, this)
       .beginFill(0, 0)
       .lineStyle(1, 0xffffff, 1)
-      .drawRect(0, 0, w, h)
+      .drawRoundedRect(0, 0, w, h, h / 5)
       .endFill();
   }
 
@@ -38,7 +42,7 @@ export default class ProgressBar extends Phaser.Group {
 
     this.progressFill = game.add.graphics(0, 0, this)
       .beginFill(0xffffff, 1)
-      .drawRect(0, 0, w, h)
+      .drawRoundedRect(0, 0, w, h, h / 5)
       .endFill();
 
     this.progressFill.scale.x = 0;
@@ -54,5 +58,20 @@ export default class ProgressBar extends Phaser.Group {
     const tween = game.tweener.scale(progressFill, scale, 1000)
       .easing(Phaser.Easing.Elastic.Out);
     tween.start();
+
+    if (difficulty === maxDifficulty) {
+      this.pulseInterval = setInterval(this.pulse, 1000);
+    } else {
+      clearInterval(this.pulseInterval);
+    }
+  }
+
+  private pulse = (): void => {
+    const { chain, scale } = this.game.tweener;
+
+    chain([
+      scale(this, 1.05, 100),
+      scale(this, 1, 100),
+    ]).start();
   }
 }
