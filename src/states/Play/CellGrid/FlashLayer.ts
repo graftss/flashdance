@@ -158,19 +158,17 @@ export default class FlashLayer extends Phaser.Group {
   private path(path: Vec2[], duration: number): TweenWrapper {
     const { scale, chain, merge, nothing } = this.game.tweener;
     const { plus, minus } = vec2;
-    const pathStepDuration = (duration - 400) / (path.length);
+    const pathStepDuration = (duration - 200) / (path.length);
 
-    const pathToTween = (pos: Vec2) => this.moveTo(
+    const pathToTween = (pos: Vec3) => this.moveTo(
       pos,
-      ((pos as any).double ? 2 : 1) * pathStepDuration,
+      pos.z * pathStepDuration,
     );
 
     const pathTween = chain([
-      this.brighten(150),
-      nothing(50),
+      this.brighten(100),
       ...path.map(pathToTween),
-      nothing(50),
-      this.dim(150),
+      this.dim(100),
     ]);
 
     const result = merge([pathTween, this.ripple(duration)]);
@@ -200,12 +198,15 @@ export default class FlashLayer extends Phaser.Group {
     return sampleSize(coords, count).map(([x, y]) => ({ x, y }));
   }
 
-  private static mergeParallelPathMoves = (path: Vec2[]): Vec2[] => {
+  // the `z` component of the result vectors gives the taxicab
+  // length of the path step corresponding to `x` and `y`
+  private static mergeParallelPathMoves = (path: Vec2[]): Vec3[] => {
     const { clone, about, minus } = vec2;
-    const result = [];
+    const result: Vec3[] = [];
 
     for (let i = 0; i < path.length; i++) {
-      const next = clone(path[i]);
+      // we're assuming here that every step is of taxicab length 1
+      const next = { ...clone(path[i]), z: 1 };
 
       if (i < 2) {
         result.push(next);
@@ -218,10 +219,8 @@ export default class FlashLayer extends Phaser.Group {
       );
 
       if (shouldMerge) {
-        // this is a hacky as hellway to tell the tweener to take twice
-        // as long on the doubled tweens, but whatever
-        (next as any).double = true;
-        result.splice(result.length - 1, 1, next);
+        const last = result.splice(result.length - 1, 1, next)[0];
+        next.z += last.z;
       } else {
         result.push(next);
       }

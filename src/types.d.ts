@@ -8,6 +8,8 @@ type GridPos = { col: number, row: number }
 
 type Vec2 = { x: number, y: number }
 
+type Vec3 = { x: number, y: number, z: number }
+
 // Save Data
 
 type SaveData = {
