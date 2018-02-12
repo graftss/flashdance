@@ -1,6 +1,8 @@
 === up next ===
 
 === on deck ===
+- grid columns/rows in course data?
+
 - practice mode (needs to be its own state i think)
   - first menu takes you to a "builder" thing where you drag and drop
     attacks into a sequence.

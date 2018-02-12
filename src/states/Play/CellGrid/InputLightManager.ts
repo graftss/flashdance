@@ -39,7 +39,7 @@ export default class InputLightManager extends Phaser.Group {
     this.lights.reverse();
 
     setTimeout(() => {
-      this.cascade(({ light }) => light.setTone('incorrect'), 30);
+      this.cascade(({ light }) => light.setTone('incorrect'), 60);
     }, 200);
 
     setTimeout(() => {
@@ -81,7 +81,7 @@ export default class InputLightManager extends Phaser.Group {
   }
 
   private destroyAllLights(): void {
-    this.cascade(({ light }) => light.dimAndDestroy().start(), 30);
+    this.cascade(({ light }) => light.dimAndDestroy().start(), 60);
 
     this.lights = [];
   }

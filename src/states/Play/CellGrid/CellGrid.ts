@@ -126,14 +126,23 @@ export default class CellGrid extends Phaser.Group {
       return merge(tweens.reverse());
     };
 
-    const fadeOut = alpha(this, 0.3, effectDuration).easing(ease);
+    const fadeOut = alpha(this, 0.3, effectDuration);
 
+    // have to be careful of the grid potentially ending on a negative
+    // scale from a reflect; if we double the current scale, the animation
+    // will appear smooth even if one or both components are tweening
+    // from -1 to -2, instead of from 1 to 2
     const targetScale = { x: this.scale.x * 2, y: this.scale.y * 2 };
     const grow = scale(this, targetScale, effectDuration).easing(ease);
 
     const spin = rotation(this, Math.PI * 4, effectDuration).easing(ease);
 
-    const effect = merge([waterfallAllCells(5, effectDuration), fadeOut, grow, spin]);
+    const effect = merge([
+      waterfallAllCells(5, effectDuration * .8),
+      fadeOut,
+      grow,
+      spin,
+    ]);
 
     return chain([nothing(100), effect]);
   }
