@@ -1,4 +1,6 @@
 === up next ===
+- disable background path trails during play state
+- stop progressbar pulsing when exiting play state
 
 === on deck ===
 - grid columns/rows in course data?
@@ -18,9 +20,6 @@
   - animation is a growing light that fills out the cell to let you know
     you can stop holding
   - not sure if this is a good idea
-
-- there should still be some kind of trail behind paths
-  - probably solid though, not the dots like before
 
 - queue a pause during a round that pauses after the round's over
 

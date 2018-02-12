@@ -3,7 +3,7 @@ import { destroy, range, sampleSize, xprod } from '../../../utils';
 
 import Cell from './Cell';
 import Game from '../../../Game';
-import { vec2, shiftAnchor } from '../../../utils';
+import { shiftAnchor, toTexture, vec2 } from '../../../utils';
 
 type FlashLayerContext = 'flash' | 'fake' | 'background';
 
@@ -155,26 +155,73 @@ export default class FlashLayer extends Phaser.Group {
     return this.flash(duration);
   }
 
-  private path(path: Vec2[], duration: number): TweenWrapper {
+  // paths have a minimum duration of 350ms for intro/outro animations
+  private path(path: Vec3[], duration: number): TweenWrapper {
+    const game = this.game;
     const { scale, chain, merge, nothing } = this.game.tweener;
     const { plus, minus } = vec2;
-    const pathStepDuration = (duration - 200) / (path.length);
+    const pathStepDuration = (duration - 350) / (path.length);
 
-    const pathToTween = (pos: Vec3) => this.moveTo(
+    const dotsPerTrail = 6;
+    const trailSize = 4;
+    const trailTexture = toTexture(
+      this.game.add.graphics()
+        .beginFill(0xffffff)
+        .drawRect(-trailSize / 2, -trailSize / 2, trailSize, trailSize),
+    );
+
+    const pathStepTweens = path.map((pos: Vec3) => this.moveTo(
       pos,
       pos.z * pathStepDuration,
-    );
+    ));
+
+    let step = 1;
+    path.forEach((next, stepIndex) => {
+      if (stepIndex === 0) {
+        return;
+      }
+
+      const last = path[stepIndex - 1];
+      const trailLocations = vec2.interpolate(
+        last,
+        next,
+        dotsPerTrail * next.z - 1,
+        true,
+      );
+
+      trailLocations.forEach(({ x, y }, trailIndex) => {
+        const appearDelay = 100 + pathStepDuration * (step + trailIndex / dotsPerTrail);
+        setTimeout(() => {
+          const sprite = game.add.sprite(
+            x + this.w / 2, y + this.h / 2,
+            trailTexture,
+            null,
+            this.parent,
+          );
+
+          setTimeout(() => {
+            const tween = game.tweener.alpha(sprite, 0, 250);
+            tween.onComplete.add(() => sprite.destroy());
+            tween.start();
+          }, 250);
+        }, appearDelay);
+      });
+
+      step += next.z;
+    });
 
     const pathTween = chain([
       this.brighten(100),
-      ...path.map(pathToTween),
+      ...pathStepTweens,
       this.dim(100),
+      nothing(150),
     ]);
 
     const result = merge([pathTween, this.ripple(duration)]);
     result.onComplete.add(() => this.destroy());
 
     return result;
+
   }
 
   private contextColor(context: FlashLayerContext): number {

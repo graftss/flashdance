@@ -158,3 +158,9 @@ export const clamp = (value: number, min: number, max: number): number => (
   value > max ? max :
   value
 );
+
+export const toTexture = (graphics: Phaser.Graphics): Phaser.RenderTexture => {
+  const texture = graphics.generateTexture();
+  graphics.destroy();
+  return texture;
+};

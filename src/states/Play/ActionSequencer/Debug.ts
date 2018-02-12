@@ -4,7 +4,7 @@ export default class DebugActionSequencer
   extends BaseActionSequencer implements IActionSequencer {
 
   public randomRound(difficulty: number): GameActionData[] {
-    return this.debugInputDisable();
+    return this.debugTrails();
   }
 
   private debugRotate(): GameActionData[] {
@@ -63,6 +63,28 @@ export default class DebugActionSequencer
     return [
       this.wait(300),
       this.multiflash(),
+    ];
+  }
+
+  private debugTrails(): GameActionData[] {
+    return [
+      this.wait(200),
+      {
+        opts: {
+          duration: 3000,
+          path: [
+            { col: 1, row: 0 },
+            { col: 1, row: 1 },
+            { col: 1, row: 2 },
+            { col: 1, row: 3 },
+            { col: 2, row: 3 },
+            { col: 2, row: 2 },
+            { col: 1, row: 2 },
+            { col: 0, row: 2 },
+          ],
+        },
+        type: 'path',
+      },
     ];
   }
 }
