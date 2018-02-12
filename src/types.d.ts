@@ -65,7 +65,7 @@ type TutorialCourse =
   'multiflash' |
   'rotate' |
   'reflect' |
-  'x-reflect'
+  'x-reflect';
 
 interface IGenericCourseData {
   id: number;
@@ -75,7 +75,7 @@ interface IGenericCourseData {
 }
 
 type CourseData = IGenericCourseData & (
-  { type: 'debug', level: 'debug' } |
+  { type: 'debug', level: any } |
   { type: 'tutorial', level: TutorialCourse }
 );
 
