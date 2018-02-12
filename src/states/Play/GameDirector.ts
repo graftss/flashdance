@@ -78,11 +78,12 @@ export default class GameDirector {
     const newDifficulty = this.difficulty + difficultyDelta;
 
     if (newDifficulty > this.maxDifficulty) {
-      this.onCourseComplete();
+      setTimeout(() => this.onCourseComplete(), 100);
     } else {
       this.setDifficulty(newDifficulty);
       this.roundActionData = this.actionSequencer.randomRound(this.difficulty);
-      this.startActionEvent(0);
+      setTimeout(() => this.startActionEvent(0), 250);
+
     }
   }
 

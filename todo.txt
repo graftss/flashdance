@@ -8,8 +8,6 @@
   - add button in game to go back to builder
 
 - polish incorrect input visuals, maybe have it shrink to a point
-- also pause after an incorrect input because the next action starts
-  way too fast
 
 - better distinguish multiple taps on the same cell in quick succession,
   so you can tell how many inputs you've done while you're still tapping
