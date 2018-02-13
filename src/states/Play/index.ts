@@ -6,7 +6,7 @@ import EventBus from '../../EventBus';
 import Fragment from '../../Fragment';
 import GameDirector from './GameDirector';
 import Game from '../../Game';
-import Unlocker from '../../Unlocker';
+import Unlocker from './Unlocker';
 
 export default class Play extends Phaser.State {
   public game: Game;
@@ -36,6 +36,8 @@ export default class Play extends Phaser.State {
       this.courseData,
       this.actionSequencer,
     );
+
+    this.game.eventBus().play.courseComplete.add(a => console.log('hddi', a));
   }
 
   public create() {

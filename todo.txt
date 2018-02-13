@@ -1,4 +1,6 @@
 === up next ===
+- merge `onCourseComplete` and `onCourseFail`, just include a parameter saying
+  whether the course was completed scucessfully for not
 
 === on deck ===
 - grid columns/rows in course data?
@@ -10,6 +12,7 @@
   - add button in game to go back to builder
 
 - polish incorrect input visuals, maybe have it shrink to a point
+- animation when losing life
 
 - better distinguish multiple taps on the same cell in quick succession,
   so you can tell how many inputs you've done while you're still tapping
@@ -35,3 +38,4 @@
 
 === colorblind ===
 - make a different shape for fake flashes
+

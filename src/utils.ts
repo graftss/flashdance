@@ -6,12 +6,14 @@ export {
   findIndex,
   flatMap,
   flatten,
+  get,
   includes,
   isEqual,
   random,
   range,
   sample,
   sampleSize,
+  set,
   shuffle,
 } from 'lodash';
 
@@ -164,3 +166,8 @@ export const toTexture = (graphics: Phaser.Graphics): Phaser.RenderTexture => {
   graphics.destroy();
   return texture;
 };
+
+const compact = <T>(as: T[]): T[] => as.filter(a => a === a && !!a);
+
+export const maxNum = (nums: number[]): number => Math.max(...compact(nums));
+export const minNum = (nums: number[]): number => Math.min(...compact(nums));

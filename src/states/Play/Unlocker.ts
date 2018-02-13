@@ -1,5 +1,5 @@
-import courses from './courses';
-import Game from './Game';
+import courses from '../../courses';
+import Game from '../../Game';
 
 export default class Unlocker {
   constructor(

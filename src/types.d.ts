@@ -18,11 +18,11 @@ type SaveData = {
 };
 
 type CourseResult = {
-  courseId: number;
   completed: boolean;
+  courseId: number;
   difficultyReached: number;
-  livesLost: number;
   highestCombo: number;
+  livesLost: number;
 };
 
 type CourseHistory = {
