@@ -1,5 +1,4 @@
 === up next ===
-- disable background path trails during play state
 - stop progressbar pulsing when exiting play state
 
 === on deck ===
@@ -23,10 +22,9 @@
 
 - queue a pause during a round that pauses after the round's over
 
-- course mode:
-  - x lives to make it through y rounds which are themed around certain
-    obstacles or length or flashes or whatever.
-  - eg one course to introduce each new mechanic
+- keep track of best difficulty reached and "lives lost" stat per
+  course in save file
+
 === loooong term ===
 
 - currency to buy upgrades like +0.01% delay or something, something

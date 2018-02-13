@@ -162,18 +162,50 @@ export default class FlashLayer extends Phaser.Group {
     const { plus, minus } = vec2;
     const pathStepDuration = (duration - 350) / (path.length);
 
-    const dotsPerTrail = 6;
-    const trailSize = 4;
-    const trailTexture = toTexture(
-      this.game.add.graphics()
-        .beginFill(0xffffff)
-        .drawRect(-trailSize / 2, -trailSize / 2, trailSize, trailSize),
-    );
-
     const pathStepTweens = path.map((pos: Vec3) => this.moveTo(
       pos,
       pos.z * pathStepDuration,
     ));
+
+    const pathTween = chain([
+      this.brighten(100),
+      ...pathStepTweens,
+      this.dim(100),
+      nothing(150),
+    ]);
+
+    if (this.shouldSpawnTrails()) {
+      this.spawnTrails(path, pathStepDuration);
+    }
+
+    const result = merge([pathTween, this.ripple(duration)]);
+    result.onComplete.add(() => this.destroy());
+
+    return result;
+
+  }
+
+  private shouldSpawnTrails() {
+    switch (this.context) {
+      case 'background': return this.game.state.current === 'MainMenu';
+      case 'flash': return true;
+      default: return false;
+    }
+  }
+
+  private spawnTrails(
+    path: Vec3[],
+    pathStepDuration: number,
+  ): void {
+    const { game } = this;
+    const dotsPerTrail = 6;
+    const trailSize = 4;
+
+    const trailTexture = toTexture(
+      game.add.graphics()
+        .beginFill(0xffffff)
+        .drawRect(-trailSize / 2, -trailSize / 2, trailSize, trailSize),
+    );
 
     let step = 1;
     path.forEach((next, stepIndex) => {
@@ -209,19 +241,6 @@ export default class FlashLayer extends Phaser.Group {
 
       step += next.z;
     });
-
-    const pathTween = chain([
-      this.brighten(100),
-      ...pathStepTweens,
-      this.dim(100),
-      nothing(150),
-    ]);
-
-    const result = merge([pathTween, this.ripple(duration)]);
-    result.onComplete.add(() => this.destroy());
-
-    return result;
-
   }
 
   private contextColor(context: FlashLayerContext): number {
