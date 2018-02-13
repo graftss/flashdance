@@ -24,6 +24,8 @@
 - keep track of best difficulty reached and "lives lost" stat per
   course in save file
 
+- keep track of combo in game and in save file
+
 === loooong term ===
 
 - currency to buy upgrades like +0.01% delay or something, something

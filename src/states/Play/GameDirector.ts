@@ -14,6 +14,10 @@ export default class GameDirector {
   private roundActionData: GameActionData[];
   private difficulty: number = 1;
 
+  private combo: number;
+  private difficultyReached: number;
+  private livesLost: number;
+
   constructor(
     private game: Game,
     private cellGrid: CellGrid,
@@ -91,7 +95,13 @@ export default class GameDirector {
     const tween = this.cellGrid.completeCourseEffect();
 
     tween.onComplete.add(() => {
-      this.game.eventBus().play.courseComplete.dispatch(this.courseData);
+      this.game.eventBus().play.courseComplete.dispatch({
+        completed: true,
+        courseId: this.courseData.id,
+        difficultyReached: 0,
+        highestCombo: 0,
+        livesLost: 0,
+      });
 
       setTimeout(() => {
         this.game.state.start('MainMenu', false, false, { fadeIn: true });

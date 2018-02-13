@@ -13,9 +13,23 @@ type Vec3 = { x: number, y: number, z: number }
 // Save Data
 
 type SaveData = {
-  achievements: object;
-  completedCourses: object;
-  highScores: object;
+  achievements: {};
+  courses: { [courseId: string]: CourseHistory };
+};
+
+type CourseResult = {
+  courseId: number;
+  completed: boolean;
+  difficultyReached: number;
+  livesLost: number;
+  highestCombo: number;
+};
+
+type CourseHistory = {
+  completed: boolean;
+  difficultyReached: number;
+  livesLost: number;
+  highestCombo: number;
 };
 
 // UI

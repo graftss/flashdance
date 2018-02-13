@@ -22,8 +22,21 @@ export default class SaveFile {
     this.update(SaveFile.getNewSaveData);
   }
 
+  public getCourseHistory(courseId: number): CourseHistory {
+    return this.saveData.courses[courseId];
+  }
+
   public isCourseCompleted(courseId: number): boolean {
-    return Boolean(this.saveData.completedCourses[courseId]);
+    return this.getCourseHistory(courseId).completed;
+  }
+
+  public updateCourseHistory(courseId: number, result: CourseResult): void {
+    const best = this.getCourseHistory(courseId);
+
+    best.completed = best.completed || result.completed;
+    best.difficultyReached = Math.max(best.difficultyReached, result.difficultyReached);
+    best.livesLost = Math.min(best.livesLost, result.livesLost);
+    best.highestCombo = Math.max(best.highestCombo, result.highestCombo);
   }
 
   public isCourseUnlocked(courseId: number): boolean {
@@ -31,7 +44,7 @@ export default class SaveFile {
       return true;
     }
 
-    return Boolean(this.saveData.completedCourses[courseId - 1]);
+    return Boolean(this.isCourseCompleted(courseId - 1));
   }
 
   public isTutorialCompleted(): boolean {
@@ -56,8 +69,7 @@ export default class SaveFile {
   private static getNewSaveData(): SaveData {
     return {
       achievements: {},
-      completedCourses: {},
-      highScores: {},
+      courses: {},
     };
   }
 }

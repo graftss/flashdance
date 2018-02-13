@@ -6,7 +6,7 @@ export default class EventBus {
   public play = {
     actionComplete: new TypedSignal() as TypedSignal<GameActionContext>,
     actionStart: new TypedSignal() as TypedSignal<GameActionContext>,
-    courseComplete: new TypedSignal() as TypedSignal<CourseData>,
+    courseComplete: new TypedSignal() as TypedSignal<CourseResult>,
     courseFail: new TypedSignal() as TypedSignal<CourseData>,
     courseQuit: new TypedSignal() as TypedSignal<null>,
     difficultyChanged: new TypedSignal() as TypedSignal<number>,

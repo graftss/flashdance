@@ -12,12 +12,9 @@ export default class Unlocker {
     this.game.eventBus().play.courseComplete.add(this.onCourseComplete);
   }
 
-  private onCourseComplete = (courseData: CourseData): void => {
-    const { id } = courseData;
-
-    this.game.saveFile.update((saveData: SaveData) => {
-      saveData.completedCourses[id] = 1;
-      return saveData;
-    });
+  private onCourseComplete = (
+    courseResult: CourseResult,
+  ): void => {
+    this.game.saveFile.updateCourseHistory(courseResult.courseId, courseResult);
   }
 }
