@@ -1,5 +1,4 @@
 === up next ===
-- stop progressbar pulsing when exiting play state
 
 === on deck ===
 - grid columns/rows in course data?

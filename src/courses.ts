@@ -1,6 +1,6 @@
 const tutorialData = {
   lives: 5,
-  maxDifficulty: 10,
+  maxDifficulty: 2,
   minDifficulty: 1,
   type: 'tutorial' as 'tutorial', // lol
 };

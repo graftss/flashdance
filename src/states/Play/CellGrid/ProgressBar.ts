@@ -25,6 +25,8 @@ export default class ProgressBar extends Phaser.Group {
     this.initBorder();
     this.initProgressFill();
     this.game.eventBus().play.difficultyChanged.add(this.onDifficultyChange);
+
+    this.onDestroy.add(this.shutdown);
   }
 
   private initBorder(): void {
@@ -73,5 +75,9 @@ export default class ProgressBar extends Phaser.Group {
       scale(this, 1.05, 100),
       scale(this, 1, 100),
     ]).start();
+  }
+
+  private shutdown = () => {
+    clearInterval(this.pulseInterval);
   }
 }
