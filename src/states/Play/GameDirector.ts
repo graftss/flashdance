@@ -68,13 +68,17 @@ export default class GameDirector {
     }
   }
 
+  private dispatchCourseComplete = (): void => {
+    this.game.eventBus().play.courseComplete.dispatch(
+      this.scorekeeper.getCourseResult(),
+    );
+  }
+
   private onCourseComplete = (): void => {
     const tween = this.cellGrid.completeCourseEffect();
 
     tween.onComplete.add(() => {
-      this.game.eventBus().play.courseComplete.dispatch(
-        this.scorekeeper.getCourseResult(),
-      );
+      this.dispatchCourseComplete();
 
       setTimeout(() => {
         this.game.state.start('MainMenu', false, false, { fadeIn: true });
@@ -88,7 +92,7 @@ export default class GameDirector {
     const tween = this.cellGrid.failCourseEffect();
 
     tween.onComplete.add(() => {
-      this.game.eventBus().play.courseFail.dispatch(this.courseData);
+      this.dispatchCourseComplete();
 
       setTimeout(() => {
         this.game.state.start('MainMenu', false, false, { fadeIn: true });

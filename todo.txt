@@ -1,6 +1,5 @@
 === up next ===
-- merge `onCourseComplete` and `onCourseFail`, just include a parameter saying
-  whether the course was completed scucessfully for not
+
 
 === on deck ===
 - grid columns/rows in course data?
