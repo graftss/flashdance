@@ -171,3 +171,13 @@ const compact = <T>(as: T[]): T[] => as.filter(a => a === a && !!a);
 
 export const maxNum = (nums: number[]): number => Math.max(...compact(nums));
 export const minNum = (nums: number[]): number => Math.min(...compact(nums));
+
+export const destroyAfterTween = <T extends TweenWrapper>(
+  object,
+  tween: T,
+): T => {
+  tween.onComplete.add(() => object.destroy());
+  tween.start();
+
+  return tween;
+};

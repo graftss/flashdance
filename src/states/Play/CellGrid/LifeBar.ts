@@ -21,9 +21,9 @@ export default class LifeBar extends Phaser.Group {
       this.gainLife();
     }
 
-    this.game.eventBus().play.livesChanged.add(this.onLivesChanged);
-
     this.positionLives();
+
+    this.game.eventBus().play.livesChanged.add(this.onLivesChanged);
   }
 
   public flip(): void {
@@ -34,6 +34,8 @@ export default class LifeBar extends Phaser.Group {
     return this.lives.length;
   }
 
+  // this doesn't work at all when losing/gaining multiple lives
+  // because of the animations but whatever
   private onLivesChanged = (newLifeCount: number): void => {
     const delta = newLifeCount - this.getLifeCount();
     const method = delta > 0 ? this.gainLife : this.loseLife;
@@ -41,15 +43,16 @@ export default class LifeBar extends Phaser.Group {
     for (let i = 0; i < Math.abs(delta); i++) {
       method();
     }
-
-    this.positionLives();
   }
 
   private loseLife = (): void => {
     const lostLife = this.lives.pop();
 
     if (lostLife) {
-      lostLife.destroy();
+      const duration = 170;
+      const tween = lostLife.die(duration);
+      setTimeout(this.shiftLives, duration / 2);
+      tween.start();
     }
   }
 
@@ -69,6 +72,17 @@ export default class LifeBar extends Phaser.Group {
     for (const life of this.lives) {
       life.x = x;
       x += space;
+    }
+  }
+
+  private shiftLives = (): void => {
+    const shift = {
+      x: this.spaceBetweenLives / 2,
+      y: 0,
+    };
+
+    for (const life of this.lives) {
+      this.game.tweener.positionBy(life, shift, 250).start();
     }
   }
 }
