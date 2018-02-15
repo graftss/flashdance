@@ -85,6 +85,8 @@ type TutorialCourse =
 
 interface IGenericCourseData {
   id: number;
+  gridCols: number;
+  gridRows: number;
   lives: number;
   minDifficulty: number;
   maxDifficulty: number;

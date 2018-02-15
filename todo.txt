@@ -2,15 +2,15 @@
 
 
 === on deck ===
-- make the progress bar progress wobble up and down at all times
+- get `getCellByGridPos` to work with uneequal `gridCols` and `gridRows`
 
-- grid columns/rows in course data?
+- make splashes scale with combo, big splash at the end of a round
+
+- put a cool texture on the progress bar maybe
 
 - practice mode (needs to be its own state i think)
-  - first menu takes you to a "builder" thing where you drag and drop
-    attacks into a sequence.
-  - can save configs by name
-  - add button in game to go back to builder
+  - choose existing course, and your own `minDifficulty` and `maxDifficulty`
+    with a double-ended slider (like twitch clip selector)
 
 - "long hold" flash mechanic
   - animation is a growing light that fills out the cell to let you know

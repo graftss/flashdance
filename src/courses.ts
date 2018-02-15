@@ -1,4 +1,6 @@
 const tutorialData = {
+  gridCols: 3,
+  gridRows: 3,
   lives: 5,
   maxDifficulty: 10,
   minDifficulty: 1,

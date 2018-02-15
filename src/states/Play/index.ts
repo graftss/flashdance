@@ -12,9 +12,6 @@ export default class Play extends Phaser.State {
   public game: Game;
   public eventBus: EventBus;
 
-  private gridCols: number = 3;
-  private gridRows: number = 3;
-
   private actionSequencer: IActionSequencer;
   private background: Fragment;
   private cellGrid: CellGrid;
@@ -52,7 +49,7 @@ export default class Play extends Phaser.State {
   }
 
   private initCellGrid(): void {
-    const { game, gridCols, gridRows } = this;
+    const { game } = this;
     const { height, width } = game;
 
     const gridSize = Math.min(width, height) / 1.5;
@@ -63,17 +60,18 @@ export default class Play extends Phaser.State {
       game,
       gridX, gridY,
       gridSize, gridSize,
-      gridCols, gridRows,
+      this.courseData.gridCols, this.courseData.gridRows,
       this.courseData,
     );
   }
 
   private initActionSequencer(): void {
-    const { courseData, gridCols: c, gridRows: r } = this;
+    const { courseData } = this;
+    const { gridCols: c, gridRows: r, level } = courseData;
 
     switch (courseData.type) {
       case 'tutorial': {
-        this.actionSequencer = new ActionSequencer.Tutorial(c, r, courseData.level);
+        this.actionSequencer = new ActionSequencer.Tutorial(c, r, level);
         break;
       }
 
