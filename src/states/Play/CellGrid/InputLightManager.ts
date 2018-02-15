@@ -85,18 +85,26 @@ export default class InputLightManager extends Phaser.Group {
     }
   }
 
+  private destroyAllLightsIterator(lightCount: number) {
+    const getSplashScale = index => 1 + ((index + 1) / lightCount);
+
+    return ({ light }: IInputLightData, index: number) => {
+      light.dimAndDestroy(getSplashScale(index)).start();
+    };
+  }
+
   private destroyAllLights(): void {
-    this.cascade(({ light }) => light.dimAndDestroy().start(), 60);
+    this.cascade(this.destroyAllLightsIterator(this.lights.length), 60);
 
     this.lights = [];
   }
 
-  private cascade(f: (d: IInputLightData) => void, timestep: number): void {
-    f(this.lights[0]);
+  private cascade(f: (d: IInputLightData, i: number) => void, timestep: number): void {
+    f(this.lights[0], 0);
 
     for (let i = 1; i < this.lights.length; i++) {
       const data = this.lights[i];
-      setTimeout(() => f(data), i * timestep);
+      setTimeout(() => f(data, i), i * timestep);
     }
   }
 }

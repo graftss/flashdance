@@ -30,25 +30,25 @@ export default class InputLight extends Phaser.Group {
     return this.game.tweener.alpha(this.graphics, .6, 1);
   }
 
-  public dim(): Phaser.Tween {
-    this.runSplash();
+  public dim(splashScale): Phaser.Tween {
+    this.runSplash(splashScale);
 
     return this.game.tweener.alpha(this.graphics, 0, 100);
   }
 
-  public dimAndDestroy(): Phaser.Tween {
-    const dimTween = this.dim();
+  public dimAndDestroy(splashScale: number = 2): Phaser.Tween {
+    const dimTween = this.dim(splashScale);
     dimTween.onComplete.add(() => this.graphics.destroy());
 
     return dimTween;
   }
 
-  private runSplash(): void {
+  private runSplash(splashScale): void {
     const { alpha, merge, scale } = this.game.tweener;
     this.splash.alpha = 1;
 
     merge([
-      scale(this.splash, 2, 500).easing(Phaser.Easing.Quadratic.Out),
+      scale(this.splash, splashScale, 500).easing(Phaser.Easing.Quadratic.Out),
       alpha(this.splash, 0, 500),
     ]).start();
   }
