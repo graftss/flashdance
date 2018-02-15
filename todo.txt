@@ -2,7 +2,7 @@
 
 
 === on deck ===
-- have the final cell of a path do a splash
+- make the progress bar progress wobble up and down at all times
 
 - grid columns/rows in course data?
 
@@ -12,11 +12,6 @@
   - can save configs by name
   - add button in game to go back to builder
 
-- polish incorrect input visuals, maybe have it shrink to a point
-
-- better distinguish multiple taps on the same cell in quick succession,
-  so you can tell how many inputs you've done while you're still tapping
-
 - "long hold" flash mechanic
   - animation is a growing light that fills out the cell to let you know
     you can stop holding
@@ -24,10 +19,7 @@
 
 - queue a pause during a round that pauses after the round's over
 
-- keep track of best difficulty reached and "lives lost" stat per
-  course in save file
-
-- keep track of combo in game and in save file
+- display CourseResult stats in menu and in game somehow
 
 === loooong term ===
 

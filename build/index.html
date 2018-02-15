@@ -4,6 +4,15 @@
     <link href="https://fonts.googleapis.com/css?family=Alegreya+Sans:100" rel="stylesheet">
   </head>
   <body>
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
     <script type="text/javascript" src="bundle.js" charset="utf-8"></script>
+    <script>
+      WebFont.load({
+        google: {
+          families: ['Alegreya Sans:100'],
+        },
+        active: () => run(),
+      });
+    </script>
   </body>
 </html>
