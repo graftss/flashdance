@@ -2,6 +2,8 @@
 
 
 === on deck ===
+- have the final cell of a path do a splash
+
 - grid columns/rows in course data?
 
 - practice mode (needs to be its own state i think)

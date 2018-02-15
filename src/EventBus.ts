@@ -1,5 +1,3 @@
-import * as Phaser from 'phaser-ce';
-
 import TypedSignal from './TypedSignal';
 
 export default class EventBus {

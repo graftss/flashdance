@@ -329,13 +329,13 @@ export default class CellGrid extends Phaser.Group {
 
     switch (expected.type) {
       case 'down': {
-        this.inputLightManager.addLight(gridPos, 'correct');
+        this.inputLightManager.addLight(gridPos, 'neutral');
         break;
       }
 
       case 'down/drag':
       case 'over/drag': {
-        this.inputLightManager.addLight(gridPos);
+        this.inputLightManager.addLight(gridPos, 'neutral');
         break;
       }
 

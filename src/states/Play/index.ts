@@ -12,8 +12,8 @@ export default class Play extends Phaser.State {
   public game: Game;
   public eventBus: EventBus;
 
-  private gridCols: number = 4;
-  private gridRows: number = 4;
+  private gridCols: number = 3;
+  private gridRows: number = 3;
 
   private actionSequencer: IActionSequencer;
   private background: Fragment;

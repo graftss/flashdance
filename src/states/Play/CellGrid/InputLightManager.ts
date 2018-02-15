@@ -22,17 +22,22 @@ export default class InputLightManager extends Phaser.Group {
     super(game, parentGrid);
   }
 
-  public addLight(gridPos: GridPos, tone?: InputLightTone): InputLight {
+  public addLight(
+    gridPos: GridPos,
+    tone?: InputLightTone,
+    splash: boolean = true,
+  ): InputLight {
     const light = this.spawnLight(gridPos, tone);
-    light.brighten().start();
+    light.brighten(splash).start();
 
     return light;
   }
 
   public onCompleteInput(): void {
     this.lights.forEach(({ light }) => light.setTone('correct'));
+    this.lights[this.lights.length - 1].light.brighten(true);
 
-    setTimeout(() => this.destroyAllLights(), 120);
+    setTimeout(() => this.destroyAllLights(), 75);
   }
 
   public onIncorrectInput(): void {
@@ -87,9 +92,11 @@ export default class InputLightManager extends Phaser.Group {
   }
 
   private cascade(f: (d: IInputLightData) => void, timestep: number): void {
-    for (let i = 0; i < this.lights.length; i++) {
+    f(this.lights[0]);
+
+    for (let i = 1; i < this.lights.length; i++) {
       const data = this.lights[i];
-      setTimeout(() => f(data), (i + 1) * timestep);
+      setTimeout(() => f(data), i * timestep);
     }
   }
 }
