@@ -15,8 +15,6 @@
     you can stop holding
   - not sure if this is a good idea
 
-- queue a pause during a round that pauses after the round's over
-
 - display CourseResult stats in menu and in game somehow
 
 === loooong term ===

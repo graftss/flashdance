@@ -11,6 +11,8 @@ export default class GameDirector {
   private roundActionData: GameActionData[];
   public scorekeeper: Scorekeeper;
 
+  private isQuitting: boolean = false;
+
   constructor(
     private game: Game,
     private cellGrid: CellGrid,
@@ -45,6 +47,10 @@ export default class GameDirector {
   }
 
   private startActionEvent = (index: number): void => {
+    if (this.isQuitting) {
+      return;
+    }
+
     const eventBus = this.game.eventBus().play;
 
     const actionData = this.roundActionData[index];
@@ -72,6 +78,15 @@ export default class GameDirector {
     this.game.eventBus().play.courseComplete.dispatch(
       this.scorekeeper.getCourseResult(),
     );
+  }
+
+  private initEventHandlers(): void {
+    const eventBus = this.game.eventBus();
+
+    eventBus.play.actionComplete.add(this.onActionComplete);
+    eventBus.play.roundComplete.add(this.onRoundComplete);
+    eventBus.play.inputIncorrect.add(this.onRoundFail);
+    eventBus.play.courseQuit.add(this.onCourseQuit);
   }
 
   private onCourseComplete = (): void => {
@@ -102,12 +117,8 @@ export default class GameDirector {
     tween.start();
   }
 
-  private initEventHandlers(): void {
-    const eventBus = this.game.eventBus();
-
-    eventBus.play.actionComplete.add(this.onActionComplete);
-    eventBus.play.roundComplete.add(this.onRoundComplete);
-    eventBus.play.inputIncorrect.add(this.onRoundFail);
+  private onCourseQuit = (): void => {
+    this.isQuitting = true;
   }
 
   private onActionComplete = (context: GameActionContext): void => {
