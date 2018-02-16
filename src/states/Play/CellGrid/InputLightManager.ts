@@ -92,7 +92,6 @@ export default class InputLightManager extends Phaser.Group {
     const getSplashScale = index => baseScale + ((index + 1) / lightCount / 2);
 
     return ({ light }: IInputLightData, index: number) => {
-      console.log('scale', getSplashScale(index));
       light.dimAndDestroy(getSplashScale(index)).start();
     };
   }

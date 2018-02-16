@@ -38,8 +38,8 @@ export default class CellGrid extends Phaser.Group {
     public y: number,
     public w: number,
     public h: number,
-    public rows: number,
     public cols: number,
+    public rows: number,
     public courseData: CourseData,
   ) {
     super(game);
@@ -391,12 +391,12 @@ export default class CellGrid extends Phaser.Group {
     return flashLayer;
   }
 
-  private getCell(row: number, col: number): Cell {
+  private getCell(col: number, row: number): Cell {
     return this.cells[col][row];
   }
 
   private getCellByGridPos = ({ col, row }: GridPos): Cell => {
-    return this.getCell(row, col);
+    return this.getCell(col, row);
   }
 
   private pathPositionMap = (gridPos: GridPos) => {
