@@ -9,7 +9,7 @@ import { clamp, includes, mapJust } from '../../utils';
 export default class GameDirector {
   private inputVerifier: InputVerifier;
   private roundActionData: GameActionData[];
-  private scorekeeper: Scorekeeper;
+  public scorekeeper: Scorekeeper;
 
   constructor(
     private game: Game,

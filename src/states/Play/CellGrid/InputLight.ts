@@ -26,11 +26,11 @@ export default class InputLight extends Phaser.Group {
     this.setTone(tone);
   }
 
-  public brighten(splash: boolean = true): Phaser.Tween {
+  public brighten(): Phaser.Tween {
     return this.game.tweener.alpha(this.graphics, .6, 1);
   }
 
-  public dim(splashScale): Phaser.Tween {
+  public dim(splashScale: number): Phaser.Tween {
     this.runSplash(splashScale);
 
     return this.game.tweener.alpha(this.graphics, 0, 100);
@@ -41,16 +41,6 @@ export default class InputLight extends Phaser.Group {
     dimTween.onComplete.add(() => this.graphics.destroy());
 
     return dimTween;
-  }
-
-  private runSplash(splashScale): void {
-    const { alpha, merge, scale } = this.game.tweener;
-    this.splash.alpha = 1;
-
-    merge([
-      scale(this.splash, splashScale, 500).easing(Phaser.Easing.Quadratic.Out),
-      alpha(this.splash, 0, 500),
-    ]).start();
   }
 
   public setTone(tone: InputLightTone): void {
@@ -94,5 +84,16 @@ export default class InputLight extends Phaser.Group {
     this.splash = this.game.add.sprite(0, 0, texture, null, this);
     centerAnchor(this.splash, this.w, this.h);
     this.splash.alpha = 0;
+  }
+
+  private runSplash(splashScale: number): void {
+    const { alpha, merge, scale } = this.game.tweener;
+    const duration = 300 + 100 * splashScale;
+    this.splash.alpha = 1;
+
+    merge([
+      scale(this.splash, splashScale, duration).easing(Phaser.Easing.Quadratic.Out),
+      alpha(this.splash, 0, duration),
+    ]).start();
   }
 }

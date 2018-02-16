@@ -24,7 +24,6 @@ export const cellGridActionTypes = [
 export default class CellGrid extends Phaser.Group {
   private background: Phaser.Graphics;
   private border: CellGridBorder;
-  private borderThickness: number = 3;
   private cellHeight: number;
   private cellWidth: number;
   private cells: Cell[][] = [];
@@ -281,9 +280,9 @@ export default class CellGrid extends Phaser.Group {
   }
 
   private initBorder(): void {
-    const { borderThickness, game, h, w } = this;
+    const { game, h, w } = this;
 
-    this.border = new CellGridBorder(game, this, 0, 0, w, h, borderThickness);
+    this.border = new CellGridBorder(game, this, 0, 0, w, h);
   }
 
   private initLifeBar(): void {
@@ -366,7 +365,7 @@ export default class CellGrid extends Phaser.Group {
   }
 
   private initBackground(): void {
-    const { borderThickness: bt, game, h, w } = this;
+    const { game, h, w } = this;
 
     const graphics = this.game.add.graphics(0, 0, this);
     graphics.alpha = 0.3;

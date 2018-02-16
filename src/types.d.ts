@@ -32,6 +32,12 @@ type CourseHistory = {
   highestCombo: number;
 };
 
+type CourseScore = {
+  combo: number;
+  difficulty: number;
+  lives: number;
+};
+
 // UI
 
 type MenuOptionData = {

@@ -4,7 +4,13 @@ export default class DebugActionSequencer
   extends BaseActionSequencer implements IActionSequencer {
 
   public randomRound(difficulty: number): GameActionData[] {
-    return this.debugPath();
+    return this.debugCombo();
+  }
+
+  private debugCombo(): GameActionData[] {
+    return [
+      { type: 'flash', opts: { origin: { col: 1, row: 1 }, duration: 100 } },
+    ];
   }
 
   private debugRepeatedDown(): GameActionData[] {

@@ -39,13 +39,16 @@ export default class Play extends Phaser.State {
 
   public create() {
     const fadeIn = this.cellGrid.fadeIn();
-
     fadeIn.onComplete.add(() => this.director.start());
     fadeIn.start();
   }
 
   public shutdown() {
     this.cellGrid.destroy();
+  }
+
+  public getCurrentScore(): CourseScore {
+    return this.director.scorekeeper.getCurrentScore();
   }
 
   private initCellGrid(): void {

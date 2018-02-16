@@ -1,8 +1,9 @@
 import * as Phaser from 'phaser-ce';
 
-import InputLight from './InputLight';
 import CellGrid from './CellGrid';
 import Game from '../../../Game';
+import InputLight from './InputLight';
+import Play from '..';
 import { findIndex, isEqual } from '../../../utils';
 
 interface IInputLightData {
@@ -25,17 +26,16 @@ export default class InputLightManager extends Phaser.Group {
   public addLight(
     gridPos: GridPos,
     tone?: InputLightTone,
-    splash: boolean = true,
   ): InputLight {
     const light = this.spawnLight(gridPos, tone);
-    light.brighten(splash).start();
+    light.brighten().start();
 
     return light;
   }
 
   public onCompleteInput(): void {
     this.lights.forEach(({ light }) => light.setTone('correct'));
-    this.lights[this.lights.length - 1].light.brighten(true);
+    this.lights[this.lights.length - 1].light.brighten();
 
     setTimeout(() => this.destroyAllLights(), 75);
   }
@@ -86,9 +86,13 @@ export default class InputLightManager extends Phaser.Group {
   }
 
   private destroyAllLightsIterator(lightCount: number) {
-    const getSplashScale = index => 1 + ((index + 1) / lightCount);
+    const { combo } = (this.game.state.getCurrentState() as Play).getCurrentScore();
+
+    const baseScale = Math.min(1 + .1 * combo, 2);
+    const getSplashScale = index => baseScale + ((index + 1) / lightCount / 2);
 
     return ({ light }: IInputLightData, index: number) => {
+      console.log('scale', getSplashScale(index));
       light.dimAndDestroy(getSplashScale(index)).start();
     };
   }

@@ -1,11 +1,13 @@
 import * as Phaser from 'phaser-ce';
 
 import Game from '../../../Game';
-import { destroy, shiftAnchor } from '../../../utils';
+import Play from '..';
+import { clamp, destroy, shiftAnchor } from '../../../utils';
 
 export default class CellGridBorder extends Phaser.Group {
   private border: Phaser.Graphics;
   private borderTween: Phaser.Tween;
+  private defaultThickness: number = 3;
 
   constructor(
     public game: Game,
@@ -14,7 +16,6 @@ export default class CellGridBorder extends Phaser.Group {
     public y: number,
     private w: number,
     private h: number,
-    private thickness: number,
   ) {
     super(game, parent);
 
@@ -24,8 +25,8 @@ export default class CellGridBorder extends Phaser.Group {
     this.initEventHandlers();
   }
 
-  private initBorder(): void {
-    const { game, h, thickness, w } = this;
+  private initBorder(thickness: number = this.defaultThickness): void {
+    const { game, h, w } = this;
 
     destroy(this.border);
 
@@ -36,10 +37,11 @@ export default class CellGridBorder extends Phaser.Group {
 
   private pulse = (targetScale: number): void => {
     const { chain, nothing, scale } = this.game.tweener;
+    const duration = 300 - 100 * targetScale;
 
     chain([
-      scale(this, targetScale, 300),
-      scale(this, 1, 300),
+      scale(this, targetScale, duration),
+      scale(this, 1, duration),
     ]).start();
   }
 
@@ -72,7 +74,10 @@ export default class CellGridBorder extends Phaser.Group {
   }
 
   private onRoundComplete = (): void => {
-    this.pulse(1.01);
+    const { combo } = (this.game.state.getCurrentState() as Play).getCurrentScore();
+    const targetScale = Math.min(1.01 + .007 * combo, 1.08);
+
+    this.pulse(targetScale);
     this.tweenBorderTint(0x00ff00);
   }
 

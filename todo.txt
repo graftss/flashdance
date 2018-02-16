@@ -4,7 +4,7 @@
 === on deck ===
 - get `getCellByGridPos` to work with uneequal `gridCols` and `gridRows`
 
-- make splashes scale with combo, big splash at the end of a round
+- do something to get rid of repeated grid positions in action sequencers
 
 - put a cool texture on the progress bar maybe
 

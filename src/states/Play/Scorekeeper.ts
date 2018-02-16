@@ -89,4 +89,9 @@ export default class Scorekeeper {
     this.difficultyReached = Math.max(this.difficultyReached, newDifficulty);
     this.game.eventBus().play.difficultyChanged.dispatch(newDifficulty);
   }
+
+  public getCurrentScore(): CourseScore {
+    const { combo, difficulty, lives } = this;
+    return { combo, difficulty, lives };
+  }
 }
