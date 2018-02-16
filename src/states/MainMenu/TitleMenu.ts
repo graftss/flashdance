@@ -35,7 +35,7 @@ export default class TitleMenu extends Menu {
       {
         label: 'practice',
         onSelect: () => {
-          console.log('open practice menu');
+          pushMenu.dispatch('practice');
         },
       },
       ...this.getExtraModeOptions(),

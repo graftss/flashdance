@@ -1,5 +1,5 @@
 === up next ===
-
+- replace x,y,w,h crap with rects
 
 === on deck ===
 - do something to get rid of repeated grid positions in action sequencers

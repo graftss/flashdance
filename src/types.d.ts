@@ -47,8 +47,9 @@ type MenuOptionData = {
 }
 
 type MenuID =
-  'title' |
   'option' |
+  'practice' |
+  'title' |
   'tutorial';
 
 // Tweening
