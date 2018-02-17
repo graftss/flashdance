@@ -9,7 +9,7 @@ const activeTint = 0xffffff;
 export default class MenuTextOption extends Phaser.Group {
   public game: Game;
   public text: Phaser.Text;
-
+  public highlighted: boolean = false;
   private mouseOver: boolean = false;
   private textStyle: Phaser.PhaserTextStyle = {
     boundsAlignH: 'center',
@@ -39,6 +39,24 @@ export default class MenuTextOption extends Phaser.Group {
     this.text.inputEnabled = value;
   }
 
+  public toggleHighlight(): void {
+    if (this.highlighted) {
+      this.unHighlight();
+    } else {
+      this.highlight();
+    }
+  }
+
+  public highlight(): void {
+    this.highlighted = true;
+    this.text.tint = activeTint;
+  }
+
+  public unHighlight(): void {
+    this.highlighted = false;
+    this.text.tint = inactiveTint;
+  }
+
   private initText() {
     const { game, h, menuTextOptionData, w } = this;
     const { label, onSelect } = menuTextOptionData;
@@ -54,8 +72,7 @@ export default class MenuTextOption extends Phaser.Group {
   }
 
   private onInputDown = () => {
-    this.text.tint = activeTint;
-    this.menuTextOptionData.onSelect();
+    this.menuTextOptionData.onSelect(this);
   }
 
   private onInputOver = () => {
@@ -73,6 +90,9 @@ export default class MenuTextOption extends Phaser.Group {
     }
 
     this.mouseOver = false;
-    this.text.tint = inactiveTint;
+
+    if (!this.highlighted) {
+      this.text.tint = inactiveTint;
+    }
   }
 }

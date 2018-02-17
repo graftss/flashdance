@@ -24,6 +24,10 @@ export default class Menu extends Phaser.Group {
   }
 
   public setOptionColumns = (optionDataColumns: MenuOptionData[][]) => {
+    if (this.optionColumns) {
+      this.forEachOption(o => o.destroy());
+    }
+
     this.optionDataColumns = optionDataColumns;
     this.colWidth = this.game.width / optionDataColumns.length;
 

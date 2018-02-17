@@ -2,6 +2,7 @@ import * as Phaser from 'phaser-ce';
 
 import Game from '../Game';
 import TypedSignal from '../TypedSignal';
+import { destroy } from '../utils';
 
 export default class DoubleSlider extends Phaser.Group {
   public onChange: TypedSignal<IDoubleSliderEvent> = new TypedSignal();
@@ -24,6 +25,16 @@ export default class DoubleSlider extends Phaser.Group {
     public discreteValues?: number,
   ) {
     super(game, parent);
+
+    this.reset(discreteValues);
+  }
+
+  public reset(discreteValues?: number) {
+    this.discreteValues = discreteValues;
+
+    destroy(this.bar);
+    destroy(this.leftSlider);
+    destroy(this.rightSlider);
 
     this.initBar();
     this.initSliders();
@@ -135,8 +146,8 @@ export default class DoubleSlider extends Phaser.Group {
     };
 
     if (this.discreteValues !== undefined) {
-      result.leftDiscrete = result.left * this.discreteValues;
-      result.rightDiscrete = result.right * this.discreteValues;
+      result.leftDiscrete = Math.round(result.left * this.discreteValues);
+      result.rightDiscrete = Math.round(result.right * this.discreteValues);
     }
 
     return result;
