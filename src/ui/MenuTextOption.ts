@@ -6,7 +6,7 @@ import { defaults } from '../utils';
 const inactiveTint = 0xbbbbbb;
 const activeTint = 0xffffff;
 
-export default class MenuOption extends Phaser.Group {
+export default class MenuTextOption extends Phaser.Group {
   public game: Game;
   public text: Phaser.Text;
 
@@ -26,11 +26,11 @@ export default class MenuOption extends Phaser.Group {
     public y: number,
     public w: number,
     public h: number,
-    private menuOptionData: MenuOptionData,
+    private menuTextOptionData: MenuTextOptionData,
   ) {
     super(game);
 
-    this.textStyle = defaults(menuOptionData.textStyle, this.textStyle);
+    this.textStyle = defaults(menuTextOptionData.textStyle, this.textStyle);
 
     this.initText();
   }
@@ -40,8 +40,8 @@ export default class MenuOption extends Phaser.Group {
   }
 
   private initText() {
-    const { game, h, menuOptionData, w } = this;
-    const { label, onSelect } = menuOptionData;
+    const { game, h, menuTextOptionData, w } = this;
+    const { label, onSelect } = menuTextOptionData;
 
     this.text = game.add.text(0, 0, label, this.textStyle, this);
     this.text.setTextBounds(0, 0, w, h);
@@ -55,7 +55,7 @@ export default class MenuOption extends Phaser.Group {
 
   private onInputDown = () => {
     this.text.tint = activeTint;
-    this.menuOptionData.onSelect();
+    this.menuTextOptionData.onSelect();
   }
 
   private onInputOver = () => {

@@ -33,7 +33,7 @@ export default class CourseMenu extends Menu {
       const onSelect = () => unlocked && startCourse(courseData);
       const textStyle = CourseMenu.getOptionTextStyle(unlocked, completed);
 
-      return { label, onSelect, textStyle };
+      return { label, onSelect, textStyle, type: 'text' };
     }
   )
 

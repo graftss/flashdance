@@ -1,11 +1,11 @@
 import * as Phaser from 'phaser-ce';
 
 import Game from '../Game';
-import MenuOption from './MenuOption';
+import MenuTextOption from './MenuTextOption';
 import { vec2 } from '../utils';
 
 export default class Menu extends Phaser.Group {
-  private optionColumns: MenuOption[][];
+  private optionColumns: Phaser.Group[][];
   private colWidth: number;
 
   constructor(
@@ -35,7 +35,7 @@ export default class Menu extends Phaser.Group {
   }
 
   public setInputEnabled(value: boolean): void {
-    this.forEachOption(opt => opt.setInputEnabled(value));
+    this.forEachOption((opt: any) => opt.setInputEnabled && opt.setInputEnabled(value));
   }
 
   public transition(delta: Vec2, duration: number): Phaser.Tween {
@@ -57,7 +57,7 @@ export default class Menu extends Phaser.Group {
   public updateMenuOption(
     colIndex: number,
     rowIndex: number,
-    updater: (o: MenuOption) => void,
+    updater: (o: Phaser.Group) => void,
   ): void {
     updater(this.optionColumns[colIndex][rowIndex]);
   }
@@ -66,17 +66,33 @@ export default class Menu extends Phaser.Group {
     return {
       label: 'back',
       onSelect: () => this.game.eventBus().menu.popMenu.dispatch(null),
+      type: 'text',
     };
   }
 
-  private forEachOption(f: (o: MenuOption) => void): void {
+  private forEachOption(f: (o: Phaser.Group) => void): void {
     this.optionColumns.forEach(col => col.forEach(f));
   }
 
-  private createMenuOption(colIndex, rowIndex, data): MenuOption {
+  private createMenuOption(
+    colIndex: number,
+    rowIndex: number,
+    data: MenuOptionData,
+  ): Phaser.Group {
+    switch (data.type) {
+      case 'text': return this.createMenuTextOption(colIndex, rowIndex, data);
+      case 'group': return this.createMenuGroupOption(colIndex, rowIndex, data);
+    }
+  }
+
+  private createMenuTextOption(
+    colIndex: number,
+    rowIndex: number,
+    data: MenuTextOptionData,
+  ): MenuTextOption {
     const { game, rowHeight, colWidth } = this;
 
-    const option = new MenuOption(
+    const option = new MenuTextOption(
       game,
       colWidth * colIndex, rowHeight * rowIndex,
       colWidth, rowHeight,
@@ -86,5 +102,20 @@ export default class Menu extends Phaser.Group {
     this.addChild(option);
 
     return option;
+  }
+
+  private createMenuGroupOption(
+    colIndex: number,
+    rowIndex: number,
+    data: MenuGroupOptionData,
+  ): Phaser.Group {
+    const { rowHeight, colWidth } = this;
+    const { group, width } = data;
+
+    group.x = colWidth * colIndex + (colWidth - width) / 2;
+    group.y = rowHeight * rowIndex;
+    this.addChild(group);
+
+    return group;
   }
 }

@@ -40,11 +40,22 @@ type CourseScore = {
 
 // UI
 
-type MenuOptionData = {
-  label: string,
-  onSelect: () => void,
-  textStyle?: Phaser.PhaserTextStyle,
-}
+type MenuTextOptionData = {
+  label: string;
+  onSelect: () => void;
+  textStyle?: Phaser.PhaserTextStyle;
+  type: 'text';
+};
+
+type MenuGroupOptionData = {
+  group: Phaser.Group;
+  type: 'group';
+  width: number;
+};
+
+type MenuOptionData =
+  MenuTextOptionData |
+  MenuGroupOptionData;
 
 type MenuID =
   'option' |

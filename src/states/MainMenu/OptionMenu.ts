@@ -2,6 +2,7 @@ import * as Phaser from 'phaser-ce';
 
 import Game from '../../Game';
 import Menu from '../../ui/Menu';
+import MenuTextOption from '../../ui/MenuTextOption';
 
 const optionMenuID: MenuID = 'option';
 
@@ -26,7 +27,7 @@ export default class OptionMenu extends Menu {
         onSelect: () => {
           if (!confirmDeleteSavedData) {
             confirmDeleteSavedData = true;
-            this.updateMenuOption(0, 0, option => {
+            this.updateMenuOption(0, 0, (option: MenuTextOption) => {
               // an insane hack because phaser sucks at text
               option.text.setText('you sure?');
               option.alpha = 0.01;
@@ -36,7 +37,7 @@ export default class OptionMenu extends Menu {
           } else {
             confirmDeleteSavedData = false;
             this.game.saveFile.clearSave();
-            this.updateMenuOption(0, 0, option => {
+            this.updateMenuOption(0, 0, (option: MenuTextOption) => {
               option.text.setText('delete saved data');
               option.alpha = 0.01;
 
@@ -44,10 +45,12 @@ export default class OptionMenu extends Menu {
             });
           }
         },
+        type: 'text',
       },
       {
         label: 'colorblind mode',
         onSelect: () => console.log('toggling colourblind mode'),
+        type: 'text',
       },
       this.getBackOptionData(),
     ]];

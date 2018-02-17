@@ -31,12 +31,14 @@ export default class TitleMenu extends Menu {
         textStyle: {
           fill: tutorialCompleted ? 'green' : undefined,
         },
+        type: 'text',
       },
       {
         label: 'practice',
         onSelect: () => {
           pushMenu.dispatch('practice');
         },
+        type: 'text',
       },
       ...this.getExtraModeOptions(),
       {
@@ -44,6 +46,7 @@ export default class TitleMenu extends Menu {
         onSelect: () => {
           pushMenu.dispatch('option');
         },
+        type: 'text',
       },
     ]];
   }
@@ -56,12 +59,14 @@ export default class TitleMenu extends Menu {
           onSelect: () => {
             console.log('open challenge menu');
           },
+          type: 'text',
         },
         {
           label: 'arcade',
           onSelect: () => {
             console.log('open arcade menu');
           },
+          type: 'text',
         },
       ];
     } else {
