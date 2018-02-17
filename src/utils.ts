@@ -1,6 +1,7 @@
 import { random, sample } from 'lodash';
 
 export {
+  chunk,
   clone,
   defaults,
   findIndex,
@@ -15,6 +16,7 @@ export {
   sampleSize,
   set,
   shuffle,
+  zipWith,
 } from 'lodash';
 
 export const copyArray = (arr: any[]): any[] => {

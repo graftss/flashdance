@@ -12,7 +12,7 @@ export default class Menu extends Phaser.Group {
     public game: Game,
     public x: number,
     public y: number,
-    private rowHeight: number,
+    public rowHeight: number,
     private optionDataColumns: MenuOptionData[][],
     public id: MenuID,
   ) {

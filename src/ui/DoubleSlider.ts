@@ -3,13 +3,6 @@ import * as Phaser from 'phaser-ce';
 import Game from '../Game';
 import TypedSignal from '../TypedSignal';
 
-interface IDoubleSliderEvent {
-  left: number;
-  leftDiscrete?: number;
-  right: number;
-  rightDiscrete?: number;
-}
-
 export default class DoubleSlider extends Phaser.Group {
   public onChange: TypedSignal<IDoubleSliderEvent> = new TypedSignal();
 

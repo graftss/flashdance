@@ -1,7 +1,11 @@
 === up next ===
-- replace x,y,w,h crap with rects
+
 
 === on deck ===
+- replace x,y,w,h crap with rects
+
+- white filler between sldiers in double slider
+
 - do something to get rid of repeated grid positions in action sequencers
 
 - put a cool texture on the progress bar maybe

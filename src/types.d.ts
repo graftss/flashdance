@@ -61,7 +61,15 @@ type MenuID =
   'option' |
   'practice' |
   'title' |
-  'tutorial';
+  'tutorial' |
+  'course list';
+
+interface IDoubleSliderEvent {
+  left: number;
+  leftDiscrete?: number;
+  right: number;
+  rightDiscrete?: number;
+}
 
 // Tweening
 
@@ -101,6 +109,11 @@ type TutorialCourse =
   'reflect' |
   'x-reflect';
 
+type CourseType =
+  'tutorial' |
+  'challenge' |
+  'debug';
+
 interface IGenericCourseData {
   id: number;
   gridCols: number;
@@ -108,6 +121,7 @@ interface IGenericCourseData {
   lives: number;
   minDifficulty: number;
   maxDifficulty: number;
+  type: CourseType
 }
 
 type CourseData = IGenericCourseData & (
