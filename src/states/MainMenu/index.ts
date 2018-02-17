@@ -25,8 +25,8 @@ export default class MainMenu extends Phaser.State {
     this.initEventHandlers();
     this.initBackground();
 
-    // this.initFirstMenu('practice');
-    this.initFirstMenu('title');
+    this.initFirstMenu('practice');
+    // this.initFirstMenu('title');
 
     if (opts.fadeIn) {
       const menu = this.activeMenu;

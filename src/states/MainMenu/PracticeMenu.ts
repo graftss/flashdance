@@ -56,6 +56,7 @@ export default class OptionMenu extends Menu {
       [
         {
           group: this.courseListMenu,
+          height: this.game.height / 4,
           type: 'group',
           width: this.game.width,
         },

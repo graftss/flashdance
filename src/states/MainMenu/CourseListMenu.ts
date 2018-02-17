@@ -35,6 +35,7 @@ export default class CourseListMenu extends Menu {
 
   private getCourseTypeOptionData = (type: CourseType): MenuOptionData => {
     return {
+      height: this.game.height / 8,
       label: type,
       onSelect: () => {
         console.log('selected', courses.filter(c => c.type === type));
@@ -46,6 +47,7 @@ export default class CourseListMenu extends Menu {
 
   private getCourseOptionData = (course: CourseData): MenuOptionData => {
     return {
+      height: this.game.height / 12,
       label: course.level,
       onSelect: () => console.log('selected', course.level),
       textStyle: { fontSize: this.rowHeight },
