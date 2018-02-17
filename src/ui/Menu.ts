@@ -94,7 +94,7 @@ export default class Menu extends Phaser.Group {
 
     const option = new MenuTextOption(
       game,
-      colWidth * colIndex, rowHeight * rowIndex,
+      colWidth * colIndex, this.getOptionHeight(colIndex, rowIndex),
       colWidth, rowHeight,
       data,
     );
@@ -113,9 +113,23 @@ export default class Menu extends Phaser.Group {
     const { group, width } = data;
 
     group.x = colWidth * colIndex + (colWidth - width) / 2;
-    group.y = rowHeight * rowIndex;
+    group.y = this.getOptionHeight(colIndex, rowIndex);
     this.addChild(group);
 
     return group;
+  }
+
+  private getOptionHeight(colIndex, rowIndex): number {
+    let result = 0;
+
+    for (let row = 0; row < rowIndex; row++) {
+      result += this.getOptionData(colIndex, row).height || this.rowHeight;
+    }
+
+    return result;
+  }
+
+  private getOptionData(colIndex, rowIndex) {
+    return this.optionDataColumns[colIndex][rowIndex];
   }
 }
