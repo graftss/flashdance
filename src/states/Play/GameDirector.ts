@@ -64,9 +64,12 @@ export default class GameDirector {
   }
 
   private startNextRound = (): void => {
-    const { actionSequencer, scorekeeper } = this;
+    const { actionSequencer, courseData, scorekeeper } = this;
 
-    if (scorekeeper.isCourseComplete()) {
+    const shouldEndCourse = !courseData.endless &&
+      scorekeeper.isCourseComplete();
+
+    if (shouldEndCourse) {
       setTimeout(() => this.onCourseComplete(), 100);
     } else {
       this.roundActionData = actionSequencer.randomRound(scorekeeper.difficulty);

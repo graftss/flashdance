@@ -8,12 +8,13 @@ const tutorialData = {
 };
 
 const debugData: CourseData = {
+  endless: true,
   gridCols: 3,
   gridRows: 3,
   id: 7,
   level: 'debug',
   lives: 5,
-  maxDifficulty: 10000,
+  maxDifficulty: 3,
   minDifficulty: 1,
   type: 'debug',
 };

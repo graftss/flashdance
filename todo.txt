@@ -1,6 +1,10 @@
 === up next ===
-- optional `endless` property in courseData to make practice go on
-  forever
+- `immortal` flag in course data
+
+- if minDifficulty === maxDifficulty, fill progress bar and start
+  pulsing immediately
+
+- correctly lock courses in practice menu
 
 === on deck ===
 - replace x,y,w,h crap with rects

@@ -61,8 +61,10 @@ export default class ProgressBar extends Phaser.Group {
       .easing(Phaser.Easing.Elastic.Out);
     tween.start();
 
-    if (difficulty === max && !this.pulseInterval) {
-      this.pulseInterval = setInterval(this.pulse, 1000);
+    if (difficulty === max) {
+      if (!this.pulseInterval) {
+        this.pulseInterval = setInterval(this.pulse, 1000);
+      }
     } else {
       this.stopPulse();
     }

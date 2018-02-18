@@ -117,6 +117,7 @@ type CourseType =
   'debug';
 
 interface IGenericCourseData {
+  endless?: boolean;
   id: number;
   gridCols: number;
   gridRows: number;

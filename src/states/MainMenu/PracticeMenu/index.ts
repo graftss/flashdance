@@ -80,6 +80,7 @@ export default class OptionMenu extends Menu {
 
     const courseData = {
       ...this.displayedCourseData,
+      endless: true,
       maxDifficulty,
       minDifficulty,
     };
