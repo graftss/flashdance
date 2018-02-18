@@ -1,5 +1,6 @@
 === up next ===
-
+- optional `endless` property in courseData to make practice go on
+  forever
 
 === on deck ===
 - replace x,y,w,h crap with rects
@@ -10,16 +11,13 @@
 
 - put a cool texture on the progress bar maybe
 
-- practice mode (needs to be its own state i think)
-  - choose existing course, and your own `minDifficulty` and `maxDifficulty`
-    with a double-ended slider (like twitch clip selector)
-
 - "long hold" flash mechanic
   - animation is a growing light that fills out the cell to let you know
     you can stop holding
   - not sure if this is a good idea
 
 - display CourseResult stats in menu and in game somehow
+  - use another `CourseListMenu` for this i think
 
 === loooong term ===
 

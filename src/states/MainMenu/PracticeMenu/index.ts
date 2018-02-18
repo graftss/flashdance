@@ -51,15 +51,11 @@ export default class OptionMenu extends Menu {
       [
         {
           group: this.courseListMenu,
-          height: this.game.height / 4,
+          height: this.game.height / 2.5,
           type: 'group',
           width: this.game.width,
         },
-        {
-          label: '',
-          onSelect: () => 0,
-          type: 'text',
-        },
+
         {
           group: this.difficultySlider,
           height: this.game.width / 7,
@@ -68,11 +64,26 @@ export default class OptionMenu extends Menu {
         },
         {
           label: 'start',
-          onSelect: () => console.log('starting practice'),
+          onSelect: this.onStart,
           type: 'text',
         },
         this.getBackOptionData(),
       ],
     ];
+  }
+
+  private onStart = () => {
+    const {
+      maxDifficulty,
+      minDifficulty,
+    } = this.difficultySlider.getValues();
+
+    const courseData = {
+      ...this.displayedCourseData,
+      maxDifficulty,
+      minDifficulty,
+    };
+
+    this.game.eventBus().menu.startCourse.dispatch(courseData);
   }
 }

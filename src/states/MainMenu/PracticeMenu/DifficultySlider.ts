@@ -29,6 +29,10 @@ export default class DifficultySlider extends Menu {
     this.alpha = 0;
   }
 
+  public getValues() {
+    return this.eventDataToValues(this.slider.getEventData());
+  }
+
   private initSlider(discreteValues: number): void {
     this.slider = new DoubleSlider(
       this.game,
@@ -66,8 +70,18 @@ export default class DifficultySlider extends Menu {
     const { leftDiscrete: l, rightDiscrete: r } = data;
 
     this.updateMenuOption(0, 0, (textOption: MenuTextOption) => {
-      textOption.text.setText(this.getLabel(l + 1, r + 1));
+      const {
+        maxDifficulty: high,
+        minDifficulty: low,
+      } = this.eventDataToValues(data);
+      textOption.text.setText(this.getLabel(low, high));
     });
+  }
+
+  private eventDataToValues(data: IDoubleSliderEvent) {
+    const { leftDiscrete: l, rightDiscrete: r } = data;
+
+    return { minDifficulty: l + 1, maxDifficulty: r + 1 };
   }
 
   private getLabel(low: number, high: number) {

@@ -139,7 +139,7 @@ export default class DoubleSlider extends Phaser.Group {
       Math.ceil(this.slideWidth / this.discreteValues / 10);
   }
 
-  private getEventData(): IDoubleSliderEvent {
+  public getEventData(): IDoubleSliderEvent {
     const result: IDoubleSliderEvent = {
       left: this.leftSliderValue,
       right: this.rightSliderValue,
