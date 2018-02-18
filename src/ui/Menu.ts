@@ -5,7 +5,7 @@ import MenuTextOption from './MenuTextOption';
 import { vec2 } from '../utils';
 
 export default class Menu extends Phaser.Group {
-  private optionColumns: Phaser.Group[][];
+  private optionColumns: Phaser.Group[][] = [];
   private colWidth: number;
 
   constructor(

@@ -1,11 +1,11 @@
 import * as Phaser from 'phaser-ce';
 
-import courses from '../../courses';
-import Game from '../../Game';
-import Menu from '../../ui/Menu';
-import MenuTextOption from '../../ui/MenuTextOption';
-import TypedSignal from '../../TypedSignal';
-import { chunk, zipWith } from '../../utils';
+import courses from '../../../courses';
+import Game from '../../../Game';
+import Menu from '../../../ui/Menu';
+import MenuTextOption from '../../../ui/MenuTextOption';
+import TypedSignal from '../../../TypedSignal';
+import { chunk, zipWith } from '../../../utils';
 
 const courseListMenuID: MenuID = 'course list';
 const courseTypes: CourseType[] = ['tutorial', 'challenge', 'debug'];
