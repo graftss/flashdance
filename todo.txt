@@ -1,6 +1,4 @@
 === up next ===
-- `immortal` flag in course data
-
 - if minDifficulty === maxDifficulty, fill progress bar and start
   pulsing immediately
 

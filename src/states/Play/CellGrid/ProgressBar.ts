@@ -51,9 +51,9 @@ export default class ProgressBar extends Phaser.Group {
   }
 
   private onDifficultyChange = (difficulty: number): void => {
-    const { game, minDifficulty: min, maxDifficulty: max, progressFill } = this;
+    const { game, minDifficulty, maxDifficulty, progressFill } = this;
     const scale = {
-      x: (difficulty - min) / (max - min),
+      x: this.getScale(difficulty, minDifficulty, maxDifficulty),
       y: 1,
     };
 
@@ -61,13 +61,20 @@ export default class ProgressBar extends Phaser.Group {
       .easing(Phaser.Easing.Elastic.Out);
     tween.start();
 
-    if (difficulty === max) {
-      if (!this.pulseInterval) {
-        this.pulseInterval = setInterval(this.pulse, 1000);
-      }
-    } else {
+    const atMaxDifficulty = difficulty === maxDifficulty;
+    const pulsing = Boolean(this.pulseInterval);
+
+    if (atMaxDifficulty && !pulsing) {
+      this.pulseInterval = setInterval(this.pulse, 1000);
+    } else if (!atMaxDifficulty) {
       this.stopPulse();
     }
+  }
+
+  private getScale(difficulty: number, min: number, max: number): number {
+    return min === max ?
+      1 :
+      (difficulty - min) / (max - min);
   }
 
   private pulse = (): void => {

@@ -119,6 +119,7 @@ type CourseType =
 interface IGenericCourseData {
   endless?: boolean;
   id: number;
+  immortal?: boolean;
   gridCols: number;
   gridRows: number;
   lives: number;

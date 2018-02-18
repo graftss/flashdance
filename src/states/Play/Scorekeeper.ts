@@ -61,6 +61,10 @@ export default class Scorekeeper {
   }
 
   public updateLives(lifeDelta: number): void {
+    if (this.courseData.immortal)  {
+      return;
+    }
+
     if (lifeDelta < 0) {
       this.livesLost -= lifeDelta;
     }

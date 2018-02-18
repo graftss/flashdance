@@ -78,9 +78,11 @@ export default class OptionMenu extends Menu {
       minDifficulty,
     } = this.difficultySlider.getValues();
 
-    const courseData = {
+    const courseData: CourseData = {
       ...this.displayedCourseData,
       endless: true,
+      immortal: true,
+      lives: 1,
       maxDifficulty,
       minDifficulty,
     };
