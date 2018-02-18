@@ -26,7 +26,8 @@ export default class MenuTextOption extends Phaser.Group {
     public y: number,
     public w: number,
     public h: number,
-    private menuTextOptionData: MenuTextOptionData,
+    public menuTextOptionData: MenuTextOptionData,
+    public gridPos: GridPos,
   ) {
     super(game);
 
@@ -72,7 +73,7 @@ export default class MenuTextOption extends Phaser.Group {
   }
 
   private onInputDown = () => {
-    this.menuTextOptionData.onSelect(this);
+    this.menuTextOptionData.onSelect(this.gridPos);
   }
 
   private onInputOver = () => {

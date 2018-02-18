@@ -74,8 +74,22 @@ export default class Menu extends Phaser.Group {
     };
   }
 
-  private forEachOption(f: (o: Phaser.Group) => void): void {
-    this.optionColumns.forEach(col => col.forEach(f));
+  public forEachOption(f: (o: Phaser.Group, c: number, r: number) => void): void {
+    this.optionColumns.forEach(
+      (options, col) => options.forEach((option, row) => f(option, col, row)),
+    );
+  }
+
+  public findOption(f: (o: Phaser.Group, c: number, r: number) => boolean): Maybe<GridPos> {
+    let result = null;
+
+    this.forEachOption((option, col, row) => {
+      if (!result && f(option, col, row)) {
+        result = { col, row };
+      }
+    });
+
+    return result;
   }
 
   private createMenuOption(
@@ -101,6 +115,7 @@ export default class Menu extends Phaser.Group {
       colWidth * colIndex, this.getOptionHeight(colIndex, rowIndex),
       colWidth, rowHeight,
       data,
+      { col: colIndex, row: rowIndex },
     );
 
     this.addChild(option);

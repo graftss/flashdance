@@ -11,18 +11,20 @@ const courseListMenuID: MenuID = 'course list';
 const courseTypes: CourseType[] = ['tutorial', 'challenge', 'debug'];
 
 interface ICourseTypeClickEvent {
-  option: MenuTextOption;
+  gridPos: GridPos;
   type: CourseType;
 }
 
 interface ICourseClickEvent {
   courseData: CourseData;
-  option: MenuTextOption;
+  gridPos: GridPos;
 }
 
 export default class CourseListMenu extends Menu {
   public onCourseTypeClick: TypedSignal<ICourseTypeClickEvent> = new TypedSignal();
   public onCourseClick: TypedSignal<ICourseClickEvent> = new TypedSignal();
+
+  private selectedCourse: GridPos;
 
   constructor(
     public game: Game,
@@ -62,7 +64,7 @@ export default class CourseListMenu extends Menu {
     return {
       height: this.game.height / 8,
       label: type,
-      onSelect: option => this.onCourseTypeClick.dispatch({ option, type }),
+      onSelect: gridPos => this.onCourseTypeClick.dispatch({ gridPos, type }),
       textStyle: { fontSize: this.rowHeight * 1.5 },
       type: 'text',
     };
@@ -72,7 +74,7 @@ export default class CourseListMenu extends Menu {
     return {
       height: this.game.height / 12,
       label: courseData.level,
-      onSelect: option => this.onCourseClick.dispatch({ courseData, option }),
+      onSelect: gridPos => this.onCourseClick.dispatch({ courseData, gridPos }),
       textStyle: { fontSize: this.rowHeight },
       type: 'text',
     };
@@ -80,11 +82,21 @@ export default class CourseListMenu extends Menu {
 
   private selectCourseType = ({ type }): void => {
     const colIndex = courseTypes.indexOf(type);
+
+    this.selectedCourse = undefined;
     this.setOptionColumns(this.getOptionDataColumns(type));
     this.updateMenuOption(colIndex, 0, (o: MenuTextOption) => o.highlight());
   }
 
-  private selectCourse = ({ courseData, option }): void => {
-    console.log('whoopee');
+  private selectCourse = ({ courseData, gridPos }): void => {
+    const { col, row } = gridPos;
+
+    if (this.selectedCourse) {
+      const { col: oldCol, row: oldRow } = this.selectedCourse;
+      this.updateMenuOption(oldCol, oldRow, (o: MenuTextOption) => o.unHighlight());
+    }
+
+    this.selectedCourse = gridPos;
+    this.updateMenuOption(col, row, (o: MenuTextOption) => o.highlight());
   }
 }

@@ -43,7 +43,7 @@ type CourseScore = {
 type MenuTextOptionData = {
   height?: number;
   label: string;
-  onSelect: (any) => void;
+  onSelect: (g: GridPos) => void;
   textStyle?: Phaser.PhaserTextStyle;
   type: 'text';
 };
