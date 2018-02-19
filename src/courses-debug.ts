@@ -2,7 +2,7 @@ const tutorialData = {
   gridCols: 3,
   gridRows: 3,
   lives: 5,
-  maxDifficulty: 20,
+  maxDifficulty: 10,
   minDifficulty: 1,
   type: 'tutorial' as 'tutorial', // lol
 };

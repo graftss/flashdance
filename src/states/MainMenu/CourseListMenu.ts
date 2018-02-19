@@ -1,11 +1,11 @@
 import * as Phaser from 'phaser-ce';
 
-import courses from '../../../courses';
-import Game from '../../../Game';
-import Menu from '../../../ui/Menu';
-import MenuTextOption from '../../../ui/MenuTextOption';
-import TypedSignal from '../../../TypedSignal';
-import { chunk, zipWith } from '../../../utils';
+import courses from '../../courses';
+import Game from '../../Game';
+import Menu from '../../ui/Menu';
+import MenuTextOption from '../../ui/MenuTextOption';
+import TypedSignal from '../../TypedSignal';
+import { chunk, zipWith } from '../../utils';
 
 const courseListMenuID: MenuID = 'course list';
 const courseTypes: CourseType[] = ['tutorial', 'challenge', 'debug'];
@@ -21,8 +21,8 @@ interface ICourseClickEvent {
 }
 
 export default class CourseListMenu extends Menu {
-  public onCourseTypeClick: TypedSignal<ICourseTypeClickEvent> = new TypedSignal();
-  public onCourseClick: TypedSignal<ICourseClickEvent> = new TypedSignal();
+  public onCourseTypeDown: TypedSignal<ICourseTypeClickEvent> = new TypedSignal();
+  public onCourseDown: TypedSignal<ICourseClickEvent> = new TypedSignal();
 
   private selectedCourse: GridPos;
 
@@ -34,8 +34,8 @@ export default class CourseListMenu extends Menu {
   ) {
     super(game, x, y, rowHeight, [], 'course list');
 
-    this.onCourseTypeClick.add(this.selectCourseType);
-    this.onCourseClick.add(this.selectCourse);
+    this.onCourseTypeDown.add(this.selectCourseType);
+    this.onCourseDown.add(this.selectCourse);
 
     this.setOptionColumns(this.getOptionDataColumns());
   }
@@ -64,7 +64,7 @@ export default class CourseListMenu extends Menu {
     return {
       height: this.game.height / 8,
       label: type,
-      onSelect: gridPos => this.onCourseTypeClick.dispatch({ gridPos, type }),
+      onSelect: gridPos => this.onCourseTypeDown.dispatch({ gridPos, type }),
       textStyle: { fontSize: this.rowHeight * 1.5 },
       type: 'text',
     };
@@ -80,7 +80,7 @@ export default class CourseListMenu extends Menu {
       label,
       onSelect: gridPos => {
         if (unlocked) {
-          this.onCourseClick.dispatch({ courseData, gridPos });
+          this.onCourseDown.dispatch({ courseData, gridPos });
         }
       },
       textStyle: { ...textStyle, fontSize: this.rowHeight },
@@ -93,7 +93,9 @@ export default class CourseListMenu extends Menu {
 
     this.selectedCourse = undefined;
     this.setOptionColumns(this.getOptionDataColumns(type));
-    this.updateMenuOption(colIndex, 0, (o: MenuTextOption) => o.highlight());
+    this.updateMenuOption(colIndex, 0, (o: MenuTextOption) => (
+      o.highlight()
+    ));
   }
 
   private selectCourse = ({ courseData, gridPos }): void => {

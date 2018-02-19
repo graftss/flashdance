@@ -26,7 +26,7 @@ export default class TitleMenu extends Menu {
       {
         label: 'tutorials',
         onSelect: () => {
-          pushMenu.dispatch('tutorial');
+          pushMenu.dispatch('course');
         },
         textStyle: {
           fill: tutorialCompleted ? 'green' : undefined,

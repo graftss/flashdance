@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser-ce';
 
-import CourseListMenu from './CourseListMenu';
+import CourseListMenu from '../CourseListMenu';
 import Game from '../../../Game';
 import DifficultySlider from './DifficultySlider';
 import Menu from '../../../ui/Menu';
@@ -30,11 +30,11 @@ export default class OptionMenu extends Menu {
   private initCourseListMenu(): void {
     this.courseListMenu = new CourseListMenu(this.game, 0, 0, 40);
 
-    this.courseListMenu.onCourseTypeClick.add(() => {
+    this.courseListMenu.onCourseTypeDown.add(() => {
       this.difficultySlider.hide();
     });
 
-    this.courseListMenu.onCourseClick.add(({ courseData }) => {
+    this.courseListMenu.onCourseDown.add(({ courseData }) => {
       const { maxDifficulty, minDifficulty } = courseData;
 
       this.displayedCourseData = courseData;

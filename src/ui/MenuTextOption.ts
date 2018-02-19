@@ -50,8 +50,11 @@ export default class MenuTextOption extends Phaser.Group {
   }
 
   public highlight(): void {
+    if (!this.highlighted) {
+      this.setTextTint(highlightedTint);
+    }
+
     this.highlighted = true;
-    this.setTextTint(highlightedTint);
   }
 
   public unHighlight(): void {
@@ -102,6 +105,6 @@ export default class MenuTextOption extends Phaser.Group {
   }
 
   private setTextTint(color: number) {
-    this.game.tweener.tint(this.text, color, 200).start();
+    this.game.tweener.tint(this.text, color, 100).start();
   }
 }

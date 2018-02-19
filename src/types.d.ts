@@ -65,7 +65,7 @@ type MenuID =
   'option' |
   'practice' |
   'title' |
-  'tutorial' |
+  'course' |
   'course list';
 
 interface IDoubleSliderEvent {

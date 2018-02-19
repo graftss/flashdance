@@ -8,7 +8,6 @@ import Menu from '../../ui/Menu';
 import OptionMenu from './OptionMenu';
 import PracticeMenu from './PracticeMenu';
 import TitleMenu from './TitleMenu';
-import TutorialMenu from './TutorialMenu';
 import { clone, destroy } from '../../utils';
 
 export default class MainMenu extends Phaser.State {
@@ -75,7 +74,7 @@ export default class MainMenu extends Phaser.State {
       case 'option': return new OptionMenu(this.game, 0, 80, 80);
       case 'practice': return new PracticeMenu(this.game, 0, 80, 80);
       case 'title': return new TitleMenu(this.game, 0, 100, 80);
-      case 'tutorial': return new TutorialMenu(this.game, 0, 80, 80);
+      case 'course': return new CourseMenu(this.game, 0, 80, 80);
     }
   }
 

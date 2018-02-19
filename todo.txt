@@ -1,6 +1,12 @@
 === up next ===
+- use a `CourseListMenu` instead of `CourseMenu` for normal course play
+- get rid of string menu id's they're worthless
+- only show start button in practice menu when course is selected
+- `slideLeft` `slideRight` in tweener?
 
 === on deck ===
+- why does courselistmenu flash when you click a course type
+
 - difficulties: easy, medium, hard
   - easy = current tutorial
   - medium = courses using 2-3 effects

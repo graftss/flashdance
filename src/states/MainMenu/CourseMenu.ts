@@ -1,49 +1,104 @@
-import Menu from '../../ui/Menu';
+import * as Phaser from 'phaser-ce';
 
-import courses from '../../courses';
 import Game from '../../Game';
+import CourseListMenu from './CourseListMenu';
+import Menu from '../../ui/Menu';
+import MenuTextOption from '../../ui/MenuTextOption';
+
+const tutorialCourseIdColumns = [[0, 1, 2, 3], [4, 5, 6]];
 
 export default class CourseMenu extends Menu {
-  private startCourse: (CourseData) => void;
+  private courseListMenu: CourseListMenu;
+  private selectedCourseData: CourseData;
+  private selectedCourseType: CourseType;
+  private startLinkShown: boolean = false;
 
   constructor(
     game: Game,
     x: number,
     y: number,
     rowHeight: number,
-    courseIdColumns: number[][],
-    startCourse: (courseData: CourseData) => void,
-    id: MenuID,
   ) {
-    const idToOption = CourseMenu.courseIdToOptionData(game, startCourse);
-    const optionDataColumns = courseIdColumns.map(col => col.map(idToOption));
+    super(
+      game,
+      x, y,
+      rowHeight,
+      [[]],
+      'course',
+    );
 
-    super(game, x, y, rowHeight, optionDataColumns, id);
+    this.initCourseListMenu();
 
-    this.startCourse = startCourse;
+    this.setOptionColumns([
+      [
+        {
+          group: this.courseListMenu,
+          height: game.height / 2,
+          type: 'group',
+          width: game.width,
+        },
+        {
+          label: '',
+          onSelect: () => {
+            const { selectedCourseData } = this;
+            if (selectedCourseData !== undefined) {
+              this.dispatchStartCourse(selectedCourseData);
+            }
+          },
+          type: 'text',
+        },
+        this.getBackOptionData(),
+      ],
+    ]);
   }
 
-  private static courseIdToOptionData = (game: Game, startCourse) => (
-    (courseId: number): MenuOptionData => {
-      const courseData = courses[courseId];
-      const unlocked = game.saveFile.isCourseUnlocked(courseId);
-      const completed = game.saveFile.isCourseCompleted(courseId);
+  private initCourseListMenu(): void {
+    this.courseListMenu = new CourseListMenu(this.game, 0, 0, 30);
 
-      const label = unlocked ? courseData.level : 'locked';
-      const onSelect = () => unlocked && startCourse(courseData);
-      const textStyle = CourseMenu.getOptionTextStyle(unlocked, completed);
+    this.courseListMenu.onCourseTypeDown.add(({ type }) => {
+      if (type !== this.selectedCourseType) {
+        this.selectedCourseType = type;
+        this.hideStartLink();
+      }
+    });
 
-      return { label, onSelect, textStyle, type: 'text' };
-    }
-  )
+    this.courseListMenu.onCourseDown.add(({ courseData }) => {
+      const { selectedCourseData } = this;
 
-  private static getOptionTextStyle(unlocked: boolean, completed: boolean) {
-    if (!unlocked) {
-      return { fill: 'red' };
-    } else if (completed) {
-      return { fill: 'green' };
-    } else {
-      return {};
-    }
+      if (!this.startLinkShown) {
+        this.showStartLink();
+      }
+
+      if (!selectedCourseData || courseData.id !== selectedCourseData.id) {
+        this.selectedCourseData = courseData;
+      }
+    });
+  }
+
+  private showStartLink(): void {
+    this.updateMenuOption(0, 1, (o: MenuTextOption) => {
+      o.text.setText('start');
+      o.position.x += this.game.width;
+
+      const tween = this.game.tweener.positionBy(
+        o,
+        { x: -this.game.width, y: 0 },
+        500,
+      );
+
+      tween.onComplete.add(() => this.startLinkShown = true);
+      tween.start();
+    });
+  }
+
+  private hideStartLink(): void {
+    this.updateMenuOption(0, 1, (o: MenuTextOption) => {
+      o.text.setText('');
+      this.startLinkShown = false;
+    });
+  }
+
+  private dispatchStartCourse(courseData: CourseData) {
+    this.game.eventBus().menu.startCourse.dispatch(courseData);
   }
 }
