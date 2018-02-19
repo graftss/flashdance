@@ -147,10 +147,10 @@ export default class DoubleSlider extends Phaser.Group {
   private updateRightSliderBounds(): void {
     const rect = this.rightSlider.input.boundsRect;
 
-    rect.width = this.slideWidth - this.leftSlider.x;
     rect.x = this.leftSlider.x +
       2 * this.sliderRadius +
       this.extraDiscreteValueSpacing();
+    rect.width = this.slideWidth - rect.x;
   }
 
   // Amount to reduce the bounding boxes of both sliders when we're
@@ -159,7 +159,7 @@ export default class DoubleSlider extends Phaser.Group {
   private extraDiscreteValueSpacing(): number {
     return this.discreteValues === undefined ?
       0 :
-      Math.ceil(this.slideWidth / this.discreteValues / 10);
+      Math.ceil(this.slideWidth / this.discreteValues / 2);
   }
 
   public getEventData(): IDoubleSliderEvent {

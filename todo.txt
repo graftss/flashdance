@@ -1,6 +1,12 @@
 === up next ===
 
 === on deck ===
+- difficulties: easy, medium, hard
+  - easy = current tutorial
+  - medium = courses using 2-3 effects
+  - hard = hard stuff . idk,, go nuts
+  - "arcade" mode after beating hard thats totally random
+
 - replace x,y,w,h crap with rects
 
 - put a cool texture on the progress bar maybe
