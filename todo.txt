@@ -1,8 +1,4 @@
 === up next ===
-- if minDifficulty === maxDifficulty, fill progress bar and start
-  pulsing immediately
-
-- correctly lock courses in practice menu
 
 === on deck ===
 - replace x,y,w,h crap with rects

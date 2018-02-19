@@ -71,11 +71,19 @@ export default class CourseListMenu extends Menu {
   }
 
   private getCourseOptionData = (courseData): MenuOptionData => {
+    const unlocked = this.game.saveFile.isCourseUnlocked(courseData.id);
+    const label = unlocked ? courseData.level : 'locked';
+    const textStyle = unlocked ? {} : { fill: 'red' };
+
     return {
       height: this.game.height / 12,
-      label: courseData.level,
-      onSelect: gridPos => this.onCourseClick.dispatch({ courseData, gridPos }),
-      textStyle: { fontSize: this.rowHeight },
+      label,
+      onSelect: gridPos => {
+        if (unlocked) {
+          this.onCourseClick.dispatch({ courseData, gridPos });
+        }
+      },
+      textStyle: { ...textStyle, fontSize: this.rowHeight },
       type: 'text',
     };
   }
