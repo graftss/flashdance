@@ -8,6 +8,7 @@ export default class DoubleSlider extends Phaser.Group {
   public onChange: TypedSignal<IDoubleSliderEvent> = new TypedSignal();
 
   private bar: Phaser.Sprite;
+  private selectionBar: Phaser.Sprite;
   private leftSlider: Phaser.Sprite;
   private rightSlider: Phaser.Sprite;
   private sliderRadius: number;
@@ -38,11 +39,12 @@ export default class DoubleSlider extends Phaser.Group {
 
     this.initBar();
     this.initSliders();
+    this.initSelectionBar();
   }
 
   // for debugging
   private initBorder(): void {
-    const { game, h, w, x, y } = this;
+    const { game, h, w } = this;
 
     const border = this.game.add.graphics(0, 0, this)
       .beginFill(0, 0)
@@ -57,8 +59,9 @@ export default class DoubleSlider extends Phaser.Group {
 
     const graphic = game.add.graphics(0, 0, this)
       .beginFill(0x444444, 1)
-      .lineStyle(1, 0xaaaaaa, 1)
-      .drawRoundedRect(0, 0, w, barHeight, barHeight / 2);
+      .lineStyle(2, 0xaaaaaa, 1)
+      .moveTo(0, barHeight / 2)
+      .lineTo(w, barHeight / 2);
 
     this.bar = game.add.sprite(0, y, graphic.generateTexture(), null, this);
     graphic.destroy();
@@ -98,17 +101,37 @@ export default class DoubleSlider extends Phaser.Group {
     this.updateRightSliderBounds();
   }
 
+  private initSelectionBar(): void {
+    destroy(this.selectionBar);
+
+    const thickness = 5;
+
+    const graphic = this.game.add.graphics(0, 0, this)
+      .lineStyle(5, 0xffffff, 1)
+      .moveTo(this.leftSlider.x, this.h / 2)
+      .lineTo(this.rightSlider.x, this.h / 2);
+    const texture = graphic.generateTexture();
+    graphic.destroy();
+
+    this.selectionBar = this.game.add.sprite(
+      this.leftSlider.x, this.h / 2 - thickness,
+      texture,
+      null,
+      this,
+    );
+  }
+
   private onLeftSliderDrag = (): void => {
     this.leftSliderValue = this.xToValue(this.leftSlider.x);
     this.updateRightSliderBounds();
-
+    this.initSelectionBar();
     this.onChange.dispatch(this.getEventData());
   }
 
   private onRightSliderDrag = (): void => {
     this.rightSliderValue = this.xToValue(this.rightSlider.x);
     this.updateLeftSliderBounds();
-
+    this.initSelectionBar();
     this.onChange.dispatch(this.getEventData());
   }
 

@@ -3,8 +3,6 @@
 === on deck ===
 - replace x,y,w,h crap with rects
 
-- white filler between sldiers in double slider
-
 - put a cool texture on the progress bar maybe
 
 - "long hold" flash mechanic
