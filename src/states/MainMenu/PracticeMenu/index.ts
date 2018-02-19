@@ -20,7 +20,7 @@ export default class OptionMenu extends Menu {
     y: number,
     rowHeight: number,
   ) {
-    super(game, x, y, rowHeight, [], practiceMenuID);
+    super(game, x, y, rowHeight, []);
 
     this.initCourseListMenu();
     this.initDifficultySlider();

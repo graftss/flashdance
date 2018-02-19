@@ -19,13 +19,7 @@ export default class CourseMenu extends Menu {
     y: number,
     rowHeight: number,
   ) {
-    super(
-      game,
-      x, y,
-      rowHeight,
-      [[]],
-      'course',
-    );
+    super(game, x, y, rowHeight, [[]]);
 
     this.initCourseListMenu();
 

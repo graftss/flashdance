@@ -3,8 +3,6 @@ import * as Phaser from 'phaser-ce';
 import Game from '../../Game';
 import Menu from '../../ui/Menu';
 
-const titleMenuID: MenuID = 'title';
-
 export default class TitleMenu extends Menu {
   constructor(
     game: Game,
@@ -12,7 +10,7 @@ export default class TitleMenu extends Menu {
     y: number,
     rowHeight: number,
   ) {
-    super(game, x, y, rowHeight, [], titleMenuID);
+    super(game, x, y, rowHeight, []);
 
     this.setOptionColumns(this.getOptionDataColumns());
   }

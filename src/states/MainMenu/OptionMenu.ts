@@ -4,8 +4,6 @@ import Game from '../../Game';
 import Menu from '../../ui/Menu';
 import MenuTextOption from '../../ui/MenuTextOption';
 
-const optionMenuID: MenuID = 'option';
-
 export default class OptionMenu extends Menu {
   constructor(
     game: Game,
@@ -13,7 +11,7 @@ export default class OptionMenu extends Menu {
     y: number,
     rowHeight: number,
   ) {
-    super(game, x, y, rowHeight, [], optionMenuID);
+    super(game, x, y, rowHeight, []);
 
     this.setOptionColumns(this.getOptionDataColumns());
   }

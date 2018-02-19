@@ -11,7 +11,7 @@ export default class DifficultySlider extends Menu {
   constructor(
     public game: Game,
   ) {
-    super(game, 0, 0, 60, [], undefined);
+    super(game, 0, 0, 60, []);
   }
 
   public init(minDifficulty: number, maxDifficulty: number): void {

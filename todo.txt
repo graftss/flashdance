@@ -1,6 +1,5 @@
 === up next ===
 - use a `CourseListMenu` instead of `CourseMenu` for normal course play
-- get rid of string menu id's they're worthless
 - only show start button in practice menu when course is selected
 - `slideLeft` `slideRight` in tweener?
 

@@ -14,7 +14,6 @@ export default class Menu extends Phaser.Group {
     public y: number,
     public rowHeight: number,
     private optionDataColumns: MenuOptionData[][],
-    public id: MenuID,
   ) {
     super(game);
 

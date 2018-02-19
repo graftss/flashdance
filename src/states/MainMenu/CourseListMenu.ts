@@ -32,7 +32,7 @@ export default class CourseListMenu extends Menu {
     public y: number,
     public rowHeight: number,
   ) {
-    super(game, x, y, rowHeight, [], 'course list');
+    super(game, x, y, rowHeight, []);
 
     this.onCourseTypeDown.add(this.selectCourseType);
     this.onCourseDown.add(this.selectCourse);
