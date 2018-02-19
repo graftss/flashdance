@@ -22,11 +22,9 @@ export default class MainMenu extends Phaser.State {
   public init(opts: any = {}) {
     this.eventBus = new EventBus();
 
-    this.initEventHandlers();
     this.initBackground();
-
-    this.initFirstMenu('practice');
-    // this.initFirstMenu('title');
+    this.initFirstMenu();
+    this.initEventHandlers();
 
     if (opts.fadeIn) {
       const menu = this.activeMenu;
@@ -43,7 +41,16 @@ export default class MainMenu extends Phaser.State {
     this.activeMenu.destroy();
   }
 
-  private initFirstMenu(menuId: MenuID) {
+  private initFirstMenu() {
+    if (PRODUCTION) {
+      this.initFirstMenuById('title');
+    } else {
+      this.initFirstMenuById('title');
+      // this.initFirstMenuById('practice');
+    }
+  }
+
+  private initFirstMenuById(menuId: MenuID) {
     this.activeMenu = this.initMenuById(menuId);
     this.menuIdStack = [menuId];
   }

@@ -1,10 +1,8 @@
-import debugCourses from './courses-debug';
-
 const tutorialData = {
   gridCols: 3,
   gridRows: 3,
   lives: 5,
-  maxDifficulty: 10,
+  maxDifficulty: 20,
   minDifficulty: 1,
   type: 'tutorial' as 'tutorial', // lol
 };
@@ -60,4 +58,4 @@ const courses: CourseData[] = [
   debugData,
 ];
 
-export default PRODUCTION ? courses : debugCourses;
+export default courses;

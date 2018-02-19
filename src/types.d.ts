@@ -1,3 +1,5 @@
+declare var PRODUCTION: boolean;
+
 // Utility
 
 type Maybe<T> = T | null;

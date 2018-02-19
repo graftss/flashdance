@@ -1,11 +1,18 @@
 const { join } = require('path');
+const webpack = require('webpack');
 
-module.exports = {
+
+module.exports = env => console.log('env', env) || ({
   entry: './src/index.ts',
   output: {
     path: join(__dirname, 'build'),
     filename: 'bundle.js'
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      'PRODUCTION': JSON.stringify(Boolean(env && env.production)),
+    }),
+  ],
   resolve: {
     alias: {
       p2: join(__dirname, 'node_modules/phaser-ce/build/custom/p2.js'),
@@ -32,4 +39,4 @@ module.exports = {
       { test: /\.ts$/, loader: 'ts-loader' },
     ]
   }
-};
+});
