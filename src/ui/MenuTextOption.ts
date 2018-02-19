@@ -5,6 +5,7 @@ import { defaults } from '../utils';
 
 const inactiveTint = 0xbbbbbb;
 const activeTint = 0xffffff;
+const highlightedTint = 0x5555ff;
 
 export default class MenuTextOption extends Phaser.Group {
   public game: Game;
@@ -50,12 +51,12 @@ export default class MenuTextOption extends Phaser.Group {
 
   public highlight(): void {
     this.highlighted = true;
-    this.text.tint = activeTint;
+    this.setTextTint(highlightedTint);
   }
 
   public unHighlight(): void {
     this.highlighted = false;
-    this.text.tint = inactiveTint;
+    this.setTextTint(inactiveTint);
   }
 
   private initText() {
@@ -65,7 +66,7 @@ export default class MenuTextOption extends Phaser.Group {
     this.text = game.add.text(0, 0, label, this.textStyle, this);
     this.text.setTextBounds(0, 0, w, h);
     this.text.inputEnabled = true;
-    this.text.tint = inactiveTint;
+    this.setTextTint(inactiveTint);
 
     this.text.events.onInputDown.add(this.onInputDown);
     this.text.events.onInputOver.add(this.onInputOver);
@@ -82,7 +83,10 @@ export default class MenuTextOption extends Phaser.Group {
     }
 
     this.mouseOver = true;
-    this.text.tint = activeTint;
+
+    if (!this.highlighted) {
+      this.setTextTint(activeTint);
+    }
   }
 
   private onInputOut = () => {
@@ -93,7 +97,11 @@ export default class MenuTextOption extends Phaser.Group {
     this.mouseOver = false;
 
     if (!this.highlighted) {
-      this.text.tint = inactiveTint;
+      this.setTextTint(inactiveTint);
     }
+  }
+
+  private setTextTint(color: number) {
+    this.game.tweener.tint(this.text, color, 200).start();
   }
 }
