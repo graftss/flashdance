@@ -8,8 +8,14 @@ import {
   xprod,
 } from '../../../utils';
 
+const equalGridPos = (g: GridPos) => (h: GridPos) => (
+  g.col === h.col && g.row === h.row
+);
+
 export default class BaseActionSequencer {
   private allGridPositions: GridPos[];
+  private randomGridPositionHistory: GridPos[] = [];
+  private randomGridPositionHistorySize: number = 3;
 
   constructor(
     protected gridCols: number,
@@ -199,7 +205,24 @@ export default class BaseActionSequencer {
   }
 
   protected randomGridPosition(): GridPos {
-    return this.randomGridPositions(1)[0];
+    const {
+      randomGridPositionHistory: history,
+      randomGridPositionHistorySize: historySize,
+    } = this;
+
+    let result;
+    const tries = 3;
+
+    for (let n = 0; n < tries; n++) {
+      result = sample(this.allGridPositions);
+
+      const inHistory = history.some(equalGridPos(result));
+      if (!inHistory) {
+        return result;
+      }
+    }
+
+    return sample(history);
   }
 
   protected randomGridPositions(count: number = 1): GridPos[] {

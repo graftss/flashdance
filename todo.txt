@@ -5,8 +5,6 @@
 
 - white filler between sldiers in double slider
 
-- do something to get rid of repeated grid positions in action sequencers
-
 - put a cool texture on the progress bar maybe
 
 - "long hold" flash mechanic
