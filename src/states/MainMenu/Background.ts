@@ -149,7 +149,7 @@ export default class Background extends Phaser.Group {
 
   private runRandomLights(count: number): void {
     for (let n = 0; n < count; n++) {
-      Math.random() > .01 ?
+      Math.random() > .03 ?
         this.runLight(this.newRandomLight()) :
         this.runLight(this.newRandomPath());
     }

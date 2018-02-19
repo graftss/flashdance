@@ -155,14 +155,6 @@ export default class FlashLayer extends Phaser.Group {
     return this.flash(duration);
   }
 
-  private shouldSpawnTrails() {
-    switch (this.context) {
-      case 'background': return this.game.state.current === 'MainMenu';
-      case 'flash': return true;
-      default: return false;
-    }
-  }
-
   // paths have a minimum duration of 350ms for intro/outro animations
   private path(path: Vec3[], duration: number): TweenWrapper {
     const { game } = this;
@@ -196,12 +188,20 @@ export default class FlashLayer extends Phaser.Group {
 
   }
 
+  private shouldSpawnTrails() {
+    switch (this.context) {
+      case 'background': return this.game.state.current === 'MainMenu';
+      case 'flash': return true;
+      default: return false;
+    }
+  }
+
   private spawnTrails(
     path: Vec3[],
     pathStepDuration: number,
     initialDelay: number,
   ): void {
-    const { game } = this;
+    const { game, h, w } = this;
     const dotsPerTrail = 6;
     const trailSize = 4;
 
@@ -223,7 +223,7 @@ export default class FlashLayer extends Phaser.Group {
 
       dotLocations.forEach(({ x, y }, dotIndex) => {
         const delay = initialDelay + pathStepDuration * (step + dotIndex / dotsPerTrail);
-        this.spawnDot(game, x + this.w / 2, y + this.h / 2, delay, trailTexture);
+        this.spawnDot(game, x + w / 2, y + h / 2, delay, trailTexture);
       });
 
       step += next.z;
@@ -242,6 +242,10 @@ export default class FlashLayer extends Phaser.Group {
 
     setTimeout(() => {
       const sprite = game.add.sprite(x, y, texture, null, this.parent);
+
+      if (this.context === 'background') {
+        sprite.alpha = 0.3;
+      }
 
       setTimeout(() => {
         const tween = game.tweener.alpha(sprite, 0, fadeOutDuration);
