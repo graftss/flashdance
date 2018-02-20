@@ -49,12 +49,18 @@ export default class SaveFile {
     return get(this.getCourseHistory(courseId), 'completed', false);
   }
 
-  public isCourseUnlocked(courseId: number): boolean {
-    if (courseId === 0) {
+  public isCourseUnlocked(courseData: CourseData): boolean {
+    const { id, type } = courseData;
+
+    if (id === 0) {
+      return true;
+    } else if (type === 'debug') {
+      return true;
+    } else if (PRODUCTION === false) {
       return true;
     }
 
-    return Boolean(this.isCourseCompleted(courseId - 1));
+    return Boolean(this.isCourseCompleted(id - 1));
   }
 
   public isCourseTypeCompleted(type: CourseType): boolean {

@@ -8,7 +8,9 @@ import TypedSignal from '../../TypedSignal';
 import { chunk, zipWith } from '../../utils';
 
 const courseListMenuID: MenuID = 'course list';
-const courseTypes: CourseType[] = ['easy', 'hard', 'impossible', 'debug'];
+const courseTypes: CourseType[] = PRODUCTION ?
+  ['easy', 'hard', 'impossible'] :
+  ['easy', 'hard', 'impossible', 'debug'];
 
 interface ICourseTypeClickEvent {
   gridPos: GridPos;
@@ -74,7 +76,7 @@ export default class CourseListMenu extends Menu {
   }
 
   private getCourseOptionData = (courseData): MenuOptionData => {
-    const unlocked = this.game.saveFile.isCourseUnlocked(courseData.id);
+    const unlocked = this.game.saveFile.isCourseUnlocked(courseData);
     const label = unlocked ? courseData.level : 'locked';
     const textStyle = unlocked ? {} : { fill: 'red' };
 
