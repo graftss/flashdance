@@ -57,6 +57,10 @@ export default class Menu extends Phaser.Group {
     column.push(this.createMenuOption(colIndex, rowIndex, data));
   }
 
+  public getMenuOption(colIndex: number, rowIndex: number): Phaser.Group {
+    return this.optionColumns[colIndex][rowIndex];
+  }
+
   public updateMenuOption(
     colIndex: number,
     rowIndex: number,

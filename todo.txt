@@ -1,7 +1,4 @@
 === up next ===
-- use a `CourseListMenu` instead of `CourseMenu` for normal course play
-- only show start button in practice menu when course is selected
-- `slideLeft` `slideRight` in tweener?
 
 === on deck ===
 - why does courselistmenu flash when you click a course type
