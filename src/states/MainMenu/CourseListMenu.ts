@@ -4,8 +4,9 @@ import courses from '../../courses';
 import Game from '../../Game';
 import Menu from '../../ui/Menu';
 import MenuTextOption from '../../ui/MenuTextOption';
+import TargetBox from '../../ui/TargetBox';
 import TypedSignal from '../../TypedSignal';
-import { chunk, zipWith } from '../../utils';
+import { chunk, destroy, zipWith } from '../../utils';
 
 const courseListMenuID: MenuID = 'course list';
 const courseTypes: CourseType[] = PRODUCTION ?
@@ -28,6 +29,7 @@ export default class CourseListMenu extends Menu {
 
   private selectedCourseType: CourseType;
   private selectedCourse: GridPos;
+  private targetBox: TargetBox;
 
   constructor(
     public game: Game,
@@ -118,6 +120,30 @@ export default class CourseListMenu extends Menu {
     }
 
     this.selectedCourse = gridPos;
-    this.updateMenuOption(col, row, (o: MenuTextOption) => o.highlight());
+
+    const opt = this.getMenuOption(col, row) as MenuTextOption;
+    const { height, width, x, y } = opt.text.getBounds();
+    const yOffsetHack = this.getMenuOption(0, 1).y + 8;
+
+    opt.highlight();
+    this.moveTargetBox(x - 2, y - yOffsetHack, width, height);
+  }
+
+  private initTargetBox(): void {
+    this.targetBox = new TargetBox(this.game, this, 0, 0, 0, 0);
+  }
+
+  private destroyTargetBox(): void {
+    destroy(this.targetBox);
+  }
+
+  private moveTargetBox(x: number, y: number, w: number, h: number): void {
+    const moveDuration = 100;
+
+    if (!this.targetBox) {
+      this.initTargetBox();
+    }
+
+    this.targetBox.moveAndResizeTo(x, y, w, h, moveDuration);
   }
 }

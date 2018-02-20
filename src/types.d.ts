@@ -12,6 +12,8 @@ type Vec2 = { x: number, y: number }
 
 type Vec3 = { x: number, y: number, z: number }
 
+type Rect = { x: number, y: number, w: number, h: number }
+
 // Save Data
 
 type SaveData = {
