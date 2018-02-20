@@ -28,4 +28,6 @@ export const courses: CourseData[] = [
   ...easyCourses,
 ];
 
-export default PRODUCTION ? courses : [...courses, ...debugCourses];
+const all: CourseData[] = PRODUCTION ? courses : courses.concat(debugCourses);
+
+export default all;

@@ -10,6 +10,8 @@ const debugData: CourseData = {
   type: 'debug',
 };
 
-export default [
+const debugCourses: CourseData[] = [
   debugData,
 ];
+
+export default debugCourses;

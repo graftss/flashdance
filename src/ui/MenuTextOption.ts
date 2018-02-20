@@ -5,7 +5,7 @@ import { defaults } from '../utils';
 
 const inactiveTint = 0xbbbbbb;
 const activeTint = 0xffffff;
-const highlightedTint = 0x3333ff;
+const highlightedTint = 0x6666ff;
 
 export default class MenuTextOption extends Phaser.Group {
   public game: Game;

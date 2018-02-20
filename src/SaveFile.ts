@@ -45,8 +45,10 @@ export default class SaveFile {
     this.setCourseHistory(courseId, best);
   }
 
-  public isCourseCompleted(courseId: number): boolean {
-    return get(this.getCourseHistory(courseId), 'completed', false);
+  public isCourseCompleted = (courseData: CourseData): boolean => {
+    const { id } = courseData;
+
+    return get(this.getCourseHistory(id), 'completed', false);
   }
 
   public isCourseUnlocked(courseData: CourseData): boolean {
@@ -60,13 +62,15 @@ export default class SaveFile {
       return true;
     }
 
-    return Boolean(this.isCourseCompleted(id - 1));
+    const previousCourse = courses.find(c => c.id === id - 1);
+
+    return Boolean(this.isCourseCompleted(previousCourse));
   }
 
   public isCourseTypeCompleted(type: CourseType): boolean {
     return courses
       .filter(c => c.type === type)
-      .every(c => this.isCourseCompleted(c.id));
+      .every(this.isCourseCompleted);
   }
 
   private initSaveData(): void {

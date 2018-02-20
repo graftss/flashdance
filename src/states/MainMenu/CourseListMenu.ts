@@ -65,7 +65,7 @@ export default class CourseListMenu extends Menu {
     return result;
   }
 
-  private getCourseTypeOptionData = (type): MenuOptionData => {
+  private getCourseTypeOptionData = (type: CourseType): MenuOptionData => {
     return {
       height: this.game.height / 8,
       label: type,
@@ -75,10 +75,13 @@ export default class CourseListMenu extends Menu {
     };
   }
 
-  private getCourseOptionData = (courseData): MenuOptionData => {
+  private getCourseOptionData = (courseData: CourseData): MenuOptionData => {
     const unlocked = this.game.saveFile.isCourseUnlocked(courseData);
+    const completed = this.game.saveFile.isCourseCompleted(courseData);
     const label = unlocked ? courseData.level : 'locked';
-    const textStyle = unlocked ? {} : { fill: 'red' };
+    const textStyle = completed ?
+      { fill: '#aaffaa' } :
+      unlocked ? {} : { fill: 'red' };
 
     return {
       height: this.game.height / 12,
@@ -88,7 +91,7 @@ export default class CourseListMenu extends Menu {
           this.onCourseDown.dispatch({ courseData, gridPos });
         }
       },
-      textStyle: { ...textStyle, fontSize: this.rowHeight },
+      textStyle: { fontSize: this.rowHeight, ...textStyle },
       type: 'text',
     };
   }
