@@ -8,7 +8,7 @@ import TypedSignal from '../../TypedSignal';
 import { chunk, zipWith } from '../../utils';
 
 const courseListMenuID: MenuID = 'course list';
-const courseTypes: CourseType[] = ['tutorial', 'challenge', 'debug'];
+const courseTypes: CourseType[] = ['easy', 'hard', 'impossible', 'debug'];
 
 interface ICourseTypeClickEvent {
   gridPos: GridPos;

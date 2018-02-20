@@ -1,9 +1,9 @@
 import ArcadeActionSequencer from './Arcade';
 import DebugActionSequencer from './Debug';
-import TutorialActionSequencer from './Tutorial';
+import EasyCourseActionSequencer from './EasyCourse';
 
 export default {
   Arcade: ArcadeActionSequencer,
   Debug: DebugActionSequencer,
-  Tutorial: TutorialActionSequencer,
+  EasyCourse: EasyCourseActionSequencer,
 };

@@ -1,6 +1,12 @@
 === up next ===
 
 === on deck ===
+- paths of set lengths in base actino sequencer ? ?? ? ? < ?
+
+- opening titles
+
+- practice mode slider only goes up to highest difficulty completed
+
 - difficulties: easy, medium, hard
   - easy = current tutorial
   - medium = courses using 2-3 effects

@@ -57,9 +57,9 @@ export default class SaveFile {
     return Boolean(this.isCourseCompleted(courseId - 1));
   }
 
-  public isTutorialCompleted(): boolean {
+  public isCourseTypeCompleted(type: CourseType): boolean {
     return courses
-      .filter(c => c.type === 'tutorial')
+      .filter(c => c.type === type)
       .every(c => this.isCourseCompleted(c.id));
   }
 

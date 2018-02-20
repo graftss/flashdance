@@ -18,24 +18,16 @@ export default class TitleMenu extends Menu {
   private getOptionDataColumns(): MenuOptionData[][] {
     const { game } = this;
     const { pushMenu, popMenu } = game.eventBus().menu;
-    const tutorialCompleted = game.saveFile.isTutorialCompleted();
 
     return [[
       {
-        label: 'tutorials',
-        onSelect: () => {
-          pushMenu.dispatch('course');
-        },
-        textStyle: {
-          fill: tutorialCompleted ? 'green' : undefined,
-        },
+        label: 'courses',
+        onSelect: () => pushMenu.dispatch('course'),
         type: 'text',
       },
       {
         label: 'practice',
-        onSelect: () => {
-          pushMenu.dispatch('practice');
-        },
+        onSelect: () => pushMenu.dispatch('practice'),
         type: 'text',
       },
       ...this.getExtraModeOptions(),
@@ -50,7 +42,7 @@ export default class TitleMenu extends Menu {
   }
 
   private getExtraModeOptions(): MenuOptionData[] {
-    if (this.game.saveFile.isTutorialCompleted()) {
+    if (this.game.saveFile.isCourseTypeCompleted('easy')) {
       return [
         {
           label: 'challenges',

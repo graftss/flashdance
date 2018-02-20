@@ -104,7 +104,7 @@ type ParticleData = {
 
 // Game levels
 
-type TutorialCourse =
+type EasyCourse =
   'flash' |
   'path' |
   'fake flash' |
@@ -114,26 +114,23 @@ type TutorialCourse =
   'x-reflect';
 
 type CourseType =
-  'tutorial' |
-  'challenge' |
+  'easy' |
+  'hard' |
+  'impossible' |
   'debug';
 
-interface IGenericCourseData {
+type CourseData = {
   endless?: boolean;
   id: number;
   immortal?: boolean;
   gridCols: number;
   gridRows: number;
+  level: string;
   lives: number;
   minDifficulty: number;
   maxDifficulty: number;
   type: CourseType
 }
-
-type CourseData = IGenericCourseData & (
-  { type: 'debug', level: any } |
-  { type: 'tutorial', level: TutorialCourse }
-);
 
 // Game actions
 

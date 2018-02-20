@@ -2,13 +2,13 @@ import { flatMap, intersperse, range } from '../../../utils';
 
 import BaseActionSequencer from './Base';
 
-export default class TutorialActionSequencer
+export default class EasyCourseActionSequencer
   extends BaseActionSequencer implements IActionSequencer {
 
   constructor(
     gridCols: number,
     gridRows: number,
-    private level: TutorialCourse,
+    private level: string,
   ) {
     super(gridCols, gridRows);
   }
@@ -30,6 +30,8 @@ export default class TutorialActionSequencer
       case 'rotate': return this.rotateRound(difficulty);
       case 'reflect': return this.reflectRound(difficulty);
       case 'x-reflect': return this.xReflectRound(difficulty);
+      case 'rotated path': return this.rotatedPathRound(difficulty);
+      case 'reflected path': return this.reflectedPathRound(difficulty);
     }
   }
 
@@ -97,8 +99,30 @@ export default class TutorialActionSequencer
   private xReflectRound(difficulty: number): GameActionData[] {
     const round = [[],
       [0, 6], [0, 6], [0, 6], [0, 6, 0], [0, 6, 0],
-      [0, 0, 6], [0, 0, 6], [0, 0, 6, 6], [0, 0, 6, 6],
+      [0, 0, 6], [0, 0, 6], [0, 0, 0, 6], [0, 0, 0, 6],
       [0, 6, 0, 6],
+    ][difficulty];
+
+    return this.roundByCode(difficulty, round);
+  }
+
+  private rotatedPathRound(difficulty: number): GameActionData[] {
+    const round = [[],
+      [3, 4], [3, 4], [3, 4],
+      [3, 4, 3], [3, 4, 3], [3, 4, 3],
+      [3, 3, 4], [3, 3, 4], [3, 3, 4],
+      [3, 4, 3, 4],
+    ][difficulty];
+
+    return this.roundByCode(difficulty, round);
+  }
+
+  private reflectedPathRound(difficulty: number): GameActionData[] {
+    const round = [[],
+      [3, 5], [3, 5], [3, 5],
+      [3, 5, 3], [3, 5, 3], [3, 5, 3],
+      [3, 3, 5], [3, 3, 5], [3, 3, 5],
+      [3, 5, 3, 5],
     ][difficulty];
 
     return this.roundByCode(difficulty, round);

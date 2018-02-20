@@ -1,63 +1,27 @@
 import debugCourses from './courses-debug';
 
-const tutorialData = {
+const easyCommonData = {
   gridCols: 3,
   gridRows: 3,
   lives: 5,
   maxDifficulty: 10,
   minDifficulty: 1,
-  type: 'tutorial' as 'tutorial', // lol
+  type: 'easy' as 'easy',
 };
 
-const debugData: CourseData = {
-  endless: true,
-  gridCols: 3,
-  gridRows: 3,
-  id: 7,
-  level: 'debug',
-  lives: 5,
-  maxDifficulty: 3,
-  minDifficulty: 1,
-  type: 'debug',
-};
+const easyCourses = [
+  { id: 0, level: 'flash' },
+  { id: 1, level: 'path' },
+  { id: 2, level: 'fake flash' },
+  { id: 3, level: 'multiflash' },
+  { id: 4, level: 'rotate' },
+  { id: 5, level: 'reflect' },
+  { id: 6, level: 'x-reflect' },
+  { id: 7, level: 'rotated path' },
+].map(obj => ({ ...easyCommonData, ...obj }));
 
-const courses: CourseData[] = [
-  {
-    id: 0,
-    level: 'flash' as TutorialCourse,
-    ...tutorialData,
-  },
-  {
-    id: 1,
-    level: 'path' as TutorialCourse,
-    ...tutorialData,
-  },
-  {
-    id: 2,
-    level: 'fake flash' as TutorialCourse,
-    ...tutorialData,
-  },
-  {
-    id: 3,
-    level: 'multiflash' as TutorialCourse,
-    ...tutorialData,
-  },
-  {
-    id: 4,
-    level: 'rotate' as TutorialCourse,
-    ...tutorialData,
-  },
-  {
-    id: 5,
-    level: 'reflect' as TutorialCourse,
-    ...tutorialData,
-  },
-  {
-    id: 6,
-    level: 'x-reflect' as TutorialCourse,
-    ...tutorialData,
-  },
-  debugData,
+export const courses: CourseData[] = [
+  ...easyCourses,
 ];
 
 export default PRODUCTION ? courses : debugCourses;

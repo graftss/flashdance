@@ -73,8 +73,8 @@ export default class Play extends Phaser.State {
     const { gridCols: c, gridRows: r, level } = courseData;
 
     switch (courseData.type) {
-      case 'tutorial': {
-        this.actionSequencer = new ActionSequencer.Tutorial(c, r, level);
+      case 'easy': {
+        this.actionSequencer = new ActionSequencer.EasyCourse(c, r, level);
         break;
       }
 
