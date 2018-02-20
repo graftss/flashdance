@@ -1,8 +1,6 @@
 === up next ===
 
 === on deck ===
-- why does courselistmenu flash when you click a course type
-
 - difficulties: easy, medium, hard
   - easy = current tutorial
   - medium = courses using 2-3 effects

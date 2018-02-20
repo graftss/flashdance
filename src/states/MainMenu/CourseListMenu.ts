@@ -24,6 +24,7 @@ export default class CourseListMenu extends Menu {
   public onCourseTypeDown: TypedSignal<ICourseTypeClickEvent> = new TypedSignal();
   public onCourseDown: TypedSignal<ICourseClickEvent> = new TypedSignal();
 
+  private selectedCourseType: CourseType;
   private selectedCourse: GridPos;
 
   constructor(
@@ -43,6 +44,8 @@ export default class CourseListMenu extends Menu {
   private getOptionDataColumns(type?: CourseType): MenuOptionData[][] {
     const courseTypeData = courseTypes.map(this.getCourseTypeOptionData);
 
+    // if no `type` is passed in, show only the course types, and not
+    // any courses
     if (type === undefined) {
       return courseTypeData.map(opt => [opt]);
     }
@@ -89,13 +92,16 @@ export default class CourseListMenu extends Menu {
   }
 
   private selectCourseType = ({ type }): void => {
+    if (type === this.selectedCourseType) {
+      return;
+    }
+
     const colIndex = courseTypes.indexOf(type);
 
     this.selectedCourse = undefined;
+    this.selectedCourseType = type;
     this.setOptionColumns(this.getOptionDataColumns(type));
-    this.updateMenuOption(colIndex, 0, (o: MenuTextOption) => (
-      o.highlight()
-    ));
+    this.updateMenuOption(colIndex, 0, (o: MenuTextOption) => o.highlight());
   }
 
   private selectCourse = ({ courseData, gridPos }): void => {
