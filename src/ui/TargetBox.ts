@@ -8,6 +8,8 @@ export default class TargetBox extends Phaser.Group {
   private reticule: Phaser.Graphics;
   private moveTween: SingletonTween = new SingletonTween();
   private resizeTween: SingletonTween = new SingletonTween();
+  private pulseTween: SingletonTween = new SingletonTween();
+  private pulseOffset: number = 0;
 
   private padding: number = 5;
   private reticuleLength: number = 10;
@@ -39,12 +41,11 @@ export default class TargetBox extends Phaser.Group {
   public moveTo(x: number, y: number, duration: number): void {
     const tween = this.game.tweener.position(this, { x, y }, duration);
     this.moveTween.start(tween);
+    this.pulse();
   }
 
   public resizeTo(w: number, h: number, duration: number): void {
     const tween = this.game.add.tween(this).to({ h, w }, duration);
-    tween.onUpdateCallback(this.drawReticule);
-    tween.onComplete.add(this.drawReticule);
     this.resizeTween.start(tween);
   }
 
@@ -56,31 +57,59 @@ export default class TargetBox extends Phaser.Group {
     this.alpha = 1;
   }
 
+  private pulse = (): void => {
+    const duration = 500;
+    const repeatDelay = 250;
+    const maxPulseOffset = 2;
+    const minPulseOffset = -1;
+
+    this.pulseOffset = minPulseOffset;
+
+    this.pulseTween.start(
+      this.game.add.tween(this)
+        .to({ pulseOffset: maxPulseOffset }, duration / 2)
+        .to({ pulseOffset: minPulseOffset }, duration / 2)
+        .delay(repeatDelay)
+        .easing(Phaser.Easing.Sinusoidal.In)
+        .loop(),
+    );
+  }
+
   private initReticule = (): void => {
     // offset x by 1 for ocd reasons, it just looks better
     this.reticule = this.game.add.graphics(1, 0, this);
   }
 
   private drawReticule = (): void => {
-    const { h, padding, reticuleLength: length, w } = this;
+    const {
+      h,
+      padding: pad,
+      pulseOffset: p,
+      reticuleLength: length,
+      w,
+    } = this;
 
     this.reticule
       .clear()
-      .lineStyle(1, 0xffffff, 1)
-      .moveTo(-padding + length, 0)
-      .lineTo(-padding, 0)
-      .lineTo(-padding, length)
-      .moveTo(-padding, h - length)
-      .lineTo(-padding, h)
-      .lineTo(-padding + length, h)
-      .moveTo(w + padding - length, 0)
-      .lineTo(w + padding, 0)
-      .lineTo(w + padding, length)
-      .moveTo(w + padding - length, h)
-      .lineTo(w + padding, h)
-      .lineTo(w + padding, h - length)
+      .lineStyle(2, 0xffffff, 1)
+      .moveTo(-pad + length - p, -p)
+      .lineTo(-pad - p, -p)
+      .lineTo(-pad - p, length - p)
+      .moveTo(-pad - p, h - length + p)
+      .lineTo(-pad - p, h + p)
+      .lineTo(-pad + length - p, h + p)
+      .moveTo(w + pad - length + p, -p)
+      .lineTo(w + pad + p, -p)
+      .lineTo(w + pad + p, length - p)
+      .moveTo(w + pad - length + p, h + p)
+      .lineTo(w + pad + p, h + p)
+      .lineTo(w + pad + p, h - length + p)
       .beginFill(0xaaaaaa, 0.25)
       .lineStyle(0, 0, 0)
-      .drawRect(-padding, 0, w + 2 * padding, h);
+      .drawRect(-pad - p, -p, w + 2 * pad + 2 * p, h + 2 * p);
+  }
+
+  public update() {
+    this.drawReticule();
   }
 }
