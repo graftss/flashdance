@@ -6,7 +6,7 @@ import Menu from '../../ui/Menu';
 import MenuTextOption from '../../ui/MenuTextOption';
 import TargetBox from '../../ui/TargetBox';
 import TypedSignal from '../../TypedSignal';
-import { chunk, destroy, zipWith } from '../../utils';
+import { chunk, destroy, equalGridPos, zipWith } from '../../utils';
 
 const courseListMenuID: MenuID = 'course list';
 const courseTypes: CourseType[] = PRODUCTION ?
@@ -27,7 +27,7 @@ export default class CourseListMenu extends Menu {
   public onCourseTypeDown: TypedSignal<ICourseTypeClickEvent> = new TypedSignal();
   public onCourseDown: TypedSignal<ICourseClickEvent> = new TypedSignal();
 
-  private selectedCourseType: CourseType;
+  private selectedCourseType: GridPos;
   private selectedCourse: GridPos;
   private courseTypeTargetBox: TargetBox;
   private courseTargetBox: TargetBox;
@@ -100,17 +100,27 @@ export default class CourseListMenu extends Menu {
     };
   }
 
-  private selectCourseType = ({ type }): void => {
-    if (type === this.selectedCourseType) {
-      return;
+  private selectCourseType = (
+    { type, gridPos }: { type: CourseType, gridPos: GridPos },
+  ): void => {
+    if (this.selectedCourseType !== undefined) {
+      if (equalGridPos(gridPos, this.selectedCourseType)) {
+        return;
+      } else {
+        const { col: oldCol, row: oldRow } = this.selectedCourseType;
+        console.log(this.selectedCourseType);
+        this.updateMenuOption(oldCol, oldRow, (o: MenuTextOption) => {
+          o.unHighlight();
+        });
+      }
     }
 
-    const colIndex = courseTypes.indexOf(type);
+    const { col, row } = gridPos;
 
     this.selectedCourse = undefined;
-    this.selectedCourseType = type;
+    this.selectedCourseType = gridPos;
     this.setOptionColumns(this.getOptionDataColumns(type));
-    this.updateMenuOption(colIndex, 0, (o: MenuTextOption) => {
+    this.updateMenuOption(col, row, (o: MenuTextOption) => {
       o.highlight();
     });
 

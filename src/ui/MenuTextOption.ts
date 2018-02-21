@@ -3,9 +3,9 @@ import * as Phaser from 'phaser-ce';
 import Game from '../Game';
 import { defaults, toTexture } from '../utils';
 
-const inactiveTint = 0xbbbbbb;
-const activeTint = 0xffffff;
-const highlightedTint = 0xaaaaff;
+const inactiveTint = 0x888888;
+const activeTint = 0xdddddd;
+const activeHighlightedTint = 0xffffff;
 
 export default class MenuTextOption extends Phaser.Group {
   public game: Game;
@@ -13,6 +13,7 @@ export default class MenuTextOption extends Phaser.Group {
   public highlighted: boolean = false;
   private background: Phaser.Sprite;
   private mouseOver: boolean = false;
+  private highlightedTint: number = activeHighlightedTint;
   private textStyle: Phaser.PhaserTextStyle = {
     boundsAlignH: 'center',
     fill: 'white',
@@ -50,11 +51,13 @@ export default class MenuTextOption extends Phaser.Group {
     }
   }
 
-  public highlight(): void {
-    if (!this.highlighted) {
-      this.setTextTint(highlightedTint).start();
+  public highlight(tint: number = activeHighlightedTint): void {
+    if (this.highlighted) {
+      return;
     }
 
+    this.setTextTint(tint).start();
+    this.highlightedTint = tint;
     this.highlighted = true;
   }
 
@@ -78,7 +81,7 @@ export default class MenuTextOption extends Phaser.Group {
     this.text = game.add.text(0, 0, label, this.textStyle, this);
     this.text.setTextBounds(0, 0, w, h);
     this.text.inputEnabled = true;
-    this.setTextTint(inactiveTint);
+    this.setTextTint(inactiveTint).start();
 
     this.text.events.onInputDown.add(this.onInputDown);
     this.text.events.onInputOver.add(this.onInputOver);

@@ -44,8 +44,8 @@ export default class MainMenu extends Phaser.State {
     if (PRODUCTION) {
       this.initFirstMenuById('title');
     } else {
-      this.initFirstMenuById('title');
-      // this.initFirstMenuById('course');
+      // this.initFirstMenuById('title');
+      this.initFirstMenuById('course');
     }
   }
 

@@ -57,7 +57,8 @@ export default class TargetBox extends Phaser.Group {
   }
 
   private initReticule = (): void => {
-    this.reticule = this.game.add.graphics(0, 0, this);
+    // offset x by 1 for ocd reasons, it just looks better
+    this.reticule = this.game.add.graphics(1, 0, this);
   }
 
   private drawReticule = (): void => {
@@ -78,7 +79,7 @@ export default class TargetBox extends Phaser.Group {
       .moveTo(w + padding - length, h)
       .lineTo(w + padding, h)
       .lineTo(w + padding, h - length)
-      .beginFill(0x888888, 0.3)
+      .beginFill(0xaaaaaa, 0.25)
       .lineStyle(0, 0, 0)
       .drawRect(-padding, 0, w + 2 * padding, h);
   }

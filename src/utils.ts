@@ -124,6 +124,10 @@ export const repeat = <T>(count: number, ts: T[]): T[] => {
   return result;
 };
 
+export const equalGridPos = (g: GridPos, h: GridPos) => (
+  g.col === h.col && g.row === h.row
+);
+
 export const randomGridPos = (cols: number, rows: number): GridPos => ({
   col: random(0, cols - 1),
   row: random(0, rows - 1),
