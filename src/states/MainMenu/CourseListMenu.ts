@@ -11,7 +11,7 @@ import { chunk, destroy, zipWith } from '../../utils';
 const courseListMenuID: MenuID = 'course list';
 const courseTypes: CourseType[] = PRODUCTION ?
   ['easy', 'hard', 'impossible'] :
-  ['easy', 'hard', 'impossible', 'debug'];
+  ['easy', 'hard', 'impossible'];
 
 interface ICourseTypeClickEvent {
   gridPos: GridPos;
@@ -29,7 +29,9 @@ export default class CourseListMenu extends Menu {
 
   private selectedCourseType: CourseType;
   private selectedCourse: GridPos;
-  private targetBox: TargetBox;
+  private courseTypeTargetBox: TargetBox;
+  private courseTargetBox: TargetBox;
+  private selectedCourseColorTween: Phaser.Tween;
 
   constructor(
     public game: Game,
@@ -82,7 +84,7 @@ export default class CourseListMenu extends Menu {
     const completed = this.game.saveFile.isCourseCompleted(courseData);
     const label = unlocked ? courseData.level : 'locked';
     const textStyle = completed ?
-      { fill: '#aaffaa' } :
+      { fill: '#66ff66' } :
       unlocked ? {} : { fill: 'red' };
 
     return {
@@ -108,15 +110,25 @@ export default class CourseListMenu extends Menu {
     this.selectedCourse = undefined;
     this.selectedCourseType = type;
     this.setOptionColumns(this.getOptionDataColumns(type));
-    this.updateMenuOption(colIndex, 0, (o: MenuTextOption) => o.highlight());
+    this.updateMenuOption(colIndex, 0, (o: MenuTextOption) => {
+      o.highlight();
+    });
+
+    this.destroyTargetBox();
   }
 
   private selectCourse = ({ courseData, gridPos }): void => {
     const { col, row } = gridPos;
 
-    if (this.selectedCourse) {
+    if (this.selectedCourse !== undefined) {
       const { col: oldCol, row: oldRow } = this.selectedCourse;
-      this.updateMenuOption(oldCol, oldRow, (o: MenuTextOption) => o.unHighlight());
+      const oldOption = this.getMenuOption(oldCol, oldRow) as MenuTextOption;
+
+      if (col === oldCol && row === oldRow) {
+        return;
+      }
+
+      oldOption.unHighlight();
     }
 
     this.selectedCourse = gridPos;
@@ -130,20 +142,21 @@ export default class CourseListMenu extends Menu {
   }
 
   private initTargetBox(): void {
-    this.targetBox = new TargetBox(this.game, this, 0, 0, 0, 0);
+    this.courseTargetBox = new TargetBox(this.game, this, 0, 0, 0, 0);
   }
 
   private destroyTargetBox(): void {
-    destroy(this.targetBox);
+    destroy(this.courseTargetBox);
+    this.courseTargetBox = undefined;
   }
 
   private moveTargetBox(x: number, y: number, w: number, h: number): void {
     const moveDuration = 100;
 
-    if (!this.targetBox) {
+    if (this.courseTargetBox === undefined) {
       this.initTargetBox();
     }
 
-    this.targetBox.moveAndResizeTo(x, y, w, h, moveDuration);
+    this.courseTargetBox.moveAndResizeTo(x, y, w, h, moveDuration);
   }
 }

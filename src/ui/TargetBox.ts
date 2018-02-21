@@ -5,9 +5,12 @@ import SingletonTween from '../SingletonTween';
 import { toTexture } from '../utils';
 
 export default class TargetBox extends Phaser.Group {
-  private box: Phaser.Graphics;
+  private reticule: Phaser.Graphics;
   private moveTween: SingletonTween = new SingletonTween();
   private resizeTween: SingletonTween = new SingletonTween();
+
+  private padding: number = 5;
+  private reticuleLength: number = 10;
 
   constructor(
     public game: Game,
@@ -19,7 +22,7 @@ export default class TargetBox extends Phaser.Group {
   ) {
     super(game, parent);
 
-    this.initBox();
+    this.initReticule();
   }
 
   public moveAndResizeTo(
@@ -40,26 +43,43 @@ export default class TargetBox extends Phaser.Group {
 
   public resizeTo(w: number, h: number, duration: number): void {
     const tween = this.game.add.tween(this).to({ h, w }, duration);
-    tween.onUpdateCallback(this.drawBox);
-    tween.onComplete.add(this.drawBox);
+    tween.onUpdateCallback(this.drawReticule);
+    tween.onComplete.add(this.drawReticule);
     this.resizeTween.start(tween);
   }
 
-  private initBox = (): void => {
-    this.box = this.game.add.graphics(0, 0, this);
+  public hide() {
+    this.alpha = 0;
   }
 
-  private drawBox = (): void => {
-    const { w, h } = this;
-    const padding = 5;
-    const length = 10;
+  public show() {
+    this.alpha = 1;
+  }
 
-    this.box
+  private initReticule = (): void => {
+    this.reticule = this.game.add.graphics(0, 0, this);
+  }
+
+  private drawReticule = (): void => {
+    const { h, padding, reticuleLength: length, w } = this;
+
+    this.reticule
       .clear()
       .lineStyle(1, 0xffffff, 1)
-      .moveTo(-padding, h / 2)
-      .lineTo(-padding - length, h / 2)
-      .moveTo(w + padding, h / 2)
-      .lineTo(w + padding + length, h / 2);
+      .moveTo(-padding + length, 0)
+      .lineTo(-padding, 0)
+      .lineTo(-padding, length)
+      .moveTo(-padding, h - length)
+      .lineTo(-padding, h)
+      .lineTo(-padding + length, h)
+      .moveTo(w + padding - length, 0)
+      .lineTo(w + padding, 0)
+      .lineTo(w + padding, length)
+      .moveTo(w + padding - length, h)
+      .lineTo(w + padding, h)
+      .lineTo(w + padding, h - length)
+      .beginFill(0x888888, 0.3)
+      .lineStyle(0, 0, 0)
+      .drawRect(-padding, 0, w + 2 * padding, h);
   }
 }
