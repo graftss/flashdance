@@ -1,6 +1,5 @@
 === up next ===
 - color permanently darkened in `MenuTextOption` after being selected
-- don't let start button be pushed twice
 - why are the fakes always slightly after the flashes in a `flashAndFake`
 - refactor base sequencer so that the generic methods can be told their
   parameters, (e.g. set path length or set # of fake flashes) via arguments

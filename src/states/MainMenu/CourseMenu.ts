@@ -12,6 +12,8 @@ export default class CourseMenu extends Menu {
   private selectedCourseType: CourseType;
   private startLink: SlidingLink;
 
+  private startCourseDispatched: boolean = false;
+
   constructor(
     game: Game,
     x: number,
@@ -76,10 +78,15 @@ export default class CourseMenu extends Menu {
   }
 
   private dispatchStartCourse = () => {
+    if (this.startCourseDispatched) {
+      return;
+    }
+
     const { selectedCourseData: courseData } = this;
 
     if (courseData !== undefined) {
       this.game.eventBus().menu.startCourse.dispatch(courseData);
+      this.startCourseDispatched = true;
     }
   }
 }

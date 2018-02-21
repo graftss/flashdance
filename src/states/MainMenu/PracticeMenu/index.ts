@@ -14,6 +14,8 @@ export default class OptionMenu extends Menu {
   private difficultySlider: DifficultySlider;
   private displayedCourseData: CourseData;
 
+  private startCourseDispatched: boolean = false;
+
   constructor(
     game: Game,
     x: number,
@@ -73,6 +75,10 @@ export default class OptionMenu extends Menu {
   }
 
   private onStart = () => {
+    if (this.startCourseDispatched) {
+      return;
+    }
+
     const {
       maxDifficulty,
       minDifficulty,
@@ -88,5 +94,6 @@ export default class OptionMenu extends Menu {
     };
 
     this.game.eventBus().menu.startCourse.dispatch(courseData);
+    this.startCourseDispatched = true;
   }
 }
