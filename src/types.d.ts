@@ -106,15 +106,6 @@ type ParticleData = {
 
 // Game levels
 
-type EasyCourse =
-  'flash' |
-  'path' |
-  'fake flash' |
-  'multiflash' |
-  'rotate' |
-  'reflect' |
-  'x-reflect';
-
 type CourseType =
   'easy' |
   'hard' |
