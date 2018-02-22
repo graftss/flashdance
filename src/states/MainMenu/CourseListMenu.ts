@@ -103,7 +103,19 @@ export default class CourseListMenu extends Menu {
   private selectCourseType = (
     { type, gridPos }: { type: CourseType, gridPos: GridPos },
   ): void => {
+    const { col, row } = gridPos;
     const yDelta = 10;
+
+    if (this.selectedCourseType !== undefined) {
+      const { col: oldCol, row: oldRow } = this.selectedCourseType;
+      if (col === oldCol && row === oldRow) {
+        return;
+      }
+
+      const oldOpt = this.getMenuOption(oldCol, oldRow) as MenuTextOption;
+      this.game.tweener.positionBy(oldOpt.text, { x: 0, y: yDelta }, 100).start();
+      oldOpt.unHighlight();
+    }
 
     // keep the course types alive
     const keepAlivePositions = courseTypes.map((_, index) => ({
@@ -116,14 +128,6 @@ export default class CourseListMenu extends Menu {
       keepAlivePositions,
     );
 
-    if (this.selectedCourseType !== undefined) {
-      const { col: oldCol, row: oldRow } = this.selectedCourseType;
-      const oldOpt = this.getMenuOption(oldCol, oldRow) as MenuTextOption;
-      this.game.tweener.positionBy(oldOpt.text, { x: 0, y: yDelta }, 100).start();
-      oldOpt.unHighlight();
-    }
-
-    const { col, row } = gridPos;
     const opt = this.getMenuOption(col, row) as MenuTextOption;
     opt.highlight(undefined, 1.3);
     this.game.tweener.positionBy(opt.text, { x: 0, y: -yDelta }, 100).start();
