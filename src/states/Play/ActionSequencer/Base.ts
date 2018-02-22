@@ -1,6 +1,7 @@
 import {
   adjacentGridPos,
   clamp,
+  equalGridPos,
   random,
   range,
   sample,
@@ -8,14 +9,21 @@ import {
   xprod,
 } from '../../../utils';
 
-const equalGridPos = (g: GridPos) => (h: GridPos) => (
-  g.col === h.col && g.row === h.row
-);
-
 export default class BaseActionSequencer {
   private allGridPositions: GridPos[];
   private randomGridPositionHistory: GridPos[] = [];
   private randomGridPositionHistorySize: number = 3;
+
+  private methodsByCode: string[] = [
+    'flash',           // 0
+    'fakeFlash',       // 1
+    'multiflash',      // 2
+    'path',            // 3
+    'rotate',          // 4
+    'reflect',         // 5
+    'xReflect',        // 6
+    'flashAndFake',    // 7
+  ];
 
   constructor(
     protected gridCols: number,
@@ -26,42 +34,15 @@ export default class BaseActionSequencer {
       .map(([col, row]) => ({ col, row }));
   }
 
-  protected input = (difficulty: number = 0): GameActionData => {
-    if (difficulty < 6) {
-      return this.flash(difficulty);
-    } else {
-      const rand = Math.random();
-
-      if (rand < 0.5) {
-        return this.flash(difficulty);
-      } else if (rand < 0.75) {
-        return this.path(difficulty);
-      } else {
-        return this.multiflash(difficulty);
-      }
-    }
+  protected roundByCode = (actionsByCode: any[][]): GameActionData[] => {
+    return actionsByCode.map(([code, ...args]) => this.actionByCode(code, ...args));
   }
 
-  protected roundByCode = (difficulty: number, codes: number[]): GameActionData[] => {
-    return codes.map(code => this.actionCodeMap(difficulty, code));
+  protected actionByCode = (code: number, ...args: any[]): GameActionData  => {
+    return this[this.methodsByCode[code]](...args);
   }
 
-  protected actionCodeMap = (difficulty: number, code: number): GameActionData  => {
-    switch (code) {
-      case 0: return this.flash(difficulty);
-      case 1: return this.fakeFlash(difficulty);
-      case 2: return this.multiflash(difficulty);
-      case 3: return this.path(difficulty);
-      case 4: return this.rotate(difficulty);
-      case 5: return this.reflect(difficulty);
-      case 6: return this.xReflect(difficulty);
-      case 7: return this.flashAndFake(difficulty);
-    }
-  }
-
-  protected flash = (difficulty: number = 0): GameActionData => {
-    const duration = Math.max(100, 300 - 10 * difficulty);
-
+  protected flash = (duration: number): GameActionData => {
     return {
       opts: {
         duration,
@@ -71,13 +52,8 @@ export default class BaseActionSequencer {
     };
   }
 
-  protected flashAndFake = (difficulty: number = 0): GameActionData => {
-    const duration = Math.max(100, 300 - 10 * difficulty);
-    const numFakes = clamp(
-      Math.floor(difficulty / 3),
-      1,
-      this.gridCols * this.gridRows - 1,
-    );
+  protected flashAndFake = (duration: number, fakes: number): GameActionData => {
+    const numFakes = clamp(fakes, 1, this.gridCols * this.gridRows - 1);
     const gridPositions = this.randomGridPositions(numFakes + 1);
     const origin = gridPositions.shift();
 
@@ -91,12 +67,10 @@ export default class BaseActionSequencer {
     };
   }
 
-  protected multiflash = (difficulty: number = 0): GameActionData => {
-    const duration = Math.max(300, 600 - 10 * difficulty);
-
+  protected multiflash = (duration: number, count: number): GameActionData => {
     return {
       opts: {
-        count: random(2, 4),
+        count,
         duration,
         origin: this.randomGridPosition(),
       },
@@ -104,10 +78,9 @@ export default class BaseActionSequencer {
     };
   }
 
-  protected path = (difficulty: number): GameActionData => {
+  protected path = (duration: number, pathLength: number): GameActionData => {
     const origin = this.randomGridPosition();
     const path = [origin];
-    const pathLength = clamp(Math.floor(difficulty / 3), 3, 5); // should scale with difficulty
 
     for (let n = 0; n < pathLength; n++) {
       let adjacents = adjacentGridPos(this.gridCols, this.gridRows, path[path.length - 1]);
@@ -124,28 +97,14 @@ export default class BaseActionSequencer {
 
     return {
       opts: {
-        duration: path.length * 250,
+        duration,
         path,
       },
       type: 'path',
     };
   }
 
-  protected obstacle = (difficulty: number = 0): GameActionData => {
-    const typeId = sample([0, 1, 2]);
-
-    switch (typeId) {
-      case 0: return this.rotate(difficulty);
-      case 1: return this.reflect(difficulty);
-      case 2: return this.fakeFlash(difficulty);
-    }
-  }
-
-  protected rotate = (difficulty: number = 0): GameActionData => {
-    const durationPerTurn = Math.max(200, 400 - difficulty * 10);
-
-    const turns = sample([-3, -2, -1, 1, 2, 3]);
-    const duration = Math.abs(turns * 400);
+  protected rotate = (duration: number, turns: number): GameActionData => {
     const rotation = turns * Math.PI / 2;
 
     return {
@@ -157,37 +116,26 @@ export default class BaseActionSequencer {
     };
   }
 
-  protected reflect = (difficulty: number = 0): GameActionData => {
-    const duration = Math.max(250, 750 - difficulty * 15);
-
-    const reflectX = sample([true, false]);
-
+  protected reflect = (
+    duration: number,
+    reflectX: boolean,
+    reflectY: boolean,
+  ): GameActionData => {
     return {
       opts: {
         duration,
         reflectX,
-        reflectY: !reflectX,
+        reflectY,
       },
       type: 'reflect',
     };
   }
 
-  protected xReflect = (difficulty: number = 0): GameActionData => {
-    const duration = Math.max(250, 750 - difficulty * 15);
-
-    return {
-      opts: {
-        duration,
-        reflectX: true,
-        reflectY: true,
-      },
-      type: 'reflect',
-    };
+  protected xReflect = (duration: number): GameActionData => {
+    return this.reflect(duration, true, true);
   }
 
-  protected fakeFlash = (difficulty: number = 0): GameActionData => {
-    const duration = Math.max(200, 400 - difficulty * 20);
-
+  protected fakeFlash = (duration: number): GameActionData => {
     return {
       opts: {
         duration,
@@ -216,7 +164,7 @@ export default class BaseActionSequencer {
     for (let n = 0; n < tries; n++) {
       result = sample(this.allGridPositions);
 
-      const inHistory = history.some(equalGridPos(result));
+      const inHistory = history.some(pos => equalGridPos(pos, result));
       if (!inHistory) {
         return result;
       }

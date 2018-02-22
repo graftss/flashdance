@@ -21,16 +21,17 @@ export default class ArcadeActionSequencer
     const raw = [];
 
     for (let i = 0; i < flashes - 1; i++) {
-      raw.push(this.input(difficulty));
+      // raw.push(this.input(difficulty));
+      console.log('placeholder');
     }
 
     for (let i = 0; i < obstacles; i++) {
-      raw.push(this.obstacle(difficulty));
+      // raw.push(this.obstacle(difficulty));
+      console.log('placeholder');
     }
 
     const shuffled = [
       { type: 'wait', opts: { duration: 300 } },
-      this.flash(),
       ...shuffle(raw),
     ];
 
