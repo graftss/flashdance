@@ -22,17 +22,34 @@ export default class Menu extends Phaser.Group {
     }
   }
 
-  public setOptionColumns = (optionDataColumns: MenuOptionData[][]) => {
+  public setOptionColumns = (
+    optionDataColumns: MenuOptionData[][],
+    keepAlive: GridPos[] = [],
+  ) => {
+    const hash = ({ col, row }: GridPos) => `${col}-${row}`;
+
+    const keepAliveHash = keepAlive.reduce((result, gridPos) => {
+      result[hash(gridPos)] = true;
+      return result;
+    }, {});
+
     if (this.optionColumns) {
-      this.forEachOption(o => o.destroy());
+      this.forEachOption((o, col, row) => {
+        if (!keepAliveHash[hash({ col, row })]) {
+          o.destroy();
+        }
+      });
     }
 
+    const oldColumns = this.optionColumns;
     this.optionDataColumns = optionDataColumns;
     this.colWidth = this.game.width / optionDataColumns.length;
 
-    this.optionColumns = optionDataColumns.map((column, colIndex) => (
-      column.map((data, rowIndex) => (
-        this.createMenuOption(colIndex, rowIndex, data)
+    this.optionColumns = optionDataColumns.map((optionColumn, col) => (
+      optionColumn.map((data, row) => (
+        keepAliveHash[hash({ col, row })] ?
+          oldColumns[col][row] :
+          this.createMenuOption(col, row, data)
       ))
     ));
   }

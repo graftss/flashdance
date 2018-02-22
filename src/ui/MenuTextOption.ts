@@ -3,7 +3,7 @@ import * as Phaser from 'phaser-ce';
 import Game from '../Game';
 import { defaults, toTexture } from '../utils';
 
-const inactiveTint = 0x666666;
+const inactiveTint = 0xcccccc;
 const activeTint = 0xdddddd;
 const activeHighlightedTint = 0xffffff;
 
@@ -51,7 +51,10 @@ export default class MenuTextOption extends Phaser.Group {
     }
   }
 
-  public highlight(tint: number = activeHighlightedTint): void {
+  public highlight(
+    tint: number = activeHighlightedTint,
+    scale?: number,
+  ): void {
     if (this.highlighted) {
       return;
     }
@@ -59,11 +62,16 @@ export default class MenuTextOption extends Phaser.Group {
     this.text.tint = tint;
     this.highlightedTint = tint;
     this.highlighted = true;
+
+    if (scale !== undefined) {
+      this.tweenTextScale(scale);
+    }
   }
 
   public unHighlight(): void {
     this.highlighted = false;
-    this.tweenTextTint(inactiveTint).start();
+    this.tweenTextTint(inactiveTint);
+    this.tweenTextScale(1);
   }
 
   public showBackground(): void {
@@ -82,6 +90,10 @@ export default class MenuTextOption extends Phaser.Group {
     this.text.setTextBounds(0, 0, w, h);
     this.text.inputEnabled = true;
     this.text.tint = inactiveTint;
+    this.text.pivot.x = 0.5 * this.text.width;
+    this.text.pivot.y = 0.5 * this.text.height;
+    this.text.x += this.w / 2;
+    this.text.y += this.h / 2;
 
     this.text.events.onInputDown.add(this.onInputDown);
     this.text.events.onInputOver.add(this.onInputOver);
@@ -120,7 +132,7 @@ export default class MenuTextOption extends Phaser.Group {
     this.mouseOver = true;
 
     if (!this.highlighted) {
-      this.tweenTextTint(activeTint).start();
+      this.tweenTextTint(activeTint);
     }
   }
 
@@ -132,11 +144,15 @@ export default class MenuTextOption extends Phaser.Group {
     this.mouseOver = false;
 
     if (!this.highlighted) {
-      this.tweenTextTint(inactiveTint).start();
+      this.tweenTextTint(inactiveTint);
     }
   }
 
-  private tweenTextTint(color: number, duration: number = 100): Phaser.Tween {
-    return this.game.tweener.tint(this.text, color, duration);
+  private tweenTextTint(color: number, duration: number = 100): void {
+    this.game.tweener.tint(this.text, color, duration).start();
+  }
+
+  private tweenTextScale(scale: number, duration: number = 100): void {
+    this.game.tweener.scale(this.text, scale, duration).start();
   }
 }

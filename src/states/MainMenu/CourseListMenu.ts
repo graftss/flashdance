@@ -103,28 +103,34 @@ export default class CourseListMenu extends Menu {
   private selectCourseType = (
     { type, gridPos }: { type: CourseType, gridPos: GridPos },
   ): void => {
+    const yDelta = 10;
+
+    // keep the course types alive
+    const keepAlivePositions = courseTypes.map((_, index) => ({
+      col: index,
+      row: 0,
+    }));
+
+    this.setOptionColumns(
+      this.getOptionDataColumns(type),
+      keepAlivePositions,
+    );
+
     if (this.selectedCourseType !== undefined) {
-      if (equalGridPos(gridPos, this.selectedCourseType)) {
-        return;
-      } else {
-        const { col: oldCol, row: oldRow } = this.selectedCourseType;
-        console.log(this.selectedCourseType);
-        this.updateMenuOption(oldCol, oldRow, (o: MenuTextOption) => {
-          o.unHighlight();
-        });
-      }
+      const { col: oldCol, row: oldRow } = this.selectedCourseType;
+      const oldOpt = this.getMenuOption(oldCol, oldRow) as MenuTextOption;
+      this.game.tweener.positionBy(oldOpt.text, { x: 0, y: yDelta }, 100).start();
+      oldOpt.unHighlight();
     }
 
     const { col, row } = gridPos;
+    const opt = this.getMenuOption(col, row) as MenuTextOption;
+    opt.highlight(undefined, 1.3);
+    this.game.tweener.positionBy(opt.text, { x: 0, y: -yDelta }, 100).start();
 
     this.selectedCourse = undefined;
     this.selectedCourseType = gridPos;
-    this.setOptionColumns(this.getOptionDataColumns(type));
-    this.updateMenuOption(col, row, (o: MenuTextOption) => {
-      o.highlight();
-    });
-
-    this.destroyTargetBox();
+    this.destroyCourseTargetBox();
   }
 
   private selectCourse = ({ courseData, gridPos }): void => {
@@ -155,7 +161,7 @@ export default class CourseListMenu extends Menu {
     this.courseTargetBox = new TargetBox(this.game, this, 0, 0, 0, 0);
   }
 
-  private destroyTargetBox(): void {
+  private destroyCourseTargetBox(): void {
     destroy(this.courseTargetBox);
     this.courseTargetBox = undefined;
   }
