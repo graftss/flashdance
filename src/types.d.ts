@@ -137,6 +137,8 @@ type TweenWrapper = {
   onComplete: Phaser.Signal,
 };
 
+type FlashLayerContext = 'flash' | 'fake' | 'background';
+
 type GameAction = {
   duration: number,
   tween: TweenWrapper,

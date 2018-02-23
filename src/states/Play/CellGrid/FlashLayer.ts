@@ -5,8 +5,6 @@ import Cell from './Cell';
 import Game from '../../../Game';
 import { shiftAnchor, toTexture, vec2 } from '../../../utils';
 
-type FlashLayerContext = 'flash' | 'fake' | 'background';
-
 const backgroundFlashColor = 0x999999;
 const flashColor = 0xffffff;
 const fakeFlashColor = 0xff0000;

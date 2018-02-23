@@ -1,11 +1,6 @@
 === up next ===
-- why are the fakes always slightly after the flashes in a `flashAndFake`
-- refactor base sequencer so that the generic methods can be told their
-  parameters, (e.g. set path length or set # of fake flashes) via arguments
 
 === on deck ===
-- paths of set lengths in base actino sequencer ? ?? ? ? < ?
-
 - opening titles
 
 - practice mode slider only goes up to highest difficulty completed
