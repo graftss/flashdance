@@ -1,5 +1,4 @@
 === up next ===
-- error when multiflash is clicked too fast apparently
 - why are the fakes always slightly after the flashes in a `flashAndFake`
 - refactor base sequencer so that the generic methods can be told their
   parameters, (e.g. set path length or set # of fake flashes) via arguments

@@ -35,7 +35,10 @@ export default class InputLightManager extends Phaser.Group {
 
   public onCompleteInput(): void {
     this.lights.forEach(({ light }) => light.setTone('correct'));
-    this.lights[this.lights.length - 1].light.brighten();
+
+    if (this.lights.length > 0) {
+      this.lights[this.lights.length - 1].light.brighten();
+    }
 
     setTimeout(() => this.destroyAllLights(), 75);
   }
@@ -103,6 +106,10 @@ export default class InputLightManager extends Phaser.Group {
   }
 
   private cascade(f: (d: IInputLightData, i: number) => void, timestep: number): void {
+    if (!this.lights[0]) {
+      return;
+    }
+
     f(this.lights[0], 0);
 
     for (let i = 1; i < this.lights.length; i++) {
