@@ -152,7 +152,7 @@ export default class MenuTextOption extends Phaser.Group {
     this.game.tweener.tint(this.text, color, duration).start();
   }
 
-  private tweenTextScale(scale: number, duration: number = 100): void {
+  public tweenTextScale(scale: number, duration: number = 100): void {
     this.game.tweener.scale(this.text, scale, duration).start();
   }
 }

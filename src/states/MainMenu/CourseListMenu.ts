@@ -128,9 +128,18 @@ export default class CourseListMenu extends Menu {
       keepAlivePositions,
     );
 
-    const opt = this.getMenuOption(col, row) as MenuTextOption;
-    opt.highlight(undefined, 1.3);
-    this.game.tweener.positionBy(opt.text, { x: 0, y: -yDelta }, 100).start();
+    const selectedOpt = this.getMenuOption(col, row) as MenuTextOption;
+    selectedOpt.highlight(undefined, 1.3);
+    this.game.tweener.positionBy(selectedOpt.text, { x: 0, y: -yDelta }, 100).start();
+
+    for (let i = 0; i < courseTypes.length; i++) {
+      if (i === col) {
+        continue;
+      }
+
+      const courseTypeOpt = this.getMenuOption(i, 0) as MenuTextOption;
+      courseTypeOpt.tweenTextScale(0.7);
+    }
 
     this.selectedCourse = undefined;
     this.selectedCourseType = gridPos;

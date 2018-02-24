@@ -1,7 +1,5 @@
 === up next ===
 
-
-
 === on deck ===
 - fix `difficulty range` text alignment in practice menu
 
@@ -17,8 +15,8 @@
 
 - put a cool texture on the progress bar maybe
 
-- display CourseResult stats in menu and in game somehow
-  - use another `CourseListMenu` for this i think
+- display CourseResult stats
+  - little box in lower-left
 
 - figure out why title menu doesn't work on mobile
 
