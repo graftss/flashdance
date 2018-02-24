@@ -37,10 +37,11 @@ export default class OptionMenu extends Menu {
     });
 
     this.courseListMenu.onCourseDown.add(({ courseData }) => {
-      const { maxDifficulty, minDifficulty } = courseData;
+      const { minDifficulty } = courseData;
+      const { difficultyReached } = this.game.saveFile.getCourseHistory(courseData.id);
 
       this.displayedCourseData = courseData;
-      this.difficultySlider.init(minDifficulty, maxDifficulty);
+      this.difficultySlider.init(minDifficulty, difficultyReached);
     });
   }
 
@@ -53,14 +54,14 @@ export default class OptionMenu extends Menu {
       [
         {
           group: this.courseListMenu,
-          height: this.game.height / 2.5,
+          height: this.game.height / 2.2,
           type: 'group',
           width: this.game.width,
         },
 
         {
           group: this.difficultySlider,
-          height: this.game.width / 7,
+          height: this.game.width / 9,
           type: 'group',
           width: this.game.width,
         },

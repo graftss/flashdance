@@ -4,6 +4,7 @@ import DoubleSlider from '../../../ui/DoubleSlider';
 import Game from '../../../Game';
 import Menu from '../../../ui/Menu';
 import MenuTextOption from '../../../ui/MenuTextOption';
+import { destroy } from '../../../utils';
 
 export default class DifficultySlider extends Menu {
   private slider: DoubleSlider;
@@ -34,6 +35,8 @@ export default class DifficultySlider extends Menu {
   }
 
   private initSlider(discreteValues: number): void {
+    destroy(this.slider);
+
     this.slider = new DoubleSlider(
       this.game,
       this,
@@ -50,11 +53,7 @@ export default class DifficultySlider extends Menu {
     maxDifficulty: number,
   ): MenuOptionData[][] {
     return [[
-      {
-        label: this.getLabel(minDifficulty, maxDifficulty),
-        onSelect: () => 0,
-        type: 'text',
-      },
+      this.getTextOptionData(minDifficulty, maxDifficulty),
       {
         group: this.slider,
         type: 'group',
@@ -62,26 +61,30 @@ export default class DifficultySlider extends Menu {
       },
     ]];
   }
+
   private resetDifficultySlider(discreteValues: number): void {
     this.slider.reset(discreteValues);
   }
 
   private onDifficultySliderChange = (data: IDoubleSliderEvent) => {
-    const { leftDiscrete: l, rightDiscrete: r } = data;
+    const { maxDifficulty, minDifficulty } = this.eventDataToValues(data);
+    const labelData = this.getTextOptionData(minDifficulty, maxDifficulty);
 
-    this.updateMenuOption(0, 0, (textOption: MenuTextOption) => {
-      const {
-        maxDifficulty: high,
-        minDifficulty: low,
-      } = this.eventDataToValues(data);
-      textOption.text.setText(this.getLabel(low, high));
-    });
+    this.setOptionColumns([[labelData]], [{ col: 0, row: 1 }]);
   }
 
   private eventDataToValues(data: IDoubleSliderEvent) {
     const { leftDiscrete: l, rightDiscrete: r } = data;
 
     return { minDifficulty: l + 1, maxDifficulty: r + 1 };
+  }
+
+  private getTextOptionData(low: number, high: number): MenuOptionData {
+    return {
+      label: this.getLabel(low, high),
+      onSelect: () => 0,
+      type: 'text',
+    };
   }
 
   private getLabel(low: number, high: number) {
