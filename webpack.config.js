@@ -2,7 +2,7 @@ const { join } = require('path');
 const webpack = require('webpack');
 
 
-module.exports = env => console.log('env', env) || ({
+module.exports = env => ({
   entry: './src/index.ts',
   output: {
     path: join(__dirname, 'build'),

@@ -1,6 +1,10 @@
 === up next ===
 
+
+
 === on deck ===
+- fix `difficulty range` text alignment in practice menu
+
 - opening titles
 
 - practice mode slider only goes up to highest difficulty completed
@@ -15,13 +19,10 @@
 
 - put a cool texture on the progress bar maybe
 
-- "long hold" flash mechanic
-  - animation is a growing light that fills out the cell to let you know
-    you can stop holding
-  - not sure if this is a good idea
-
 - display CourseResult stats in menu and in game somehow
   - use another `CourseListMenu` for this i think
+
+- figure out why title menu doesn't work on mobile
 
 === loooong term ===
 
