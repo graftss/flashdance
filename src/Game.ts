@@ -34,6 +34,7 @@ export default class Game extends Phaser.Game {
   public boot() {
     super.boot();
     this.stage.disableVisibilityChange = true;
+    this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
   }
 
   public eventBus(): EventBus {

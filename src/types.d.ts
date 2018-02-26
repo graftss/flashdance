@@ -1,5 +1,9 @@
 declare var PRODUCTION: boolean;
 
+declare class Game extends Phaser.Game {
+
+}
+
 // Utility
 
 type Maybe<T> = T | null;
@@ -44,6 +48,13 @@ type CourseScore = {
 
 // UI
 
+interface IMenuOptionData {
+  group: Phaser.Group;
+  rect: Phaser.Rectangle;
+  type: 'real';
+  height?: number;
+}
+
 type MenuTextOptionData = {
   height?: number;
   label: string;
@@ -61,7 +72,8 @@ type MenuGroupOptionData = {
 
 type MenuOptionData =
   MenuTextOptionData |
-  MenuGroupOptionData;
+  MenuGroupOptionData |
+  IMenuOptionData;
 
 type MenuID =
   'option' |

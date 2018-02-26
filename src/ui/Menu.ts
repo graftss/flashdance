@@ -171,4 +171,8 @@ export default class Menu extends Phaser.Group {
   private getOptionData(colIndex, rowIndex) {
     return this.optionDataColumns[colIndex][rowIndex];
   }
+
+  protected pushMenu(menuID: MenuID) {
+    this.game.eventBus().menu.pushMenu.dispatch(menuID);
+  }
 }

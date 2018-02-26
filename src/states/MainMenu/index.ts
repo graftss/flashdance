@@ -83,7 +83,7 @@ export default class MainMenu extends Phaser.State {
     const { activeMenu, game } = this;
     const newMenu = this.initMenuById(menuId);
     const slideDelta = { x: -this.game.width, y: 0 };
-    const slideDuration = 500;
+    const slideDuration = 250;
 
     newMenu.position.x = this.game.width;
 
