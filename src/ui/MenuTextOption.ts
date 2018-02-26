@@ -33,6 +33,7 @@ export default class MenuTextOption extends Phaser.Group {
   ) {
     super(game);
 
+    this.textStyle.fontSize = this.game.height / 8;
     this.textStyle = defaults(menuTextOptionData.textStyle, this.textStyle);
 
     this.initText();
@@ -95,29 +96,37 @@ export default class MenuTextOption extends Phaser.Group {
     this.text.x += this.w / 2;
     this.text.y += this.h / 2;
 
-    this.text.events.onInputDown.add(this.onInputDown);
     this.text.events.onInputOver.add(this.onInputOver);
     this.text.events.onInputOut.add(this.onInputOut);
   }
 
   private initBackground(): void {
-    const { x, y, width, height } = this.text.getBounds();
-    const paddingX = 5;
+    const { x, y, width, height } = this.text.getLocalBounds();
+    const paddingX = 10;
+    const paddingY = 0;
 
     const texture: Phaser.RenderTexture = toTexture(
       this.game.add.graphics(0, 0)
-        .beginFill(0xaaaaaa, 0.3)
-        .drawRoundedRect(0, 0, width + 2 * paddingX, height, height / 10),
+        .beginFill(0, 0)
+        .lineStyle(2, 0xff0000)
+        .drawRect(0, 0, width + 2 * paddingX, height),
     );
 
     this.background = this.game.add.sprite(
-      (this.w - width) / 2 - paddingX, -2,
+      (this.w - width) / 2 - paddingX, -10,
       texture,
       null,
       this,
     );
 
+    this.background.anchor = new Phaser.Point(0.5, 0.5);
+    this.background.x += this.background.width / 2;
+    this.background.y += this.background.height / 2;
+
     this.background.alpha = 0;
+
+    this.background.inputEnabled = true;
+    this.background.events.onInputDown.add(this.onInputDown);
   }
 
   private onInputDown = () => {
@@ -154,5 +163,6 @@ export default class MenuTextOption extends Phaser.Group {
 
   public tweenTextScale(scale: number, duration: number = 100): void {
     this.game.tweener.scale(this.text, scale, duration).start();
+    this.game.tweener.scale(this.background, scale, duration).start();
   }
 }

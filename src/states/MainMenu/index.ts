@@ -70,11 +70,12 @@ export default class MainMenu extends Phaser.State {
   }
 
   private initMenuById(menuId: MenuID): Menu {
+    const rowHeight = this.game.height / 7;
     switch (menuId) {
-      case 'option': return new OptionMenu(this.game, 0, 80, 80);
-      case 'practice': return new PracticeMenu(this.game, 0, 80, 80);
-      case 'title': return new TitleMenu(this.game, 0, 100, 80);
-      case 'course': return new CourseMenu(this.game, 0, 80, 80);
+      case 'option': return new OptionMenu(this.game, 0, 80, rowHeight);
+      case 'practice': return new PracticeMenu(this.game, 0, 80, rowHeight);
+      case 'title': return new TitleMenu(this.game, 0, this.game.height / 3, rowHeight);
+      case 'course': return new CourseMenu(this.game, 0, 80, rowHeight);
     }
   }
 

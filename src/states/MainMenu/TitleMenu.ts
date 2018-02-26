@@ -30,7 +30,6 @@ export default class TitleMenu extends Menu {
         onSelect: () => pushMenu.dispatch('practice'),
         type: 'text',
       },
-      ...this.getExtraModeOptions(),
       {
         label: 'options',
         onSelect: () => {

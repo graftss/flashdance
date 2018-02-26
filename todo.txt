@@ -1,4 +1,7 @@
 === up next ===
+- put "start" and "back" buttons on the same (bottom) row; have start slide in
+  from the left
+- make course list elements bigger
 
 === on deck ===
 - fix `difficulty range` text alignment in practice menu

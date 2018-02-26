@@ -74,7 +74,7 @@ export default class CourseListMenu extends Menu {
       height: this.game.height / 8,
       label: type,
       onSelect: gridPos => this.onCourseTypeDown.dispatch({ gridPos, type }),
-      textStyle: { fontSize: this.rowHeight * 1.5 },
+      textStyle: { fontSize: 50 },
       type: 'text',
     };
   }
