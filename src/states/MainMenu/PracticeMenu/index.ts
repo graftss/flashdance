@@ -30,7 +30,7 @@ export default class OptionMenu extends Menu {
   }
 
   private initCourseListMenu(): void {
-    this.courseListMenu = new CourseListMenu(this.game, 0, 0, 30);
+    this.courseListMenu = new CourseListMenu(this.game, 0, 0, 50);
 
     this.courseListMenu.onCourseTypeDown.add(() => {
       this.difficultySlider.hide();

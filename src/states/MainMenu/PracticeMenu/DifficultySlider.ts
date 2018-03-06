@@ -83,6 +83,9 @@ export default class DifficultySlider extends Menu {
     return {
       label: this.getLabel(low, high),
       onSelect: () => 0,
+      textStyle: {
+        fontSize: 40,
+      },
       type: 'text',
     };
   }
