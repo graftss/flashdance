@@ -8,7 +8,8 @@
     "start": "webpack-dev-server --content-base build --open",
     "lint": "tslint --project . --format verbose --force",
     "build": "webpack --env.production",
-    "host": "yarn run build && cd build && git add . && git commit -m \"ok\" && git push -u origin master && cd .."
+    "host": "yarn run build && cd build && git add . && git commit -m \"ok\" && git push -u origin master && cd ..",
+    "postinstall": "sed -i -e '28945d' node_modules/phaser-ce/build/phaser.js"
   },
   "devDependencies": {
     "@types/node": "^8.0.53",
