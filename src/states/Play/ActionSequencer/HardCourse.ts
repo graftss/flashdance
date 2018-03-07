@@ -40,18 +40,7 @@ export default class EasyCourseActionSequencer
   }
 
   private waitlessRound(difficulty: number): GameActionData[] {
-    switch (this.level) {
-      case 'long path':
-      case 'flash 5':
-      case 'dizzy':
-      case 'squint': {
-        return this.expand(difficulty, this.roundCodes[this.level][difficulty]);
-      }
-      case 'so fake': return;
-      case 'jesus': return;
-      case 'fast': return;
-      case 'long path 2': return;
-    }
+    return this.expand(difficulty, this.roundCodes[this.level][difficulty]);
   }
 
   private durationByActionCode(
@@ -177,6 +166,24 @@ export default class EasyCourseActionSequencer
       [0, 0, 0, 0],
       [[3, 2], 0, 0, 0],
       [0, 0, 0, 0, ro()],
+    ],
+
+    'so fake': [[],
+      [[7, 4], [7, 4], [7, 4], [7, 4], [7, 4], [7, 4]],
+      [[7, 6], [7, 6], [7, 6], [7, 6], [7, 6], [7, 6]],
+      [[7, 8], [7, 8], [7, 8], [7, 8], [7, 8], [7, 8]],
+      [[7, 10], [7, 10], [7, 10], [7, 10], [7, 10], [7, 10]],
+      [[7, 13], [7, 13], [7, 13], [7, 13], [7, 13], [7, 13]],
+      [[7, 4], [7, 4], [7, 4], [7, 4], [7, 4], [7, 4], ro()],
+      [[7, 6], [7, 6], [7, 6], [7, 6], [7, 6], [7, 6], re()],
+      [[7, 8], [7, 8], [7, 8], [7, 8], [7, 8], [7, 8], ro()],
+      [[7, 10], [7, 10], [7, 10], [7, 10], [7, 10], [7, 10], re()],
+      [[7, 13], [7, 13], [7, 13], [7, 13], [7, 13], [7, 13], ro()],
+      [[7, 4], [7, 4], [7, 4], ro(), [7, 4], [7, 4], [7, 4], ro()],
+      [[7, 6], [7, 6], [7, 6], re(), [7, 6], [7, 6], [7, 6], re()],
+      [[7, 8], [7, 8], [7, 8], re(), [7, 8], [7, 8], [7, 8], ro()],
+      [[7, 10], [7, 10], [7, 10], ro(), [7, 10], [7, 10], [7, 10], re()],
+      [[7, 13], [7, 13], [7, 13], re(), [7, 13], [7, 13], [7, 13], ro()],
     ],
   };
 }
