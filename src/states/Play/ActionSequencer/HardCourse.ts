@@ -18,6 +18,8 @@ const args = {
   rotate: () => [4, sample([-1, -2, -3, 1, 2, 3])],
 };
 
+const { rotate: ro, reflect: re } = args;
+
 export default class EasyCourseActionSequencer
   extends BaseActionSequencer implements IActionSequencer {
 
@@ -39,10 +41,12 @@ export default class EasyCourseActionSequencer
 
   private waitlessRound(difficulty: number): GameActionData[] {
     switch (this.level) {
-      case 'long path': return this.longPathRound(difficulty);
-      case 'flash 5': return this.flashyRound(difficulty);
-      case 'dizzy': return this.dizzyRound(difficulty);
-      case 'squint': return this.squintRound(difficulty);
+      case 'long path':
+      case 'flash 5':
+      case 'dizzy':
+      case 'squint': {
+        return this.expand(difficulty, this.roundCodes[this.level][difficulty]);
+      }
       case 'so fake': return;
       case 'jesus': return;
       case 'fast': return;
@@ -102,8 +106,8 @@ export default class EasyCourseActionSequencer
     return this.roundByCode(expandedActionsByCode);
   }
 
-  private longPathRound(difficulty: number): GameActionData[] {
-    const roundCodes = [[],
+  private roundCodes = {
+    'long path': [[],
       [[3, 6]],
       [[3, 7]],
       [[3, 8]],
@@ -119,15 +123,9 @@ export default class EasyCourseActionSequencer
       [[3, 8], [3, 4], [3, 4]],
       [[3, 9], [3, 4], [3, 4]],
       [[3, 10], [3, 4], [3, 4]],
-    ][difficulty];
+    ],
 
-    return this.expand(difficulty, roundCodes);
-  }
-
-  private flashyRound(difficulty: number): GameActionData[] {
-    const { rotate: ro, reflect: re } = args;
-
-    const roundCodes = [[],
+    'flash 5': [[],
       [0, 0, 0, 0, 0, 0],
       [0, 0, 0, ro(), 0, 0, 0],
       [0, 0, 0, re(), 0, 0, 0],
@@ -143,15 +141,9 @@ export default class EasyCourseActionSequencer
       [0, 0, 0, 0, re(), 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, ro()],
       [0, 0, 0, 0, 0, 0, 0, 0, re()],
-    ][difficulty];
+    ],
 
-    return this.expand(difficulty, roundCodes);
-  }
-
-  private dizzyRound(difficulty: number): GameActionData[] {
-    const { rotate: ro } = args;
-
-    const roundCodes = [[],
+    'dizzy': [[],
       [0, ro(), 0, ro(), 0, ro()],
       [0, ro(), 0, ro(), 0, ro()],
       [0, ro(), 0, ro(), 0, ro()],
@@ -167,15 +159,9 @@ export default class EasyCourseActionSequencer
       [0, ro(), 0, ro(), 0, ro(), 0, ro(), 0, ro()],
       [0, ro(), 0, ro(), 0, ro(), 0, ro(), 0, ro()],
       [0, ro(), 0, ro(), 0, ro(), 0, ro(), 0, ro()],
-    ][difficulty];
+    ],
 
-    return this.expand(difficulty, roundCodes);
-  }
-
-  private squintRound(difficulty: number): GameActionData[] {
-    const { rotate: ro, reflect: re } = args;
-
-    const roundCodes = [[],
+    'squint': [[],
       [0],
       [[3, 2]],
       [0, ro()],
@@ -191,8 +177,6 @@ export default class EasyCourseActionSequencer
       [0, 0, 0, 0],
       [[3, 2], 0, 0, 0],
       [0, 0, 0, 0, ro()],
-    ][difficulty];
-
-    return this.expand(difficulty, roundCodes);
-  }
+    ],
+  };
 }

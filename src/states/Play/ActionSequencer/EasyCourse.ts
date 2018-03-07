@@ -12,6 +12,8 @@ const args = {
   rotate: () => [4, sample([-1, -2, -3, 1, 2, 3])],
 };
 
+const { multiflash: m, reflect: re, rotate: ro } = args;
+
 export default class EasyCourseActionSequencer
   extends BaseActionSequencer implements IActionSequencer {
 
@@ -32,20 +34,7 @@ export default class EasyCourseActionSequencer
   }
 
   private waitlessRound(difficulty: number): GameActionData[] {
-    switch (this.level) {
-      case 'flash': return this.flashRound(difficulty);
-      case 'path': return this.pathRound(difficulty);
-      case 'fake flash': return this.fakeFlashRound(difficulty);
-      case 'multiflash': return this.multiflashRound(difficulty);
-      case 'rotate': return this.rotateRound(difficulty);
-      case 'reflect': return this.reflectRound(difficulty);
-      case 'x-reflect': return this.xReflectRound(difficulty);
-      case 'flash 2': return this.rotateReflectRound(difficulty);
-      case 'path 2': return this.reflectedPathRound(difficulty);
-      case 'flash 3': return this.rotateXReflectRound(difficulty);
-      case 'path 3': return this.rotatedPathRound(difficulty);
-      case 'flash 4': return this.rotateReflectFakeFlash(difficulty);
-    }
+    return this.expand(difficulty, this.roundCodes[this.level][difficulty]);
   }
 
   private durationByActionCode(
@@ -100,19 +89,15 @@ export default class EasyCourseActionSequencer
     return this.roundByCode(expandedActionsByCode);
   }
 
-  private flashRound(difficulty: number): GameActionData[] {
-    const roundCodes = [[],
+  private roundCodes = {
+    'flash': [[],
       [0], [0, 0], [0, 0, 0], [0, 0, 0],
       [0, 0, 0, 0], [0, 0, 0, 0],
       [0, 0, 0, 0, 0], [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0],
-    ][difficulty];
+    ],
 
-    return this.expand(difficulty, roundCodes);
-  }
-
-  private fakeFlashRound(difficulty: number): GameActionData[] {
-    const roundCodes = [[],
+    'fake flash': [[],
       [1, 0],
       [[7, 1], 0],
       [1, 1, 0],
@@ -123,13 +108,9 @@ export default class EasyCourseActionSequencer
       [0, [7, 3], 1, 1, [7, 4]],
       [[7, 4], 1, 1, [7, 2], [7, 3], 1, 0],
       [[7, 3], 1, [7, 3], 1, [7, 4], 1, [7, 4]],
-    ][difficulty];
+    ],
 
-    return this.expand(difficulty, roundCodes);
-  }
-
-  private pathRound(difficulty: number): GameActionData[] {
-    const roundCodes = [[],
+    'path': [[],
       [[3, 2]],
       [[3, 3]],
       [[3, 4]],
@@ -140,15 +121,9 @@ export default class EasyCourseActionSequencer
       [[3, 2], [3, 2], [3, 2]],
       [[3, 2], [3, 3], [3, 3]],
       [[3, 4], [3, 2], [3, 4]],
-    ][difficulty];
+    ],
 
-    return this.expand(difficulty, roundCodes);
-  }
-
-  private multiflashRound(difficulty: number): GameActionData[] {
-    const { multiflash: m } = args;
-
-    const roundCodes = [[],
+    'multiflash': [[],
       [m()],
       [0, m()],
       [m(), 0],
@@ -159,51 +134,35 @@ export default class EasyCourseActionSequencer
       [m(), 0, m(), m()],
       [m(), m(), m(), m()],
       [m(), m(), 0, m(), m()],
-    ][difficulty];
+    ],
 
-    return this.expand(difficulty, roundCodes);
-  }
+    'rotate': [[],
+      [0, ro()],
+      [0, ro()],
+      [0, ro()],
+      [0, ro(), 0],
+      [0, ro(), 0],
+      [0, 0, ro()],
+      [0, 0, ro()],
+      [0, 0, ro(), ro()],
+      [0, 0, ro(), ro()],
+      [0, ro(), 0, ro()],
+    ],
 
-  private rotateRound(difficulty: number): GameActionData[] {
-    const { rotate: r } = args;
+    'reflect': [[],
+      [0, re()],
+      [0, re()],
+      [0, re()],
+      [0, re(), 0],
+      [0, re(), 0],
+      [0, 0, re()],
+      [0, 0, re()],
+      [0, 0, re(), re()],
+      [0, 0, re(), re()],
+      [0, re(), 0, re()],
+    ],
 
-    const roundCodes = [[],
-      [0, r()],
-      [0, r()],
-      [0, r()],
-      [0, r(), 0],
-      [0, r(), 0],
-      [0, 0, r()],
-      [0, 0, r()],
-      [0, 0, r(), r()],
-      [0, 0, r(), r()],
-      [0, r(), 0, r()],
-    ][difficulty];
-
-    return this.expand(difficulty, roundCodes);
-  }
-
-  private reflectRound(difficulty: number): GameActionData[] {
-    const { reflect: r } = args;
-
-    const roundCodes = [[],
-      [0, r()],
-      [0, r()],
-      [0, r()],
-      [0, r(), 0],
-      [0, r(), 0],
-      [0, 0, r()],
-      [0, 0, r()],
-      [0, 0, r(), r()],
-      [0, 0, r(), r()],
-      [0, r(), 0, r()],
-    ][difficulty];
-
-    return this.expand(difficulty, roundCodes);
-  }
-
-  private xReflectRound(difficulty: number): GameActionData[] {
-    const roundCodes = [[],
+    'x-reflect': [[],
       [0, 6],
       [0, 6],
       [0, 6],
@@ -214,55 +173,9 @@ export default class EasyCourseActionSequencer
       [0, 0, 0, 6],
       [0, 0, 0, 6],
       [0, 6, 0, 6],
-    ][difficulty];
+    ],
 
-    return this.expand(difficulty, roundCodes);
-  }
-
-  private rotatedPathRound(difficulty: number): GameActionData[] {
-    const { rotate: r } = args;
-
-    const roundCodes = [[],
-      [[3, 2], r()],
-      [[3, 3], r()],
-      [[3, 4], r()],
-      [[3, 2], r(), [3, 2]],
-      [[3, 3], r(), [3, 2]],
-      [[3, 4], r(), [3, 3]],
-      [[3, 2], [3, 2], r()],
-      [[3, 2], [3, 3], r()],
-      [[3, 3], [3, 4], r()],
-      [[3, 2], r(), [3, 3], r()],
-    ][difficulty];
-
-    return this.expand(difficulty, roundCodes);
-  }
-
-  private reflectedPathRound(difficulty: number): GameActionData[] {
-    const { reflect: r } = args;
-
-    console.log('hi');
-
-    const roundCodes = [[],
-      [[3, 2], r()],
-      [[3, 3], r()],
-      [[3, 4], r()],
-      [[3, 2], r(), [3, 2]],
-      [[3, 3], r(), [3, 2]],
-      [[3, 4], r(), [3, 3]],
-      [[3, 2], [3, 2], r()],
-      [[3, 2], [3, 3], r()],
-      [[3, 3], [3, 3], r()],
-      [[3, 2], r(), [3, 2], r()],
-    ][difficulty];
-
-    return this.expand(difficulty, roundCodes);
-  }
-
-  private rotateReflectRound(difficulty: number): GameActionData[] {
-    const { reflect: re, rotate: ro } = args;
-
-    const roundCodes = [[],
+    'flash 2': [[],
       [0, ro(), re()],
       [0, re(), ro()],
       [0, ro(), re(), ro()],
@@ -273,15 +186,9 @@ export default class EasyCourseActionSequencer
       [0, re(), 0, ro()],
       [0, re(), 0, ro(), re()],
       [0, re(), 0, ro(), 0, re()],
-    ][difficulty];
+    ],
 
-    return this.expand(difficulty, roundCodes);
-  }
-
-  private rotateXReflectRound(difficulty: number): GameActionData[] {
-    const { rotate: ro } = args;
-
-    const roundCodes = [[],
+    'flash 3': [[],
       [0, ro(), 6],
       [0, 6, ro()],
       [0, ro(), 6, ro()],
@@ -292,15 +199,9 @@ export default class EasyCourseActionSequencer
       [0, 6, 0, ro()],
       [0, 6, 0, ro(), 6],
       [0, 6, 0, ro(), 0, ro()],
-    ][difficulty];
+    ],
 
-    return this.expand(difficulty, roundCodes);
-  }
-
-  private rotateReflectFakeFlash(difficulty: number): GameActionData[] {
-    const { reflect: re, rotate: ro } = args;
-
-    const roundCodes = [[],
+    'flash 4': [[],
       [[7, 2], ro(), re()],
       [[7, 3], re(), ro()],
       [[7, 4], 1, re(), ro(), 0],
@@ -311,8 +212,32 @@ export default class EasyCourseActionSequencer
       [[7, 2], re(), [7, 3], ro()],
       [[7, 3], re(), [7, 3], ro(), re()],
       [[7, 4], re(), [7, 4], ro(), [7, 3], re()],
-    ][difficulty];
+    ],
 
-    return this.expand(difficulty, roundCodes);
-  }
+    'path 2': [[],
+      [[3, 2], re()],
+      [[3, 3], re()],
+      [[3, 4], re()],
+      [[3, 2], re(), [3, 2]],
+      [[3, 3], re(), [3, 2]],
+      [[3, 4], re(), [3, 3]],
+      [[3, 2], [3, 2], re()],
+      [[3, 2], [3, 3], re()],
+      [[3, 3], [3, 3], re()],
+      [[3, 2], re(), [3, 2], re()],
+    ],
+
+    'path 3': [[],
+      [[3, 2], ro()],
+      [[3, 3], ro()],
+      [[3, 4], ro()],
+      [[3, 2], ro(), [3, 2]],
+      [[3, 3], ro(), [3, 2]],
+      [[3, 4], ro(), [3, 3]],
+      [[3, 2], [3, 2], ro()],
+      [[3, 2], [3, 3], ro()],
+      [[3, 3], [3, 4], ro()],
+      [[3, 2], ro(), [3, 3], ro()],
+    ],
+  };
 }
