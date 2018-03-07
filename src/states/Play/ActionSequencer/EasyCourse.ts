@@ -241,6 +241,8 @@ export default class EasyCourseActionSequencer
   private reflectedPathRound(difficulty: number): GameActionData[] {
     const { reflect: r } = args;
 
+    console.log('hi');
+
     const roundCodes = [[],
       [[3, 2], r()],
       [[3, 3], r()],
@@ -250,8 +252,8 @@ export default class EasyCourseActionSequencer
       [[3, 4], r(), [3, 3]],
       [[3, 2], [3, 2], r()],
       [[3, 2], [3, 3], r()],
-      [[3, 3], [3, 4], r()],
-      [[3, 2], r(), [3, 3], r()],
+      [[3, 3], [3, 3], r()],
+      [[3, 2], r(), [3, 2], r()],
     ][difficulty];
 
     return this.expand(difficulty, roundCodes);
