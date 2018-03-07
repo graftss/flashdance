@@ -40,8 +40,8 @@ export default class EasyCourseActionSequencer
   private waitlessRound(difficulty: number): GameActionData[] {
     switch (this.level) {
       case 'long path': return this.longPathRound(difficulty);
-      case 'flashy': return;
-      case 'dizzy': return;
+      case 'flash 5': return this.flashyRound(difficulty);
+      case 'dizzy': return this.dizzyRound(difficulty);
       case 'squint': return this.squintRound(difficulty);
       case 'so fake': return;
       case 'jesus': return;
@@ -119,6 +119,54 @@ export default class EasyCourseActionSequencer
       [[3, 8], [3, 4], [3, 4]],
       [[3, 9], [3, 4], [3, 4]],
       [[3, 10], [3, 4], [3, 4]],
+    ][difficulty];
+
+    return this.expand(difficulty, roundCodes);
+  }
+
+  private flashyRound(difficulty: number): GameActionData[] {
+    const { rotate: ro, reflect: re } = args;
+
+    const roundCodes = [[],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, ro(), 0, 0, 0],
+      [0, 0, 0, re(), 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, ro()],
+      [0, 0, 0, 0, 0, 0, re()],
+      [0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, ro(), 0, 0, 0, 0],
+      [0, 0, 0, re(), 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, ro()],
+      [0, 0, 0, 0, 0, 0, 0, re()],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, ro(), 0, 0, 0, 0],
+      [0, 0, 0, 0, re(), 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, ro()],
+      [0, 0, 0, 0, 0, 0, 0, 0, re()],
+    ][difficulty];
+
+    return this.expand(difficulty, roundCodes);
+  }
+
+  private dizzyRound(difficulty: number): GameActionData[] {
+    const { rotate: ro } = args;
+
+    const roundCodes = [[],
+      [0, ro(), 0, ro(), 0, ro()],
+      [0, ro(), 0, ro(), 0, ro()],
+      [0, ro(), 0, ro(), 0, ro()],
+      [0, ro(), 0, ro(), 0, ro(), 0],
+      [0, ro(), 0, ro(), 0, ro(), 0],
+      [0, ro(), 0, ro(), 0, ro(), 0],
+      [0, ro(), 0, ro(), 0, ro(), 0, ro()],
+      [0, ro(), 0, ro(), 0, ro(), 0, ro()],
+      [0, ro(), 0, ro(), 0, ro(), 0, ro()],
+      [0, ro(), 0, ro(), 0, ro(), 0, ro(), 0],
+      [0, ro(), 0, ro(), 0, ro(), 0, ro(), 0],
+      [0, ro(), 0, ro(), 0, ro(), 0, ro(), 0],
+      [0, ro(), 0, ro(), 0, ro(), 0, ro(), 0, ro()],
+      [0, ro(), 0, ro(), 0, ro(), 0, ro(), 0, ro()],
+      [0, ro(), 0, ro(), 0, ro(), 0, ro(), 0, ro()],
     ][difficulty];
 
     return this.expand(difficulty, roundCodes);

@@ -35,7 +35,7 @@ const hardCommonData = {
 
 const hardCourses: CourseData[] = [
   { id: 100, level: 'long path' },
-  { id: 101, level: 'flashy' },
+  { id: 101, level: 'flash 5' },
   { id: 102, level: 'dizzy' },
   { id: 103, level: 'squint', gridCols: 6, gridRows: 6 },
   { id: 104, level: 'so fake' },
