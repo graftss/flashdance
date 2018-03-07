@@ -5,6 +5,8 @@ import Menu from '../../ui/Menu';
 import TextLink from '../../ui/TextLink';
 
 export default class TitleMenu extends Menu {
+  private title: TextLink[];
+
   constructor(
     game: Game,
     x: number,
@@ -18,15 +20,36 @@ export default class TitleMenu extends Menu {
   }
 
   private initTitle() {
-    const title = new TextLink(
+    const letters = 'flashdance'.split('');
+    this.title = letters.map((l, i) => new TextLink(
       this.game,
       this,
-      this.game.width / 2, 150,
+      this.game.width / 2 - (4.5 - i) * 60, 150,
       100,
-      'f l a s h d a n c e',
+      l,
       undefined,
       true,
-    );
+    ));
+
+    setTimeout(this.animateTitle, 3000);
+  }
+
+  private animateTitle = () => {
+    const { chain, merge, positionBy } = this.game.tweener;
+    const duration = 4000;
+
+    const tweens = this.title.map((textLink, i) => {
+      const dx = (i - 4.5) * 3;
+
+      return chain([
+        positionBy(textLink, { x: dx, y: Math.random() * 10 - 5 }, duration),
+        positionBy(textLink, { x: 0, y: 0 }, duration),
+      ]);
+    });
+
+    const animation = merge(tweens);
+    animation.onComplete.add(this.animateTitle);
+    animation.start();
   }
 
   private initOptions() {

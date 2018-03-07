@@ -4,7 +4,7 @@ import Game from '../Game';
 import { toTexture } from '../utils';
 
 export default class TextLink extends Phaser.Group {
-  private text: Phaser.Text;
+  public text: Phaser.Text;
   private boundingBox: Phaser.Sprite;
 
   private defaultTextStyle: Phaser.PhaserTextStyle = {
@@ -36,10 +36,17 @@ export default class TextLink extends Phaser.Group {
       0, 0, this.label, textStyle, this,
     );
 
+    const bounds = this.text.getBounds();
+
     if (centered) {
-      this.x -= this.text.getBounds().width / 2;
-      this.y -= this.text.getBounds().height / 2;
+      this.x -= bounds.width / 2;
+      this.y -= bounds.height / 2;
     }
+
+    this.text.pivot.x = 0.5 * bounds.width;
+    this.text.pivot.y = 0.5 * bounds.height;
+    this.text.x += bounds.width / 2;
+    this.text.y += bounds.height / 2;
 
     this.initBoundingBox();
   }

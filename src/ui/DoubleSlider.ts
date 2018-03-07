@@ -61,7 +61,7 @@ export default class DoubleSlider extends Phaser.Group {
       .beginFill(0x444444, 1)
       .lineStyle(2, 0xaaaaaa, 1)
       .moveTo(0, barHeight / 2)
-      .lineTo(w, barHeight / 2);
+      .lineTo(w - 2, barHeight / 2);
 
     this.bar = game.add.sprite(0, y, graphic.generateTexture(), null, this);
     graphic.destroy();
