@@ -25,7 +25,7 @@ export default class TitleMenu extends Menu {
     this.title = letters.map((l, i) => new TextLink(
       this.game,
       this,
-      this.game.width / 2 - (4.5 - i) * 60, 150,
+      this.game.width / 2 + (i - 4.5) * 60, 150,
       100,
       l,
       undefined,

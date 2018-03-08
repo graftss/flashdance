@@ -73,7 +73,7 @@ export default class GameDirector {
       setTimeout(() => this.onCourseComplete(), 100);
     } else {
       this.roundActionData = actionSequencer.randomRound(scorekeeper.difficulty);
-      setTimeout(() => this.startActionEvent(0), 250);
+      setTimeout(() => this.startActionEvent(0), 350);
     }
   }
 

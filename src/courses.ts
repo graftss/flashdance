@@ -19,9 +19,9 @@ const easyCourses = [
   { id: 6, level: 'x-reflect' },
   { id: 7, level: 'flash 2' }, // rotate + reflect
   { id: 8, level: 'flash 3' }, // rotate + x-reflect
-  { id: 11, level: 'flash 4' }, // rotated + reflected + fake
-  { id: 9, level: 'path 2' }, // reflected path
-  { id: 10, level: 'path 3' }, // rotated path
+  { id: 9, level: 'flash 4' }, // rotated + reflected + fake
+  { id: 10, level: 'path 2' }, // reflected path
+  { id: 11, level: 'path 3' }, // rotated path
 ].map(obj => ({ ...easyCommonData, ...obj }));
 
 const hardCommonData = {
@@ -42,6 +42,7 @@ const hardCourses: CourseData[] = [
   { id: 17, level: 'jesus' },
   { id: 18, level: 'fast' },
   { id: 19, level: 'long path 2', maxDifficulty: 10 },
+  { id: 20, level: 'path 4' },
 ].map(obj => ({ ...hardCommonData, ...obj }));
 
 export const courses: CourseData[] = [
