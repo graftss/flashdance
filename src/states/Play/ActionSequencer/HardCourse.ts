@@ -48,22 +48,36 @@ export default class EasyCourseActionSequencer
     code: number,
     ...actionArgs: any[],
   ): number {
+    if (this.level === 'fast') {
+      if (code === 0) {
+        return 100;
+      } else if (code === 3) {
+        return (actionArgs[0] + 2) * 100;
+      } else if (code === 4) {
+        return Math.abs(actionArgs[0]) * 280;
+      } else if (code === 5) {
+        return 280;
+      }
+    }
+
     switch (code) {
       // flash
       case 0:
       // fake flash
       case 1:
       // flash and fake
-      case 7: return Math.max(100, 300 - 15 * difficulty);
+      case 7: {
+        return Math.max(100, 300 - 10 * difficulty);
+      }
 
       // multiflash
-      case 2: return Math.max(300, 600 - 25 * difficulty);
+      case 2: return Math.max(300, 600 - 15 * difficulty);
 
       // path
-      case 3: return (actionArgs[0] + 2) * Math.max(100, 250 - difficulty * 10);
+      case 3: return (actionArgs[0] + 2) * Math.max(100, 250 - 10 * difficulty);
 
       // rotate
-      case 4: return Math.abs(actionArgs[0]) * Math.max(300, 500 - difficulty * 10);
+      case 4: return Math.abs(actionArgs[0]) * Math.max(300, 500 - 10 * difficulty);
 
       // reflect
       case 5:
@@ -184,6 +198,24 @@ export default class EasyCourseActionSequencer
       [[7, 8], [7, 8], [7, 8], re(), [7, 8], [7, 8], [7, 8], ro()],
       [[7, 10], [7, 10], [7, 10], ro(), [7, 10], [7, 10], [7, 10], re()],
       [[7, 13], [7, 13], [7, 13], re(), [7, 13], [7, 13], [7, 13], ro()],
+    ],
+
+    'fast': [[],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, ro(), 0, 0],
+      [0, 0, re(), 0, 0],
+      [0, 0, ro(), 0, 0, 0],
+      [0, 0, re(), 0, 0, 0],
+      [0, 0, 0, 0, ro()],
+      [0, 0, 0, 0, re()],
+      [0, 0, 0, 0, 0, ro()],
+      [0, 0, 0, 0, 0, re()],
+      [0, 0, 0, 0, 0, 0, re()],
     ],
   };
 }
