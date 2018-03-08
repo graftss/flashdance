@@ -1,4 +1,5 @@
 import * as Phaser from 'phaser-ce';
+import { sample } from '../../utils';
 
 import Game from '../../Game';
 import Menu from '../../ui/Menu';
@@ -32,6 +33,7 @@ export default class TitleMenu extends Menu {
     ));
 
     setTimeout(this.animateTitle, 3000);
+    setTimeout(this.flickerTitleLoop, 2000);
   }
 
   private animateTitle = () => {
@@ -50,6 +52,26 @@ export default class TitleMenu extends Menu {
     const animation = merge(tweens);
     animation.onComplete.add(this.animateTitle);
     animation.start();
+  }
+
+  private flickerTitle = () => {
+    const { alpha, chain } = this.game.tweener;
+    const duration = 50 + Math.random() * 200;
+    const letter = sample(this.title);
+    const flickers = duration < 80 ? sample([1, 2]) : 1;
+    const tweens = [];
+
+    for (let i = 0; i < flickers; i++) {
+      tweens.push(alpha(letter, 0, duration));
+      tweens.push(alpha(letter, 1, duration));
+    }
+
+    chain(tweens).start();
+  }
+
+  private flickerTitleLoop = () => {
+    this.flickerTitle();
+    setTimeout(this.flickerTitleLoop, 300 + Math.random() * 2000);
   }
 
   private initOptions() {
