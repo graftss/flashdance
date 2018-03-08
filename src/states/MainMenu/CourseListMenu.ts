@@ -70,11 +70,14 @@ export default class CourseListMenu extends Menu {
   }
 
   private getCourseTypeOptionData = (type: CourseType): MenuOptionData => {
+    const completed = this.game.saveFile.isCourseTypeCompleted(type);
+    const completionColor = completed ? { fill: 'green' } : {};
+
     return {
       height: this.game.height / 8,
       label: type,
       onSelect: gridPos => this.onCourseTypeDown.dispatch({ gridPos, type }),
-      textStyle: { fontSize: 50 },
+      textStyle: { fontSize: 50, ...completionColor },
       type: 'text',
     };
   }
