@@ -54,7 +54,9 @@ export default class EasyCourseActionSequencer
       case 2: return Math.max(300, 600 - 25 * difficulty);
 
       // path
-      case 3: return (actionArgs[0] + 2) * Math.max(100, 300 - difficulty * 10);
+      case 3: {
+        return (actionArgs[0] + 2) * Math.max(100, 300 - difficulty * 10);
+      }
 
       // rotate
       case 4: return Math.abs(actionArgs[0]) * Math.max(300, 500 - difficulty * 10);

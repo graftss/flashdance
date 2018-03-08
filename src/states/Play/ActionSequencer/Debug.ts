@@ -4,7 +4,38 @@ export default class DebugActionSequencer
   extends BaseActionSequencer implements IActionSequencer {
 
   public randomRound(difficulty: number): GameActionData[] {
-    return this.debugFlashAndFake();
+    return this.debugPath();
+  }
+
+  private debugPath(): GameActionData[] {
+    return [
+      {
+        opts: {
+          duration: 1000,
+          path: [
+            { col: 0, row: 0 },
+            { col: 0, row: 1 },
+            { col: 0, row: 2 },
+            { col: 1, row: 2 },
+            { col: 2, row: 2 },
+          ],
+        },
+        type: 'path',
+      },
+      {
+        opts: {
+          duration: 1000,
+          path: [
+            { col: 0, row: 0 },
+            { col: 0, row: 1 },
+            { col: 1, row: 1 },
+            { col: 1, row: 2 },
+            { col: 2, row: 2 },
+          ],
+        },
+        type: 'path',
+      },
+    ];
   }
 
   private debugFlashAndFake(): GameActionData[] {

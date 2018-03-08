@@ -161,7 +161,8 @@ export default class FlashLayer extends Phaser.Group {
 
     const initialDelay = 100;
     const finalDelay = 300;
-    const pathStepDuration = (duration - initialDelay - finalDelay) / (path.length);
+    const pathSteps = path.reduce((acc, { z }) => acc + z, 0);
+    const pathStepDuration = (duration - initialDelay - finalDelay) / pathSteps;
 
     const pathStepTweens = path.map((pos: Vec3) => this.moveTo(
       pos,
@@ -188,7 +189,6 @@ export default class FlashLayer extends Phaser.Group {
 
   private shouldSpawnTrails() {
     switch (this.context) {
-      case 'background': return this.game.state.current === 'MainMenu';
       case 'flash': return true;
       default: return false;
     }
@@ -200,8 +200,8 @@ export default class FlashLayer extends Phaser.Group {
     initialDelay: number,
   ): void {
     const { game, h, w } = this;
-    const dotsPerTrail = 6;
-    const trailSize = 4;
+    const dotsPerTrail = 8;
+    const trailSize = 3;
 
     const trailTexture = toTexture(
       game.add.graphics()
@@ -221,7 +221,14 @@ export default class FlashLayer extends Phaser.Group {
 
       dotLocations.forEach(({ x, y }, dotIndex) => {
         const delay = initialDelay + pathStepDuration * (step + dotIndex / dotsPerTrail);
-        this.spawnDot(game, x + w / 2, y + h / 2, delay, trailTexture);
+
+        this.spawnDot(
+          game,
+          x + w / 2, y + h / 2,
+          delay,
+          pathStepDuration,
+          trailTexture,
+        );
       });
 
       step += next.z;
@@ -233,10 +240,11 @@ export default class FlashLayer extends Phaser.Group {
     x: number,
     y: number,
     delay: number,
+    pathStepDuration: number,
     texture: Phaser.RenderTexture,
   ) {
-    const fadeOutDelay = 250;
-    const fadeOutDuration = 250;
+    const fadeOutDelay = pathStepDuration * 1.5;
+    const fadeOutDuration = pathStepDuration * 1.5;
 
     setTimeout(() => {
       const sprite = game.add.sprite(x, y, texture, null, this.parent);
