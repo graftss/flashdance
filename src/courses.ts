@@ -34,14 +34,14 @@ const hardCommonData = {
 };
 
 const hardCourses: CourseData[] = [
-  { id: 100, level: 'long path' },
-  { id: 101, level: 'flash 5' },
-  { id: 102, level: 'dizzy' },
-  { id: 103, level: 'squint', gridCols: 6, gridRows: 6 },
-  { id: 104, level: 'so fake' },
-  { id: 105, level: 'jesus' },
-  { id: 105, level: 'fast' },
-  { id: 105, level: 'long path 2', maxDifficulty: 10 },
+  { id: 12, level: 'long path' },
+  { id: 13, level: 'flash 5' },
+  { id: 14, level: 'dizzy' },
+  { id: 15, level: 'squint', gridCols: 6, gridRows: 6 },
+  { id: 16, level: 'so fake' },
+  { id: 17, level: 'jesus' },
+  { id: 18, level: 'fast' },
+  { id: 19, level: 'long path 2', maxDifficulty: 10 },
 ].map(obj => ({ ...hardCommonData, ...obj }));
 
 export const courses: CourseData[] = [
