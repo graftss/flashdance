@@ -41,7 +41,7 @@ const hardCourses: CourseData[] = [
   { id: 104, level: 'so fake' },
   { id: 105, level: 'jesus' },
   { id: 105, level: 'fast' },
-  { id: 105, level: 'long path 2' },
+  { id: 105, level: 'long path 2', maxDifficulty: 10 },
 ].map(obj => ({ ...hardCommonData, ...obj }));
 
 export const courses: CourseData[] = [
