@@ -5,6 +5,7 @@ import Game from '../../../Game';
 import DifficultySlider from './DifficultySlider';
 import Menu from '../../../ui/Menu';
 import MenuTextOption from '../../../ui/MenuTextOption';
+import SlidingLink from '../../../ui/SlidingLink';
 import { chunk, destroy } from '../../../utils';
 
 const practiceMenuID: MenuID = 'practice';
@@ -13,6 +14,7 @@ export default class OptionMenu extends Menu {
   private courseListMenu: CourseListMenu;
   private difficultySlider: DifficultySlider;
   private displayedCourseData: CourseData;
+  private startLink: SlidingLink;
 
   private startCourseDispatched: boolean = false;
 
@@ -27,6 +29,11 @@ export default class OptionMenu extends Menu {
     this.initCourseListMenu();
     this.initDifficultySlider();
     this.setOptionColumns(this.getOptionDataColumns());
+
+    this.startLink = new SlidingLink(
+      game,
+      this.getMenuOption(0, 2) as MenuTextOption,
+    );
   }
 
   private initCourseListMenu(): void {
@@ -42,6 +49,10 @@ export default class OptionMenu extends Menu {
 
       this.displayedCourseData = courseData;
       this.difficultySlider.init(minDifficulty, difficultyReached);
+
+      if (!this.startLink.inFinalPosition) {
+        this.startLink.slide();
+      }
     });
   }
 

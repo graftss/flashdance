@@ -39,9 +39,7 @@ export default class CourseMenu extends Menu {
     this.courseListMenu.onCourseDown.add(({ courseData }) => {
       const { selectedCourseData } = this;
 
-      if (!this.startLink.slideInProgress && !this.startLink.inFinalPosition) {
-        this.startLink.slide();
-      }
+      this.startLink.slide();
 
       if (!selectedCourseData || courseData.id !== selectedCourseData.id) {
         this.selectedCourseData = courseData;

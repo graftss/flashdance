@@ -23,7 +23,7 @@ export default class SlidingLink extends Phaser.Group {
     slideBy: Vec2 = { x: -this.game.width, y: 0 },
     slideTo: Vec2 = this.text.position,
   ): void {
-    if (this.slideInProgress) {
+    if (this.slideInProgress || this.inFinalPosition) {
       return;
     }
 
