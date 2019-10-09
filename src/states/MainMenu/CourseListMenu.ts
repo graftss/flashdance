@@ -83,7 +83,8 @@ export default class CourseListMenu extends Menu {
   }
 
   private getCourseOptionData = (courseData: CourseData): MenuOptionData => {
-    const unlocked = this.game.saveFile.isCourseUnlocked(courseData);
+    // const unlocked = this.game.saveFile.isCourseUnlocked(courseData);
+    const unlocked = true;
     const completed = this.game.saveFile.isCourseCompleted(courseData);
     const label = unlocked ? courseData.level : 'locked';
     const textStyle = completed ?

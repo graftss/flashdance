@@ -40,7 +40,7 @@ export default class EasyCourseActionSequencer
   private durationByActionCode(
     difficulty: number,
     code: number,
-    ...actionArgs: any[],
+    ...actionArgs: any[]
   ): number {
     switch (code) {
       // flash

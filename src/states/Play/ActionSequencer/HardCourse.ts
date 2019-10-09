@@ -46,7 +46,7 @@ export default class EasyCourseActionSequencer
   private durationByActionCode(
     difficulty: number,
     code: number,
-    ...actionArgs: any[],
+    ...actionArgs: any[]
   ): number {
     if (this.level === 'fast') {
       if (code === 0) {
